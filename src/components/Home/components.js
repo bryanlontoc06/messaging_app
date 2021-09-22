@@ -8,7 +8,7 @@ import {BsPencilSquare} from 'react-icons/bs'
 
 
 export const Container = styled.div `
-    height: 100vh;
+    /* height: 100vh; */
 `
 
 export const Body = styled.div `
