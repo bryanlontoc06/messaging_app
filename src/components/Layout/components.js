@@ -47,6 +47,7 @@ export const Footer = styled.div `
     flex-direction: column;
     right: 0;
     left: 0;
+    background: #fff;
 `
 export const FooterIcons = styled.div `
     display: flex;
