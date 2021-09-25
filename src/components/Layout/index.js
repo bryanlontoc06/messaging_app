@@ -15,9 +15,14 @@ import {
   } from "react-router-dom";
 
 import SwitchComponent from '../Routes';
+import useHooks from './hooks'
 
 
 const Index = () => {
+    const {
+        isLogin,
+        setIsLogin
+      } = useHooks();
     
     return (
         <>
@@ -28,7 +33,13 @@ const Index = () => {
                 <Redirect to={`/`} />
             </Router> */}
             <Router>
-                <SwitchComponent Switch={Switch} Route={Route} useLocation={useLocation}/>
+                <SwitchComponent 
+                    Switch={Switch} 
+                    Route={Route} 
+                    useLocation={useLocation}
+                    isLogin={isLogin}
+                    setIsLogin={setIsLogin}
+                />
             </Router>
         </>
     )

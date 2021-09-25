@@ -4,27 +4,19 @@ import DMs from '../../bak_pages/DMs'
 import Mentions from '../../bak_pages/Mentions'
 import You from '../../bak_pages/You'
 
+
 import MainPage from '../Main'
 import Login from '../Login'
 import Register from "../Register";
 
 const Index = (props) => {
-  const {Switch, Route, useLocation} = props;
+  const {Switch, Route, useLocation, isLogin, setIsLogin} = props;
   return (
     <>
       <Switch>
-          <Route exact path="/" component={MainPage}>
-              {/* <Home useLocation={useLocation}/> */}
-              <MainPage />
-          </Route>
-          <Route exact path="/login" component={Login}>
-              {/* <DMs useLocation={useLocation}/> */}
-              <Login />
-          </Route>
-          <Route exact path="/register" component={Register}>
-              {/* <Mentions /> */}
-              <Register/>
-          </Route>
+          <Route exact path="/" component={() => <MainPage authorized={isLogin} setIsLogin={setIsLogin}/>} />
+          <Route exact path="/login" component={() => <Login isLogin={isLogin} setIsLogin={setIsLogin}/>} />
+          <Route exact path="/register" component={() => <Register />} />
       </Switch>
     </>
   )

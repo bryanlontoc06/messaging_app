@@ -1,14 +1,54 @@
-import { Link as RouterLink } from 'react-router-dom';
+import React, {useRef, useState} from 'react'
+import { Link as RouterLink, Redirect } from 'react-router-dom';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import {
+  Container, 
+  Button, 
+  Link, 
   Box,
   TextField,
   Typography
-} from '@mui/material';
-import {Container, Button, Link} from './components'
+} from './components'
+import axios from 'axios'
 
-const Index = () => {
+
+
+const Index = (props) => {
+  const {isLogin, setIsLogin} = props;
+  const email = useRef('')
+  const password = useRef('')
+  const [isLoading, setIsLoading] = useState(false)
+  
+
+  if(isLogin) {
+    return <Redirect to='/' />
+  }
+
+  const handleLogin = async() => {
+    setIsLoading(true)
+    await axios({
+      url: 'http://206.189.91.54/api/v1/auth/sign_in',
+      data: {
+        'email': email.current.value,
+        'password': password.current.value,
+      },
+      headers: {},
+      method: 'POST'
+    })
+    .then((res) => 
+      {
+          if(res.status === 200){
+            return (
+            setIsLogin(true),
+            setIsLoading(false))
+          }
+      } 
+    )
+    .catch((err) => console.log(`Error in Login`, err))
+  }
+
+
     return (
         <>
          <Box
@@ -78,6 +118,7 @@ const Index = () => {
                   type="email"
                   value={values.email}
                   variant="outlined"
+                  inputRef={email}
                 />
                 <TextField
                   error={Boolean(touched.password && errors.password)}
@@ -91,6 +132,7 @@ const Index = () => {
                   type="password"
                   value={values.password}
                   variant="outlined"
+                  inputRef={password}
                 />
                 <Box sx={{ py: 2 }}>
                   <Button
@@ -100,6 +142,7 @@ const Index = () => {
                     size="large"
                     type="submit"
                     variant="contained"
+                    onClick={() => handleLogin()}
                   >
                     Sign in now
                   </Button>

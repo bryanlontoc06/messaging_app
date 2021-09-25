@@ -1,18 +1,55 @@
-import { Link as RouterLink , Redirect} from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
+import { Link as RouterLink, useHistory} from 'react-router-dom';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import {
+  Container, 
+  Button, 
+  Link, 
   Box,
-  Checkbox,
-  FormHelperText,
+  // Checkbox,
+  // FormHelperText,
   TextField,
-  Typography
-} from '@mui/material';
-import {Container, Button, Link} from './components'
+  Typography} from './components'
+import axios from 'axios'
+import Snackbar from '../Snackbars'
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
 
-const Register = () => {
 
 
+
+
+
+
+const Register = (props) => {
+  const {isLogin, setIsLogin} = props;
+  const email = useRef('')
+  const password = useRef('')
+  const retypePassword = useRef('')
+
+  const [responseMessage, setResponseMessage] = useState('')
+  const [state, setState] = useState({
+    open: false,
+    loading: false,
+    response: '',
+    responseMessage: ''
+  });
+
+  const history = useHistory();
+
+  const handleClose = (event, reason) => {
+      if (reason === 'clickaway') {
+        return;
+      };
+      setState({
+        open: false,
+      })
+  };
+
+
+  console.log('rerender')
+  console.log(`message`, responseMessage)
 
   return (
     <>
@@ -39,14 +76,49 @@ const Register = () => {
             Yup.object().shape({
               email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
               password: Yup.string().max(255).required('Password is required'),
-              retypepassword: Yup.string().max(255).required('Retype Password is required').oneOf([Yup.ref('password'), null], 'Retype Passwords must match'),
-              policy: Yup.boolean().oneOf([true], 'This field must be checked')
+              retypepassword: Yup.string().max(255).required('Retype password is required').oneOf([Yup.ref('password'), null], 'Passwords must match'),
+              // policy: Yup.boolean().oneOf([true], 'This field must be checked')
             })
           }
-            onSubmit={() => {
-              console.log('testttt')
+            onSubmit={async() => {
+              setState({loading: true})
+                await axios({
+                  url: 'http://206.189.91.54/api/v1/auth',
+                  data: {
+                    'email': email.current.value,
+                    'password': password.current.value,
+                    'password_confirmation': retypePassword.current.value,
+                  },
+                  headers: {},
+                  method: 'POST'
+                })
+                .then((res) => 
+                  {
+                      if(res.status === 200){
+                          setState({response: res})
+                          setResponseMessage(`Registered successfully!`)
+                          setState({open: true})
+                      }
+                      setTimeout(() => {
+                        setState({loading: false})
+                        history.push('/login')
+                      }, 800)
+                  }
+                )
+                .catch((err) => 
+                  {
+                    if(err.response.status === 422) {
+                      setState({response: err.response})
+                      setState({loading: false})
+                    }
+                    setResponseMessage(err.response.data?.errors?.full_messages[err.response.data?.errors?.full_messages.length - 1])
+                  },
+                )
+                setState({open: true})
+                console.log(`message`, responseMessage) 
             }}
           >
+            
             {({
               errors,
               handleBlur,
@@ -85,6 +157,7 @@ const Register = () => {
                   type="email"
                   value={values.email}
                   variant="outlined"
+                  inputRef={email}
                 />
                 <TextField
                   error={Boolean(touched.password && errors.password)}
@@ -98,6 +171,7 @@ const Register = () => {
                   type="password"
                   value={values.password}
                   variant="outlined"
+                  inputRef={password}
                 />
                 <TextField
                   error={Boolean(touched.retypepassword && errors.retypepassword)}
@@ -111,41 +185,8 @@ const Register = () => {
                   type="password"
                   value={values.retypepassword}
                   variant="outlined"
+                  inputRef={retypePassword}
                 />
-                <Box
-                  sx={{
-                    alignItems: 'center',
-                    display: 'flex',
-                    ml: -1
-                  }}
-                >
-                  <Checkbox
-                    checked={values.policy}
-                    name="policy"
-                    onChange={handleChange}
-                  />
-                  <Typography
-                    color="textSecondary"
-                    variant="body1"
-                  >
-                    I have read the
-                    {' '}
-                    <Link
-                      color="primary"
-                      component={RouterLink}
-                      to="#"
-                      underline="always"
-                      variant="h6"
-                    >
-                      Terms and Conditions
-                    </Link>
-                  </Typography>
-                </Box>
-                {Boolean(touched.policy && errors.policy) && (
-                <FormHelperText error>
-                  {errors.policy}
-                </FormHelperText>
-                )}
                 <Box sx={{ py: 2 }}>
                   <Button
                     color="primary"
@@ -155,6 +196,15 @@ const Register = () => {
                     type="submit"
                     variant="contained"
                   >
+                    {state.loading && 
+                    <Backdrop
+                      sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                      open={true}
+                      onClick={handleClose}
+                    >
+                      <CircularProgress color="inherit" />
+                    </Backdrop>
+                    }
                     Sign up now
                   </Button>
                 </Box>
@@ -172,6 +222,16 @@ const Register = () => {
             )}
           </Formik>
         </Container>
+          <Snackbar 
+            isOpen={state.open} 
+            close={handleClose}
+            message={responseMessage}
+            status={
+              responseMessage === 'Password is too short (minimum is 6 characters)' ||
+              responseMessage === 'Email has already been taken'
+               ? 
+            'warning' : 'success'}
+          />
       </Box>
     </>
   );

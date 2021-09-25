@@ -36,6 +36,8 @@ import Typography from '@mui/material/Typography';
 import channel_logo from '../../assets/sampleLogo.png'
 import ChatUserProfileComponent from './ChatUserProfileComponent'
 import UserChatBoxComponent from './UserChatBoxComponent';
+import { Redirect } from 'react-router-dom';
+import { Logout } from '@mui/icons-material';
 
 const useStyles = makeStyles({
     avatarSize: {
@@ -62,11 +64,20 @@ const style = {
     p: 4,
   };
 
-const Index = () => {
+const Index = (props) => {
+    const {authorized, setIsLogin} = props
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+    console.log({authorized})
+    if(!authorized) {
+        return <Redirect to='/login'/>
+    }
+
+    const handleLogout = () => {
+        setIsLogin(false)
+    }
     return (
         <Container>
            <LogoContainer>
@@ -175,6 +186,8 @@ const Index = () => {
                 </Typography>
                 </Box>
             </Modal>
+
+            <button onClick={() => handleLogout()}>Log out</button>
         </Container>
     )
 }
