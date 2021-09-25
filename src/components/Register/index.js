@@ -28,12 +28,12 @@ const Register = (props) => {
   const password = useRef('')
   const retypePassword = useRef('')
 
-  const [responseMessage, setResponseMessage] = useState('')
   const [state, setState] = useState({
     open: false,
     loading: false,
     response: '',
-    responseMessage: ''
+    responseMessage: '',
+    warning: false,
   });
 
   const history = useHistory();
@@ -43,13 +43,10 @@ const Register = (props) => {
         return;
       };
       setState({
-        open: false,
+        ...state, open: false,
       })
   };
 
-
-  console.log('rerender')
-  console.log(`message`, responseMessage)
 
   return (
     <>
@@ -81,7 +78,7 @@ const Register = (props) => {
             })
           }
             onSubmit={async() => {
-              setState({loading: true})
+              setState({...state, loading: true})
                 await axios({
                   url: 'http://206.189.91.54/api/v1/auth',
                   data: {
@@ -95,27 +92,34 @@ const Register = (props) => {
                 .then((res) => 
                   {
                       if(res.status === 200){
-                          setState({response: res})
-                          setResponseMessage(`Registered successfully!`)
-                          setState({open: true})
+                          setState({...state, 
+                            open: true,
+                            loading: false,
+                            response: res,
+                            responseMessage: `Registered successfully!`,
+                            warning: false
+                          })
+                          setTimeout(() => {
+                            history.push('/login')
+                          }, 1500)
                       }
-                      setTimeout(() => {
-                        setState({loading: false})
-                        history.push('/login')
-                      }, 800)
-                  }
-                )
-                .catch((err) => 
-                  {
-                    if(err.response.status === 422) {
-                      setState({response: err.response})
-                      setState({loading: false})
-                    }
-                    setResponseMessage(err.response.data?.errors?.full_messages[err.response.data?.errors?.full_messages.length - 1])
                   },
                 )
-                setState({open: true})
-                console.log(`message`, responseMessage) 
+                .catch((err) =>
+                  { 
+                    const {full_messages} = err.response.data?.errors;
+                    console.log({full_messages})
+                    if(err.response.status === 422) {
+                      setState({...state, 
+                        open: true,
+                        loading: false,
+                        response: err.response, 
+                        responseMessage: full_messages[full_messages.length - 1], 
+                        warning: true
+                      })
+                    }
+                  }
+                )
             }}
           >
             
@@ -225,12 +229,8 @@ const Register = (props) => {
           <Snackbar 
             isOpen={state.open} 
             close={handleClose}
-            message={responseMessage}
-            status={
-              responseMessage === 'Password is too short (minimum is 6 characters)' ||
-              responseMessage === 'Email has already been taken'
-               ? 
-            'warning' : 'success'}
+            message={state.responseMessage}
+            status={state.warning ? 'warning' : 'success'}
           />
       </Box>
     </>

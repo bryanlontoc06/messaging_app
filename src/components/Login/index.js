@@ -1,5 +1,5 @@
 import React, {useRef, useState} from 'react'
-import { Link as RouterLink, Redirect } from 'react-router-dom';
+import { Link as RouterLink, useHistory } from 'react-router-dom';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import {
@@ -11,6 +11,9 @@ import {
   Typography
 } from './components'
 import axios from 'axios'
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
+import Snackbar from '../Snackbars'
 
 
 
@@ -18,36 +21,65 @@ const Index = (props) => {
   const {isLogin, setIsLogin} = props;
   const email = useRef('')
   const password = useRef('')
-  const [isLoading, setIsLoading] = useState(false)
+  const [state, setState] = useState({
+    open: false,
+    isLoading: false,
+    responseMessage: '',
+    warning: false
+  })
+  const history = useHistory();
   
 
-  if(isLogin) {
-    return <Redirect to='/' />
-  }
-
   const handleLogin = async() => {
-    setIsLoading(true)
-    await axios({
-      url: 'http://206.189.91.54/api/v1/auth/sign_in',
-      data: {
-        'email': email.current.value,
-        'password': password.current.value,
-      },
-      headers: {},
-      method: 'POST'
-    })
-    .then((res) => 
+    if(email.current.value.length > 0 && password.current.value.length > 0)  {
+      setState({isLoading: true})
+      await axios({
+        url: 'http://206.189.91.54/api/v1/auth/sign_in',
+        data: {
+          'email': email.current.value,
+          'password': password.current.value,
+        },
+        headers: {},
+        method: 'POST'
+      })
+      .then((res) => 
+        {
+            if(res.status === 200){     
+              setState({...state, open: true})
+              setIsLogin(true)
+            }
+            setTimeout(() => {
+              setState({...state, isLoading: false})
+              history.push('/')
+            },)
+        } 
+      )
+      .catch((err) => 
       {
-          if(res.status === 200){
-            return (
-            setIsLogin(true),
-            setIsLoading(false))
-          }
-      } 
-    )
-    .catch((err) => console.log(`Error in Login`, err))
+          const { errors } = err.response.data;
+          if(err.response.status === 401) {
+            setState({...state, 
+              open: true,
+              isLoading: false,
+              responseMessage: errors[errors.length - 1],
+              warning: true
+            })
+          }   
+        }
+      )
+    } else {
+      setState({...state, open: true, responseMessage: 'Please complete the following fields', warning: true})
+    }
   }
 
+  const handleClose = (event, reason) => {
+      if (reason === 'clickaway') {
+        return;
+      };
+      setState({
+        ...state, open: false,
+      })
+  };
 
     return (
         <>
@@ -137,7 +169,7 @@ const Index = (props) => {
                 <Box sx={{ py: 2 }}>
                   <Button
                     color="primary"
-                    disabled={isSubmitting}
+                    disabled={!state.warning && isSubmitting}
                     fullWidth
                     size="large"
                     type="submit"
@@ -161,6 +193,21 @@ const Index = (props) => {
             )}
           </Formik>
         </Container>
+        {state.isLoading && 
+          <Backdrop
+            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            open={true}
+            // onClick={handleClose}
+          >
+            <CircularProgress color="inherit" />
+          </Backdrop>
+          }
+          <Snackbar 
+            isOpen={state.open} 
+            close={handleClose}
+            message={state.responseMessage}
+            status={state.warning ? 'warning': 'success'}
+          />
         </Box>   
         </>
     )
