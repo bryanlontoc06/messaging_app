@@ -5,25 +5,43 @@
 // import HeaderComponent from './Header.js';
 // import FooterComponent from './Footer.js';
 
-
+import React, {useEffect} from "react";
 import {
     BrowserRouter as Router,
     Switch,
     Route,
-    useLocation,
-    Redirect
   } from "react-router-dom";
 
 import SwitchComponent from '../Routes';
-import useHooks from './hooks'
+import useHooks from './hooks';
+import Cookies from 'js-cookie'
 
 
 const Index = () => {
-    const {
-        isLogin,
-        setIsLogin
-      } = useHooks();
+    const { isLogin,
+        setIsLogin,
+        loginUser,
+        setLoginUser } = useHooks();
     
+    const readCookie = () => {
+        const user = Cookies.get("user")
+        if(user) {
+            setIsLogin(true)
+        } else {
+            setIsLogin(false)
+        }
+    } 
+
+    useEffect(() => {
+        readCookie();
+        if(window.location.pathname === '/') 
+        {
+            window.location.pathname = `/app/${loginUser.data.data?.id}`
+        }
+        // } else {
+        //     window.location.pathname = `/login`
+        // }
+    }, [])
     return (
         <>
             {/* <Router>
@@ -36,9 +54,7 @@ const Index = () => {
                 <SwitchComponent 
                     Switch={Switch} 
                     Route={Route} 
-                    useLocation={useLocation}
                     isLogin={isLogin}
-                    setIsLogin={setIsLogin}
                 />
             </Router>
         </>

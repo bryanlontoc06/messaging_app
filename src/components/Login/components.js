@@ -9,20 +9,20 @@ import MaterialBox from '@mui/material/Box';
 
 
 export const Container = styled(MaterialContainer) `
-    display: flex;
-    align-items: center;
-    height: 100vh;
-    font-family: 'Source Sans Pro', sans-serif;
+    display: flex !important;
+    align-items: center !important;
+    height: 100vh !important;
+    font-family: 'Source Sans Pro', sans-serif !important;
 `
 export const Button = styled(MaterialButton) `
-    background: #34495e;
+    background: #34495e !important;
     &:hover {
-        opacity: 0.9;
-        background: #34495e;
+        opacity: 0.9 !important;
+        background: #34495e !important;
     }
 `
 export const Link = styled(MaterialLink) `
-    color: #34495e;
+    color: #34495e !important;
 `
 export const Box = styled(MaterialBox) ``
 export const TextField = styled(MaterialTextField) ``

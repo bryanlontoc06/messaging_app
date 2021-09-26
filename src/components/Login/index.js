@@ -1,5 +1,5 @@
 import React, {useRef, useState} from 'react'
-import { Link as RouterLink, useHistory } from 'react-router-dom';
+import { Link as RouterLink, useHistory, Redirect } from 'react-router-dom';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import {
@@ -14,24 +14,32 @@ import axios from 'axios'
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Snackbar from '../Snackbars'
+import useHooks from './hooks'
+import Cookies from 'js-cookie'
 
 
 
 const Index = (props) => {
-  const {isLogin, setIsLogin} = props;
+  const {isLogin,
+    setIsLogin, 
+    loginUser, 
+    setLoginUser} = useHooks();
+  const { authorized } = props;
   const email = useRef('')
   const password = useRef('')
   const [state, setState] = useState({
     open: false,
     isLoading: false,
+    response: '',
     responseMessage: '',
-    warning: false
+    warning: false,
   })
   const history = useHistory();
-  
 
+
+  
+  // Creating a User Session
   const handleLogin = async() => {
-    if(email.current.value.length > 0 && password.current.value.length > 0)  {
       setState({isLoading: true})
       await axios({
         url: 'http://206.189.91.54/api/v1/auth/sign_in',
@@ -44,13 +52,20 @@ const Index = (props) => {
       })
       .then((res) => 
         {
+            // var date = new Date();
+            // date.setTime(date.getTime() + (30 * 1000));
             if(res.status === 200){     
-              setState({...state, open: true})
+              Cookies.set('user', 'loginTrue', { expires: 1 })
+              setState({...state, 
+                open: true,
+                response: res?.data,
+              })
+              setLoginUser(res)
               setIsLogin(true)
             }
             setTimeout(() => {
               setState({...state, isLoading: false})
-              history.push('/')
+              history.push(`/app/${res.data?.data.id}`)
             },)
         } 
       )
@@ -67,10 +82,8 @@ const Index = (props) => {
           }   
         }
       )
-    } else {
-      setState({...state, open: true, responseMessage: 'Please complete the following fields', warning: true})
-    }
   }
+
 
   const handleClose = (event, reason) => {
       if (reason === 'clickaway') {
@@ -208,7 +221,7 @@ const Index = (props) => {
             message={state.responseMessage}
             status={state.warning ? 'warning': 'success'}
           />
-        </Box>   
+        </Box>
         </>
     )
 }

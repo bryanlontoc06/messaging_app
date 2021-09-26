@@ -28,7 +28,7 @@ import {
     ChatsContainer,
     ChatsMessageandChatInput
 } from './components'
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import { makeStyles } from '@material-ui/styles';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
@@ -36,8 +36,12 @@ import Typography from '@mui/material/Typography';
 import channel_logo from '../../assets/sampleLogo.png'
 import ChatUserProfileComponent from './ChatUserProfileComponent'
 import UserChatBoxComponent from './UserChatBoxComponent';
-import { Redirect } from 'react-router-dom';
-import { Logout } from '@mui/icons-material';
+import { Redirect } from 'react-router-dom';    
+import Popover from '@mui/material/Popover';
+import useHooks from './hooks'
+import axios from 'axios';
+import Cookies from 'js-cookie';
+
 
 const useStyles = makeStyles({
     avatarSize: {
@@ -65,20 +69,74 @@ const style = {
   };
 
 const Index = (props) => {
-    const {authorized, setIsLogin} = props
+    const { authorized } = props;
     const classes = useStyles();
+    const {isLogin,
+        setIsLogin, 
+        loginUser, 
+        setLoginUser} = useHooks();
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-    console.log({authorized})
-    if(!authorized) {
-        return <Redirect to='/login'/>
-    }
+    const [channels, setChannels] = useState()
+    const [selectChannel, setSelectChannel] = useState('')
 
+
+    // Pop Over
+    const [anchorEl, setAnchorEl] = useState(null);
+    const handleClickPopOver = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClosePopOver = () => {
+        setAnchorEl(null);
+    };
+    const openPopOver = Boolean(anchorEl);
+    const idPopOver = open ? 'simple-popover' : undefined;
+    // Pop Over
+    
+
+    // Retrieve All Channels where was invited
+    useEffect(() => {
+        axios({
+            url: 'http://206.189.91.54/api/v1/channels',
+            data: {},
+            headers: {
+                'access-token': loginUser.headers?.['access-token'],
+                'client': loginUser.headers?.client,
+                'expiry': loginUser.headers?.expiry,
+                'uid': loginUser.headers?.uid
+            } || {},
+            method: 'GET'
+            })  
+            .then((res) => 
+                {
+                    if(isLogin){
+                        setChannels(res?.data)
+                        // setIsLogin(true)
+                    }
+                }
+            )
+            .catch((err) => {
+                if(!isLogin){
+                    return
+                } else {
+                    console.error('Error in main page', err)
+                }
+            })
+    }, [])
+
+
+    // if(!authorized) {
+    //     return <Redirect exact to='/login'/>
+    // }
     const handleLogout = () => {
         setIsLogin(false)
+        Cookies.remove('user')
+        setLoginUser({});
     }
+    
     return (
+        <> 
         <Container>
            <LogoContainer>
                 <Logo src={channel_logo } />
@@ -89,9 +147,12 @@ const Index = (props) => {
                    <ChannelsAndMessagesContainer>
                     <ChannelsTitleHeader>Channels <AddIcon /></ChannelsTitleHeader>
                     <ChannelsContainer>
-                        <Channel><LockIcon/>Batch 11</Channel>
+                        {channels?.data.map((data) => {
+                            return (<Channel key={data.id} active={selectChannel.id === data.id} onClick={() => setSelectChannel(data)}>{/*<LockIcon/>*/}{data.name}</Channel>)
+                        })}
+                        {/* <Channel active={true}><LockIcon/>Batch 11</Channel>
                         <Channel><LockIcon/>Batch 12</Channel>
-                        <Channel><LockIcon/>Batch 13</Channel>
+                        <Channel><LockIcon/>Batch 13</Channel> */}
                     </ChannelsContainer>
                     <ChannelsTitleHeader>Direct Messages <AddIcon /></ChannelsTitleHeader>
                     <ChannelsContainer>
@@ -113,15 +174,15 @@ const Index = (props) => {
                                 placeholder="Search Avion School"
                             />
                         </ContentChannelSearchBox>
-                        <ContentUserProfileContainer>
+                        <ContentUserProfileContainer onClick={handleClickPopOver}>
                             <Avatar sx={{ bgcolor: 'green' }} variant="rounded">
-                                M
+                                {loginUser.data?.data ? loginUser.data.data?.email.split("@")[0].charAt(0).toUpperCase() : null}
                             </Avatar>
                         </ContentUserProfileContainer>
                    </ContentChatBoxHeader>
                    <ContentChatBoxBody>
                        <ChatBoxAddUserContainer>
-                        <ContentChatBoxChannelTitle>Batch11</ContentChatBoxChannelTitle>
+                        <ContentChatBoxChannelTitle>{selectChannel.name}</ContentChatBoxChannelTitle>
                         <AvatarnButton>
                             <AvatarGroup max={5} variant="rounded" className={classes.avatarSize} >
                                 <AvatarSmallGroup alt="Remy Sharp" src="/static/images/avatar/1.jpg" variant="rounded" />
@@ -187,9 +248,28 @@ const Index = (props) => {
                 </Box>
             </Modal>
 
-            <button onClick={() => handleLogout()}>Log out</button>
+            
+            <div>
+                <Popover
+                    id={idPopOver}
+                    open={openPopOver}
+                    anchorEl={anchorEl}
+                    onClose={handleClosePopOver}
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                    }}
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'center',
+                    }}
+                >
+                    <Typography sx={{ p: 2 }} style={{cursor: 'pointer'}} onClick={() => handleLogout()}>Logout</Typography>
+                </Popover>
+            </div>
         </Container>
+        </>
     )
 }
 
-export default Index
+export default Index;

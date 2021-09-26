@@ -77,6 +77,8 @@ const Register = (props) => {
               // policy: Yup.boolean().oneOf([true], 'This field must be checked')
             })
           }
+
+          // User Registration
             onSubmit={async() => {
               setState({...state, loading: true})
                 await axios({

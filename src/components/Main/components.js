@@ -53,7 +53,7 @@ export const TextField = styled(MaterialTextField) `
     width: 100%;
 `
 export const ContentUserProfileContainer = styled.div `
-   
+    cursor: pointer;
 `
 export const Avatar = styled(MaterialAvatar) `
     width: 38px !important;
@@ -75,7 +75,34 @@ export const AddIcon = styled(MaterialAddIcon) `
     font-weight: bold;
     cursor: pointer;
 `
-export const ChannelsContainer = styled.div ``
+export const ChannelsContainer = styled.div `
+    height: calc(100vh - 31rem);
+    overflow-y: hidden;
+    
+    &:hover {
+        overflow-y: scroll;
+        transition: overflow-y 2s;
+        transition-timing-function: ease-in-out;
+    }
+    /* width */
+    &::-webkit-scrollbar {
+    width: 10px;
+    }
+    /* Track */
+    &::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+    }
+    
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+    background: #888; 
+    }
+
+    /* Handle on hover */
+    &::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+    }
+`
 export const Channel = styled.div `
     font-size: 1rem;
     font-weight: 600;
@@ -85,9 +112,9 @@ export const Channel = styled.div `
     gap: 5px;
     padding: 0.6875rem 0rem 0.6875rem 1.9375rem;
     margin-top: 0.8125rem;
-    background: #ffffff;
+    background: ${props => props.active ? '#fff' : '' };
     border-radius: 7px;
-    border-left: 5px solid #9b59b6;
+    border-left: 5px solid ${props => props.active ? '#9b59b6' : '#fff' };
     cursor: pointer;
 `
 export const LockIcon = styled(MaterialLockIcon) `
@@ -199,7 +226,9 @@ export const ChatUsernTime = styled.div `
     display: flex;
     gap: 9px;
 `
-export const ChatUserName = styled.div ``
+export const ChatUserName = styled.div `
+    cursor: pointer;
+`
 export const ChatUserTime = styled.div `
     font-weight: 400 !important;
 `   
