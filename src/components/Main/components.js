@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { makeStyles } from '@material-ui/styles';
 import MaterialTextField from '@mui/material/TextField';
 import MaterialAvatar from '@mui/material/Avatar';
 import MaterialAddIcon from '@mui/icons-material/Add';
@@ -6,6 +7,31 @@ import MaterialLockIcon from '@mui/icons-material/Lock';
 import MaterialButton from '@mui/material/Button'
 import MaterialAvatarGroup from '@mui/material/AvatarGroup';
 
+
+export const useStyles = makeStyles({
+    avatarSize: {
+        '& .MuiAvatar-root.MuiAvatar-rounded.MuiAvatar-colorDefault.MuiAvatarGroup-avatar.css-16fxgir-MuiAvatar-root-MuiAvatarGroup-avatar': {
+            width: '24px',
+            height: '24px',
+            fontSize: '0.75rem',
+            background: 'unset',
+            fontFamily: 'Source Sans Pro',
+            color: '#34495e'
+        }
+    }
+});
+
+export const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '3px solid #34495e',
+    boxShadow: 24,
+    p: 4,
+  };
 
 export const Container = styled.div `
     background: #f6f7fb;
@@ -250,4 +276,49 @@ export const ChatsMessageandChatInput = styled.div `
     bottom: 26px;
     right: 18px;
     left: 58px;
+`
+export const UidInputContainer = styled.div `
+    border: solid 1px #979797;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.625rem;
+`
+export const ButtonAddUser = styled(Button) `
+    margin-top: 1rem !important;
+`
+export const UsersContainer = styled.div `
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 31rem);
+    overflow-y: hidden;
+    &:hover {
+        overflow-y: scroll;
+        transition: overflow-y 2s;
+        transition-timing-function: ease-in-out;
+    }
+    /* width */
+    &::-webkit-scrollbar {
+    width: 10px;
+    }
+    /* Track */
+    &::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+    }
+    
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+    background: #888; 
+    }
+
+    /* Handle on hover */
+    &::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+    }
+`
+export const User = styled.span `
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 600;
+    color: #85929e;
+    cursor: pointer;
 `

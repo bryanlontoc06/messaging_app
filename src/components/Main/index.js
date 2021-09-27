@@ -1,4 +1,6 @@
 import {
+    style,
+    useStyles,
     Container, 
     LogoContainer, 
     Logo,
@@ -26,60 +28,66 @@ import {
     AvatarnButton,
     ChatInput,
     ChatsContainer,
-    ChatsMessageandChatInput
+    ChatsMessageandChatInput,
+    UidInputContainer,
+    ButtonAddUser,
+    UsersContainer,
+    User
 } from './components'
-import {useState, useEffect} from 'react'
-import { makeStyles } from '@material-ui/styles';
+import {useState, useEffect, useRef} from 'react'
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import channel_logo from '../../assets/sampleLogo.png'
 import ChatUserProfileComponent from './ChatUserProfileComponent'
 import UserChatBoxComponent from './UserChatBoxComponent';
-import { Redirect } from 'react-router-dom';    
 import Popover from '@mui/material/Popover';
 import useHooks from './hooks'
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import ModalAddChannelComponent from './NewChannelComponent'
+import {emailRemover} from '../helpers/helpers'
 
 
-const useStyles = makeStyles({
-    avatarSize: {
-        '& .MuiAvatar-root.MuiAvatar-rounded.MuiAvatar-colorDefault.MuiAvatarGroup-avatar.css-16fxgir-MuiAvatar-root-MuiAvatarGroup-avatar': {
-            width: '24px',
-            height: '24px',
-            fontSize: '0.75rem',
-            background: 'unset',
-            fontFamily: 'Source Sans Pro',
-            color: '#34495e'
-        }
-    }
-});
 
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '3px solid #34495e',
-    boxShadow: 24,
-    p: 4,
-  };
 
-const Index = (props) => {
-    const { authorized } = props;
+const Index = () => {
     const classes = useStyles();
     const {isLogin,
         setIsLogin, 
         loginUser, 
         setLoginUser} = useHooks();
-    const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    const addUserEmail = useRef('')
     const [channels, setChannels] = useState()
     const [selectChannel, setSelectChannel] = useState('')
+    const [users, setUsers] = useState('')
+    
+    // Modal for Adding User in a Channel
+    const [open, setOpen] = useState(false);
+    const handleOpen = async() => {
+        await axios({
+            url: 'http://206.189.91.54/api/v1/users',
+            data: {},
+            headers: {
+                'access-token': loginUser.headers?.['access-token'],
+                'client': loginUser.headers?.client,
+                'expiry': loginUser.headers?.expiry,
+                'uid': loginUser.headers?.uid
+            } || {},
+            method: 'GET'
+        })  
+        .then((res) => 
+            setUsers(res)
+        )
+        .catch((err) => {
+            console.log(err)
+        })
+        setOpen(true)
+    };
+    const handleClose = () => setOpen(false);
+
+
+  
 
 
     // Pop Over
@@ -93,6 +101,19 @@ const Index = (props) => {
     const openPopOver = Boolean(anchorEl);
     const idPopOver = open ? 'simple-popover' : undefined;
     // Pop Over
+
+
+    // Add Channel Modal
+    const [openAddChannel, setOpenAddChannel] = useState(false);
+    const handleOpenAddChannel = () => setOpenAddChannel(true);
+    const handleCloseChannel = () => setOpenAddChannel(false);
+    // Add Channel Modal
+
+
+    // Function for adding a user in a channel
+    const handleAddUser = async () => {
+        console.log(addUserEmail.current.value)
+    }
     
 
     // Retrieve All Channels where was invited
@@ -135,6 +156,8 @@ const Index = (props) => {
         setLoginUser({});
     }
     
+
+    console.log(users.data?.data)
     return (
         <> 
         <Container>
@@ -145,7 +168,7 @@ const Index = (props) => {
                <ContentChannelSection>
                    <ContentChannelTitle>Avion School</ContentChannelTitle>
                    <ChannelsAndMessagesContainer>
-                    <ChannelsTitleHeader>Channels <AddIcon /></ChannelsTitleHeader>
+                    <ChannelsTitleHeader>Channels <AddIcon onClick={handleOpenAddChannel}/></ChannelsTitleHeader>
                     <ChannelsContainer>
                         {channels?.data.map((data) => {
                             return (<Channel key={data.id} active={selectChannel.id === data.id} onClick={() => setSelectChannel(data)}>{/*<LockIcon/>*/}{data.name}</Channel>)
@@ -176,7 +199,7 @@ const Index = (props) => {
                         </ContentChannelSearchBox>
                         <ContentUserProfileContainer onClick={handleClickPopOver}>
                             <Avatar sx={{ bgcolor: 'green' }} variant="rounded">
-                                {loginUser.data?.data ? loginUser.data.data?.email.split("@")[0].charAt(0).toUpperCase() : null}
+                                {loginUser.data?.data ? emailRemover(loginUser.data.data?.email).charAt(0).toUpperCase() : null}
                             </Avatar>
                         </ContentUserProfileContainer>
                    </ContentChatBoxHeader>
@@ -231,6 +254,7 @@ const Index = (props) => {
                </ContentChatBoxSection>
            </ContentContainer>
 
+            {/* Modal for Add User  */}
            <Modal
                 keepMounted
                 open={open}
@@ -240,15 +264,34 @@ const Index = (props) => {
             >
                 <Box sx={style}>
                 <Typography id="keep-mounted-modal-title" variant="h6" component="h2">
-                    Text in a modal
+                    Add a User
                 </Typography>
                 <Typography id="keep-mounted-modal-description" sx={{ mt: 2 }}>
-                    Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+                    <UidInputContainer>
+                        <TextField 
+                            id="standard-basic"
+                            variant="standard" 
+                            InputProps={{ 
+                                disableUnderline: true, 
+                                classes: {
+                                input: classes.resize,
+                            }, }}
+                            inputRef={addUserEmail}
+                            placeholder="Input email"
+                        />
+                    </UidInputContainer>
+                    <UsersContainer>
+                        {users.data?.data.slice(0,20).map((user) => {
+                            return (<User>{emailRemover(user.uid)}<AddIcon /></User>)
+                        })}
+                    </UsersContainer>
+                    
+                    <ButtonAddUser variant="contained" onClick={handleAddUser} >Accept</ButtonAddUser>
                 </Typography>
                 </Box>
             </Modal>
 
-            
+            {/* For Logout */}
             <div>
                 <Popover
                     id={idPopOver}
@@ -267,6 +310,12 @@ const Index = (props) => {
                     <Typography sx={{ p: 2 }} style={{cursor: 'pointer'}} onClick={() => handleLogout()}>Logout</Typography>
                 </Popover>
             </div>
+
+            {/* Modal for Add Channel */}
+            <ModalAddChannelComponent
+                openAddChannel={openAddChannel}
+                handleCloseChannel={handleCloseChannel}
+            />
         </Container>
         </>
     )
