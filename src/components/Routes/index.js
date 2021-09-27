@@ -11,13 +11,14 @@ import Login from '../Login'
 import Register from "../Register";
 
 const Index = (props) => {
-  const {Switch, Route, isLogin} = props;
+  const {Switch, Route, isLogin, loginUser} = props;
   return (
     <>
       <Switch>
           <Route exact path="/app/:id" component={() => isLogin ? <MainPage/> : <Redirect to='/login'/>} />
-          <Route exact path="/login" component={() => !isLogin ? <Login /> : <Redirect to='/'/>} />
-          <Route exact path="/register" component={() => <Register />} />
+          <Route exact path="/login" component={() => isLogin ? <Redirect to={`/app/${loginUser.data?.data?.id}`}/> : <Login />} />
+          <Route exact path="/" component={() => isLogin ? <Redirect to={`/app/${loginUser.data?.data?.id}`}/> : <Login />} />
+          <Route exact path="/register" component={() => isLogin ? <Redirect to={`/app/${loginUser.data?.data?.id}`}/> : <Register />} />
       </Switch>
     </>
   )
