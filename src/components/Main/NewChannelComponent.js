@@ -35,7 +35,7 @@ const Index = (props) => {
                 timeout: 500,
                 }}
             >
-                <Fade in={true}>
+                <Fade in={openAddChannel}>
                     <Box sx={style}>
                         <Typography id="transition-modal-title" variant="h6" component="h2">
                         Text in a modal
