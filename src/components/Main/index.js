@@ -32,11 +32,11 @@ import {
     UidInputContainer,
     ButtonAddUser,
     UsersContainer,
-    User
+    User,
+    AddIconAddUser
 } from './components'
 import {useState, useEffect, useRef} from 'react'
-import Box from '@mui/material/Box';
-import Modal from '@mui/material/Modal';
+
 import Typography from '@mui/material/Typography';
 import channel_logo from '../../assets/sampleLogo.png'
 import ChatUserProfileComponent from './ChatUserProfileComponent'
@@ -45,8 +45,11 @@ import Popover from '@mui/material/Popover';
 import useHooks from './hooks'
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import ModalAddChannelComponent from './NewChannelComponent'
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
+import AddChannelModalComponent from './NewChannelComponent'
 import {emailRemover} from '../helpers/helpers'
+import AddUserModalComponent from './AddUserComponent'
 
 
 
@@ -61,33 +64,44 @@ const Index = () => {
     const [channels, setChannels] = useState()
     const [selectChannel, setSelectChannel] = useState('')
     const [users, setUsers] = useState('')
+    const [searchUser, setSearchUser] = useState('')
+    const [searchResults, setSearchResults] = useState('')
     
     // Modal for Adding User in a Channel
+    const [isLoading, setIsLoading] = useState(false)
     const [open, setOpen] = useState(false);
     const handleOpen = async() => {
-        await axios({
-            url: 'http://206.189.91.54/api/v1/users',
-            data: {},
-            headers: {
-                'access-token': loginUser.headers?.['access-token'],
-                'client': loginUser.headers?.client,
-                'expiry': loginUser.headers?.expiry,
-                'uid': loginUser.headers?.uid
-            } || {},
-            method: 'GET'
-        })  
-        .then((res) => 
-            setUsers(res)
-        )
-        .catch((err) => {
-            console.log(err)
-        })
         setOpen(true)
+        if(users.data?.data){
+            setIsLoading(false)
+        } else {
+            setIsLoading(true)
+            await axios({
+                url: 'http://206.189.91.54/api/v1/users',
+                data: {},
+                headers: {
+                    'access-token': loginUser.headers?.['access-token'],
+                    'client': loginUser.headers?.client,
+                    'expiry': loginUser.headers?.expiry,
+                    'uid': loginUser.headers?.uid
+                } || {},
+                method: 'GET'
+            })  
+            .then((res) => 
+                {
+                    if(res.status === 200) {
+                        setIsLoading(false)
+                        setUsers(res)
+                    } 
+                }
+            )
+            .catch((err) => {
+                console.log(err)
+            })
+        }
     };
     const handleClose = () => setOpen(false);
 
-
-  
 
 
     // Pop Over
@@ -156,8 +170,25 @@ const Index = () => {
         setLoginUser({});
     }
     
+    const searchHandler = (searchUser) => {
+        setSearchUser(searchUser)
+        if(searchUser !== "") {
+            const newUsersList = users.data?.data.filter((user) => {
+                return Object.values(user)
+                .join(" ")
+                .toLowerCase()
+                .includes(searchUser.toLowerCase())
+            })
+            setSearchResults(newUsersList)
+        } else {
+            setSearchResults(users.data?.data)
+        }
+    }
 
-    console.log(users.data?.data)
+    const getSearchUser = () => {
+        searchHandler(addUserEmail.current.value)
+    }
+  
     return (
         <> 
         <Container>
@@ -255,41 +286,28 @@ const Index = () => {
            </ContentContainer>
 
             {/* Modal for Add User  */}
-           <Modal
-                keepMounted
+            {users.data?.data  &&
+            <AddUserModalComponent
                 open={open}
-                onClose={handleClose}
-                aria-labelledby="keep-mounted-modal-title"
-                aria-describedby="keep-mounted-modal-description"
+                handleClose={handleClose}
+                style={style}
+                classes={classes}
+                addUserEmail={addUserEmail}
+                searchUser={searchUser}
+                getSearchUser={getSearchUser}
+                users={searchUser.length < 1 ? users.data?.data : searchResults}
+                emailRemover={emailRemover}
+                handleAddUser={handleAddUser}
+            />}
+            {isLoading  &&
+            <Backdrop
+                sx={{ color: '#fff' ,zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={true}
+                onClick={handleClose}
             >
-                <Box sx={style}>
-                <Typography id="keep-mounted-modal-title" variant="h6" component="h2">
-                    Add a User
-                </Typography>
-                <Typography id="keep-mounted-modal-description" sx={{ mt: 2 }}>
-                    <UidInputContainer>
-                        <TextField 
-                            id="standard-basic"
-                            variant="standard" 
-                            InputProps={{ 
-                                disableUnderline: true, 
-                                classes: {
-                                input: classes.resize,
-                            }, }}
-                            inputRef={addUserEmail}
-                            placeholder="Input email"
-                        />
-                    </UidInputContainer>
-                    <UsersContainer>
-                        {users.data?.data.slice(0,20).map((user) => {
-                            return (<User>{emailRemover(user.uid)}<AddIcon /></User>)
-                        })}
-                    </UsersContainer>
-                    
-                    <ButtonAddUser variant="contained" onClick={handleAddUser} >Accept</ButtonAddUser>
-                </Typography>
-                </Box>
-            </Modal>
+                <CircularProgress color="inherit" />
+            </Backdrop>}
+            
 
             {/* For Logout */}
             <div>
@@ -312,7 +330,7 @@ const Index = () => {
             </div>
 
             {/* Modal for Add Channel */}
-            <ModalAddChannelComponent
+            <AddChannelModalComponent
                 openAddChannel={openAddChannel}
                 handleCloseChannel={handleCloseChannel}
             />

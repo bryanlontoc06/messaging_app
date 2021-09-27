@@ -8,7 +8,7 @@ import MaterialButton from '@mui/material/Button'
 import MaterialAvatarGroup from '@mui/material/AvatarGroup';
 
 
-export const useStyles = makeStyles({
+export const useStyles = makeStyles((theme) => ({
     avatarSize: {
         '& .MuiAvatar-root.MuiAvatar-rounded.MuiAvatar-colorDefault.MuiAvatarGroup-avatar.css-16fxgir-MuiAvatar-root-MuiAvatarGroup-avatar': {
             width: '24px',
@@ -18,8 +18,8 @@ export const useStyles = makeStyles({
             fontFamily: 'Source Sans Pro',
             color: '#34495e'
         }
-    }
-});
+    },
+}))
 
 export const style = {
     position: 'absolute',
@@ -281,20 +281,20 @@ export const UidInputContainer = styled.div `
     border: solid 1px #979797;
     padding: 0.5rem 0.75rem;
     border-radius: 0.625rem;
+    margin-bottom: 1rem;
 `
-export const ButtonAddUser = styled(Button) `
-    margin-top: 1rem !important;
-`
+
 export const UsersContainer = styled.div `
     display: flex;
     flex-direction: column;
     height: calc(100vh - 31rem);
-    overflow-y: hidden;
-    &:hover {
-        overflow-y: scroll;
-        transition: overflow-y 2s;
-        transition-timing-function: ease-in-out;
-    }
+    overflow-y: auto;
+    
+    /* // &:hover {
+    //     overflow-y: auto;
+    //     transition: overflow-y 2s;
+    //     transition-timing-function: ease-in-out;
+    // } */
     /* width */
     &::-webkit-scrollbar {
     width: 10px;
@@ -321,4 +321,12 @@ export const User = styled.span `
     font-weight: 600;
     color: #85929e;
     cursor: pointer;
+    padding: 1rem 0.5rem;
+`
+export const AddIconAddUser = styled(AddIcon) `
+    background: #34495e;
+    border-radius: 4px;
+    &:hover {
+        opacity: 0.8;
+    }
 `
