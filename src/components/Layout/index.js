@@ -34,13 +34,6 @@ const Index = () => {
 
     useEffect(() => {
         readCookie();
-        if(window.location.pathname === '/') 
-        {
-            window.location.pathname = `/app/${loginUser.data.data?.id}`
-        }
-        // } else {
-        //     window.location.pathname = `/login`
-        // }
     }, [])
     return (
         <>
@@ -55,6 +48,7 @@ const Index = () => {
                     Switch={Switch} 
                     Route={Route} 
                     isLogin={isLogin}
+                    loginUser={loginUser}
                 />
             </Router>
         </>
