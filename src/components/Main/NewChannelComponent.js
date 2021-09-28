@@ -5,6 +5,10 @@ import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import { TextField, AddIcon, UsersContainer, User } from './components'
+import {emailRemover} from '../helpers/helpers'
+import useHooks from './hooks'
+import axios from 'axios';
 
 const style = {
   position: 'absolute',
@@ -19,8 +23,8 @@ const style = {
 };
 
 const Index = (props) => {
-    const {openAddChannel, handleCloseChannel} = props;
-    
+    const {openAddChannel, handleCloseChannel, usersList} = props;
+    const {isLogin, setIsLogin, loginUser, setLoginUser} = useHooks();
     
     return (
         <>
@@ -38,11 +42,25 @@ const Index = (props) => {
                 <Fade in={openAddChannel}>
                     <Box sx={style}>
                         <Typography id="transition-modal-title" variant="h6" component="h2">
-                        Text in a modal
+                        Create a Channel
                         </Typography>
-                        <Typography id="transition-modal-description" sx={{ mt: 2 }}>
-                        Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-                        </Typography>
+                        <div>
+                            <TextField 
+                                id="outlined-basic" 
+                                label="Channel Name" 
+                                variant="outlined" 
+                                size="small" 
+                                sx={{
+                                    margin: '12px 0px',
+                                }} 
+                            />
+                        </div>
+                        <UsersContainer>
+                            {usersList.data?.data.slice(0,20).map((user) => {
+                                return (<User>{emailRemover(user.uid)}<AddIcon /></User>)
+                            })}
+                        </UsersContainer>
+                        <Button variant="contained" startIcon={<AddIcon />}>Add Channel</Button>
                     </Box>
                 </Fade>
             </Modal> 

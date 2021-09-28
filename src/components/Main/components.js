@@ -140,7 +140,7 @@ export const Channel = styled.div `
     margin-top: 0.8125rem;
     background: ${props => props.active ? '#fff' : '' };
     border-radius: 7px;
-    border-left: 5px solid ${props => props.active ? '#9b59b6' : '#fff' };
+    border-left: ${props => props.active ? '5px solid #9b59b6' : "" };
     cursor: pointer;
 `
 export const LockIcon = styled(MaterialLockIcon) `
