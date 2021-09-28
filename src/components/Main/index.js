@@ -70,7 +70,7 @@ const Index = () => {
     const [state, setState] = useState({
         open: false,
         message: '',
-        status: '',
+        warning: false,
     })
     
     // Modal for Adding User in a Channel
@@ -108,7 +108,8 @@ const Index = () => {
     };
     // Function for adding a user in a channel
     const handleAddUser = async(id) => {
-        setState({open: true})
+        setIsLoading(true)
+        setOpen(false)
         await axios({
             url: 'http://206.189.91.54/api/v1/channel/add_member',
             data: {
@@ -124,15 +125,28 @@ const Index = () => {
             method: 'POST'
         })  
         .then((res) => 
-            {
-                if(res.data?.data) {
-                    console.log(`added`)
-                    // console.log([res.data?.data])
-                    // setState({message: res.data?.data})
-                    console.log('asd')
-                } else if (res.data?.errors) {
-                    console.log(res.data?.errors[0])
-                    setState({message: res.data?.errors[0]})
+            {   
+                console.log(res.data.data?.id.length > 0)
+                console.log(res)
+                if(res.status === 200) {
+                    setTimeout(() => {
+                            if(res.data.data?.id) {
+                                setState({...state, 
+                                    open: true, 
+                                    message: `Added Successfully!`, 
+                                    warning: false
+                                })
+                                setIsLoading(false)
+                            } 
+                            else {
+                                setState({...state, 
+                                    open: true, 
+                                    message: `User is already a member of this channel!`, 
+                                    warning: true
+                                })
+                                setIsLoading(false)
+                            } 
+                    }, 1000);
                 }
             }
         )
@@ -140,8 +154,16 @@ const Index = () => {
             console.log(err)
         })
     }
-
+    const handleCloseAddUserModal = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        };
+        setState({
+          ...state, open: false,
+        })
+    };
     const handleClose = () => setOpen(false);
+    
 
     // Pop Over
     const [anchorEl, setAnchorEl] = useState(null);
@@ -182,9 +204,6 @@ const Index = () => {
     // Add Channel Modal
 
 
-    
-    
-
     // Retrieve All Channels where user was invited
     useEffect(() => {
         axios({
@@ -215,10 +234,28 @@ const Index = () => {
             })
     }, [])
 
+    // Retrieve a Channel
+    useEffect(() => {
+        axios({
+            url: `http://206.189.91.54/api/v1/channels/${selectChannel.id}`,
+            data: {},
+            headers: {
+                'access-token': loginUser.headers?.['access-token'],
+                'client': loginUser.headers?.client,
+                'expiry': loginUser.headers?.expiry,
+                'uid': loginUser.headers?.uid
+            } || {},
+            method: 'GET'
+            })  
+            .then((res) => 
+                console.log({res})
+            )
+            .catch((err) => {console.log(err)})
+    }, [])
+    
 
-    // if(!authorized) {
-    //     return <Redirect exact to='/login'/>
-    // }
+
+    // Logout a user 
     const handleLogout = () => {
         setIsLogin(false)
         Cookies.remove('user')
@@ -239,7 +276,6 @@ const Index = () => {
             setSearchResults(users.data?.data)
         }
     }
-
     const getSearchUser = () => {
         searchHandler(addUserEmail.current.value)
     }
@@ -356,13 +392,14 @@ const Index = () => {
                 selectChannel={selectChannel}
             />}
             {isLoading  &&
-            <Backdrop
-                sx={{ color: '#fff' ,zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={true}
-                onClick={handleClose}
-            >
-                <CircularProgress color="inherit" />
-            </Backdrop>}
+                <Backdrop
+                    sx={{ color: '#fff' ,zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                    open={true}
+                    onClick={handleClose}
+                >
+                    <CircularProgress color="inherit" />
+                </Backdrop>
+            }
             
 
             {/* For Logout */}
@@ -395,9 +432,9 @@ const Index = () => {
             {/* Snackbar */}
             <SnackbarComponent 
                 isOpen={state.open} 
-                // close={closemessage}
+                close={handleCloseAddUserModal}
                 message={state.message}
-                status={`success`}
+                status={state.warning ? `warning` : `success`}
             />
         </Container>
         </>
