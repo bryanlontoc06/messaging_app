@@ -1,4 +1,3 @@
-import {useState} from 'react'
 import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
@@ -7,8 +6,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { TextField, AddIcon, UsersContainer, User, ContentChannelTitle } from './components'
 import {emailRemover} from '../helpers/helpers'
-import useHooks from './hooks'
-import axios from 'axios';
+
 
 const style = {
   position: 'absolute',
@@ -24,8 +22,7 @@ const style = {
 
 const Index = (props) => {
     const {openAddChannel, handleCloseChannel, usersList} = props;
-    const {isLogin, setIsLogin, loginUser, setLoginUser} = useHooks();
-    
+
     return (
         <>
            <Modal
@@ -56,6 +53,7 @@ const Index = (props) => {
                             />
                         </div>
                         <ContentChannelTitle>Invite users to the new channel</ContentChannelTitle>
+
                         <UsersContainer>
                             {usersList.data?.data.slice(0,20).map((user) => {
                                 return (<User>{emailRemover(user.uid)}<AddIcon /></User>)
