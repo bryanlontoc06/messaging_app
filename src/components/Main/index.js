@@ -50,6 +50,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import AddChannelModalComponent from './NewChannelComponent'
 import {emailRemover} from '../helpers/helpers'
 import AddUserModalComponent from './AddUserComponent'
+import SnackbarComponent from '../Snackbars/index'
 
 
 
@@ -66,6 +67,11 @@ const Index = () => {
     const [users, setUsers] = useState('')
     const [searchUser, setSearchUser] = useState('')
     const [searchResults, setSearchResults] = useState('')
+    const [state, setState] = useState({
+        open: false,
+        message: '',
+        status: '',
+    })
     
     // Modal for Adding User in a Channel
     const [isLoading, setIsLoading] = useState(false)
@@ -100,9 +106,42 @@ const Index = () => {
             })
         }
     };
+    // Function for adding a user in a channel
+    const handleAddUser = async(id) => {
+        setState({open: true})
+        await axios({
+            url: 'http://206.189.91.54/api/v1/channel/add_member',
+            data: {
+                'id': selectChannel.id,
+                'member_id': id,
+            },
+            headers: {
+                'access-token': loginUser.headers?.['access-token'],
+                'client': loginUser.headers?.client,
+                'expiry': loginUser.headers?.expiry,
+                'uid': loginUser.headers?.uid
+            } || {},
+            method: 'POST'
+        })  
+        .then((res) => 
+            {
+                if(res.data?.data) {
+                    console.log(`added`)
+                    // console.log([res.data?.data])
+                    // setState({message: res.data?.data})
+                    console.log('asd')
+                } else if (res.data?.errors) {
+                    console.log(res.data?.errors[0])
+                    setState({message: res.data?.errors[0]})
+                }
+            }
+        )
+        .catch((err) => {
+            console.log(err)
+        })
+    }
+
     const handleClose = () => setOpen(false);
-
-
 
     // Pop Over
     const [anchorEl, setAnchorEl] = useState(null);
@@ -124,10 +163,7 @@ const Index = () => {
     // Add Channel Modal
 
 
-    // Function for adding a user in a channel
-    const handleAddUser = async () => {
-        console.log(addUserEmail.current.value)
-    }
+    
     
 
     // Retrieve All Channels where was invited
@@ -298,6 +334,7 @@ const Index = () => {
                 users={searchUser.length < 1 ? users.data?.data : searchResults}
                 emailRemover={emailRemover}
                 handleAddUser={handleAddUser}
+                selectChannel={selectChannel}
             />}
             {isLoading  &&
             <Backdrop
@@ -333,6 +370,14 @@ const Index = () => {
             <AddChannelModalComponent
                 openAddChannel={openAddChannel}
                 handleCloseChannel={handleCloseChannel}
+            />
+
+            {/* Snackbar */}
+            <SnackbarComponent 
+                isOpen={state.open} 
+                // close={closemessage}
+                message={state.message}
+                status={`success`}
             />
         </Container>
         </>

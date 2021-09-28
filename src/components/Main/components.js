@@ -322,6 +322,7 @@ export const User = styled.span `
     color: #85929e;
     cursor: pointer;
     padding: 1rem 0.5rem;
+    width: 100%;
 `
 export const AddIconAddUser = styled(AddIcon) `
     background: #34495e;
@@ -329,4 +330,8 @@ export const AddIconAddUser = styled(AddIcon) `
     &:hover {
         opacity: 0.8;
     }
+`
+export const AddUserUsersContainer = styled.div `
+    display: flex;
+    align-items: center;
 `
