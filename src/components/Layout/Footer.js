@@ -51,7 +51,7 @@ const FooterComponent = (props) => {
                 <FooterIcons>
                     {footerIcons.map((item, index) => {
                         return (
-                            <Link to={item.link} onClick={() => setActiveMenu(index)}>
+                            <Link key={index} to={item.link} onClick={() => setActiveMenu(index)}>
                                 <FooterIconsComponent 
                                     icons={item.icons} 
                                     filledIcons={item.icons_filled}
