@@ -5,7 +5,7 @@ import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { TextField, AddIcon, UsersContainer, User } from './components'
+import { TextField, AddIcon, UsersContainer, User, ContentChannelTitle } from './components'
 import {emailRemover} from '../helpers/helpers'
 import useHooks from './hooks'
 import axios from 'axios';
@@ -55,6 +55,7 @@ const Index = (props) => {
                                 }} 
                             />
                         </div>
+                        <ContentChannelTitle>Invite users to the new channel</ContentChannelTitle>
                         <UsersContainer>
                             {usersList.data?.data.slice(0,20).map((user) => {
                                 return (<User>{emailRemover(user.uid)}<AddIcon /></User>)
