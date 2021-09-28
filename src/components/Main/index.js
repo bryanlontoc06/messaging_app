@@ -105,7 +105,26 @@ const Index = () => {
 
     // Add Channel Modal
     const [openAddChannel, setOpenAddChannel] = useState(false);
-    const handleOpenAddChannel = () => setOpenAddChannel(true);
+    const handleOpenAddChannel = async() => {
+        await axios({
+            url: 'http://206.189.91.54/api/v1/users',
+            data: {},
+            headers: {
+                'access-token': loginUser.headers?.['access-token'],
+                'client': loginUser.headers?.client,
+                'expiry': loginUser.headers?.expiry,
+                'uid': loginUser.headers?.uid
+            } || {},
+            method: 'GET'
+        })  
+        .then((res) => 
+            setUsers(res)
+        )
+        .catch((err) => {
+            console.log(err)
+        })
+        setOpenAddChannel(true);
+    };
     const handleCloseChannel = () => setOpenAddChannel(false);
     // Add Channel Modal
 
@@ -116,7 +135,7 @@ const Index = () => {
     }
     
 
-    // Retrieve All Channels where was invited
+    // Retrieve All Channels where user was invited
     useEffect(() => {
         axios({
             url: 'http://206.189.91.54/api/v1/channels',
@@ -315,6 +334,7 @@ const Index = () => {
             <ModalAddChannelComponent
                 openAddChannel={openAddChannel}
                 handleCloseChannel={handleCloseChannel}
+                usersList={users}
             />
         </Container>
         </>
