@@ -6,14 +6,12 @@ import {
     AddIconAddUser, 
     ContentUserProfileContainer,
     Avatar,
-    AddUserUsersContainer
+    AddUserUsersContainer,
+    AddUserButton
 } from './components'
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
-
-
-
 
 
 
@@ -73,7 +71,7 @@ const AddUserComponent = (props) => {
                                                 {emailRemover(user.uid).charAt(0).toUpperCase()}
                                             </Avatar>
                                         </ContentUserProfileContainer>
-                                        <User>{emailRemover(user.uid)}<AddIconAddUser onClick={() => handleAddUser(user.id)}/></User>
+                                        <User>{emailRemover(user.uid)}<AddUserButton variant="contained" onClick={() => handleAddUser(user.id)}>ADD</AddUserButton></User>
                                     </AddUserUsersContainer>
                                 </>
                             )})

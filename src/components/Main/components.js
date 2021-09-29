@@ -323,6 +323,7 @@ export const User = styled.span `
     cursor: pointer;
     padding: 1rem 0.5rem;
     width: 100%;
+    padding-right: 0;
 `
 export const AddIconAddUser = styled(AddIcon) `
     background: #34495e;
@@ -334,4 +335,9 @@ export const AddIconAddUser = styled(AddIcon) `
 export const AddUserUsersContainer = styled.div `
     display: flex;
     align-items: center;
+    padding-right: 1rem;
+`
+
+export const AddUserButton = styled(Button) `
+    width: unset;
 `
