@@ -67,6 +67,8 @@ const Index = () => {
     const [users, setUsers] = useState('')
     const [searchUser, setSearchUser] = useState('')
     const [searchResults, setSearchResults] = useState('')
+    const messageChannel = useRef('')
+    const [allMessages, setAllMessages] = useState('')
     const [state, setState] = useState({
         open: false,
         message: '',
@@ -203,12 +205,12 @@ const Index = () => {
     const handleCloseChannel = () => setOpenAddChannel(false);
     // Add Channel Modal
 
-    
 
-    // Retrieve All Channels where user was invited
-    useEffect(() => {
-        axios({
-            url: 'http://206.189.91.54/api/v1/channels',
+    // Retrieve all messages in a Channel
+    const retrieveMessagesinChannel = async(data) => {
+        setSelectChannel(data)
+        await axios({
+            url: `http://206.189.91.54/api/v1/messages?receiver_id=${data.id}&receiver_class=Channel`,
             data: {},
             headers: {
                 'access-token': loginUser.headers?.['access-token'],
@@ -220,41 +222,94 @@ const Index = () => {
             })  
             .then((res) => 
                 {
-                    if(isLogin){
-                        setChannels(res?.data)
-                        // setIsLogin(true)
+                    if(res?.status === 200) {
+                        console.log(`Retrieve all messages in a channel`, {res})
+                        setAllMessages(res)
                     }
                 }
-            )
-            .catch((err) => {
-                if(!isLogin){
-                    return
-                } else {
-                    console.error('Error in main page', err)
-                }
-            })
-    }, [])
+            )   
+            .catch((err) => {console.log(err)})
+    }
 
-    // Retrieve a Channel
-    useEffect(() => {
-        axios({
-            url: `http://206.189.91.54/api/v1/channels/${selectChannel.id}`,
-            data: {},
+    // Create a Message in a channel
+    const createAMessageinChannel = async(e) => {
+        e.preventDefault()
+        await axios({
+            url: `http://206.189.91.54/api/v1/messages`,
+            data: {
+                'receiver_id': selectChannel.id,
+                'receiver_class': 'Channel',
+                'body': messageChannel.current.value,
+            },
             headers: {
                 'access-token': loginUser.headers?.['access-token'],
                 'client': loginUser.headers?.client,
                 'expiry': loginUser.headers?.expiry,
                 'uid': loginUser.headers?.uid
             } || {},
-            method: 'GET'
+            method: 'POST'
             })  
             .then((res) => 
-                console.log({res})
-            )
+                {
+                    console.log(`Create a message in a Channel`, {res})
+                    retrieveMessagesinChannel();
+                }
+            )   
             .catch((err) => {console.log(err)})
-    }, [])
-    
+            messageChannel.current.value = ''
+    }
 
+    // Retrieve a Channel
+    useEffect(() => {
+        axios.all([
+            // Retrieve All Channels where user was invited
+            axios({
+                url: 'http://206.189.91.54/api/v1/channels',
+                data: {},
+                headers: {
+                    'access-token': loginUser.headers?.['access-token'],
+                    'client': loginUser.headers?.client,
+                    'expiry': loginUser.headers?.expiry,
+                    'uid': loginUser.headers?.uid
+                } || {},
+                method: 'GET'
+                })  
+                .then((res) => 
+                    {
+                        if(isLogin){
+                            setChannels(res?.data)
+                            // setIsLogin(true)
+                        }
+                    }
+                )
+                .catch((err) => {
+                    if(!isLogin){
+                        return
+                    } else {
+                        console.error('Error in main page', err)
+                    }
+                }),
+            // Retrieve a channel
+            axios({
+                url: `http://206.189.91.54/api/v1/channels/${selectChannel.id}`,
+                data: {},
+                headers: {
+                    'access-token': loginUser.headers?.['access-token'],
+                    'client': loginUser.headers?.client,
+                    'expiry': loginUser.headers?.expiry,
+                    'uid': loginUser.headers?.uid
+                } || {},
+                method: 'GET'
+                })  
+                .then((res) => 
+                    console.log(`Retrieve a channel`, {res})
+                )
+                .catch((err) => {console.log(err)})
+        ])
+    }, [])
+
+
+    
 
     // Logout a user 
     const handleLogout = () => {
@@ -280,6 +335,7 @@ const Index = () => {
     const getSearchUser = () => {
         searchHandler(addUserEmail.current.value)
     }
+
   
     return (
         <> 
@@ -294,7 +350,7 @@ const Index = () => {
                     <ChannelsTitleHeader>Channels <AddIcon onClick={handleOpenAddChannel}/></ChannelsTitleHeader>
                     <ChannelsContainer>
                         {channels?.data.map((data) => {
-                            return (<Channel key={data.id} active={selectChannel.id === data.id} onClick={() => setSelectChannel(data)}>{/*<LockIcon/>*/}{data.name}</Channel>)
+                            return (<Channel key={data.id} active={selectChannel.id === data.id} onClick={() => retrieveMessagesinChannel(data)}>{/*<LockIcon/>*/}{data.name}</Channel>)
                         })}
                         {/* <Channel active={true}><LockIcon/>Batch 11</Channel>
                         <Channel><LockIcon/>Batch 12</Channel>
@@ -361,6 +417,7 @@ const Index = () => {
                                 />
                             </ChatsContainer>
                             <ChatInput>
+                            <form onSubmit={createAMessageinChannel}>
                                 <TextField 
                                     id="standard-basic"
                                     variant="standard" 
@@ -369,8 +426,10 @@ const Index = () => {
                                         classes: {
                                         input: classes.resize,
                                     }, }}
-                                    placeholder="Send a message to Batch11"
+                                    placeholder={`Send a message to ${selectChannel.name}`}
+                                    inputRef={messageChannel}
                                 />
+                            </form>
                             </ChatInput>
                        </ChatsMessageandChatInput>
                    </ContentChatBoxBody>
