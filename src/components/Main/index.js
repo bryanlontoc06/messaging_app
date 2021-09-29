@@ -317,11 +317,13 @@ const Index = () => {
         Cookies.remove('user')
         setLoginUser({});
     }
-    
+
+
     const searchHandler = (searchUser) => {
+        const sortedUsers = users.data?.data.filter(user => {return !(JSON.stringify(user?.id).includes(loginUser.data.data?.id))})
         setSearchUser(searchUser)
         if(searchUser !== "") {
-            const newUsersList = users.data?.data.filter((user) => {
+            const newUsersList = sortedUsers.filter((user) => {
                 return Object.values(user)
                 .join(" ")
                 .toLowerCase()
@@ -335,8 +337,10 @@ const Index = () => {
     const getSearchUser = () => {
         searchHandler(addUserEmail.current.value)
     }
+    
+    
 
-  
+
     return (
         <> 
         <Container>
@@ -450,6 +454,7 @@ const Index = () => {
                 emailRemover={emailRemover}
                 handleAddUser={handleAddUser}
                 selectChannel={selectChannel}
+                loginUser={loginUser}
             />}
             {isLoading  &&
                 <Backdrop

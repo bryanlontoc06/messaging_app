@@ -335,3 +335,7 @@ export const AddUserUsersContainer = styled.div `
     display: flex;
     align-items: center;
 `
+export const ButtonAddUser = styled(Button) `
+    color: #fff !important;
+    width: unset;
+`
