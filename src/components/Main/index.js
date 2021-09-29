@@ -203,6 +203,7 @@ const Index = () => {
     const handleCloseChannel = () => setOpenAddChannel(false);
     // Add Channel Modal
 
+    
 
     // Retrieve All Channels where user was invited
     useEffect(() => {
