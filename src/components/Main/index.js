@@ -214,12 +214,7 @@ const Index = () => {
 
     // Retrieve all messages in a Channel
     const retrieveMessagesinChannel = (data) => {
-        // if(selectChannel) {
-            setSelectChannel(data)
-        // }
-
-        console.log('retrieve messagessssss')
-        // setInterval(() => {
+        setSelectChannel(data)
         axios({
             url: `http://206.189.91.54/api/v1/messages?receiver_id=${data.id}&receiver_class=Channel`,
             data: {},
@@ -233,15 +228,12 @@ const Index = () => {
             })  
             .then((res) => 
                 {
-                    console.log(`retrieve all messages`, {res})
                     if(res?.status === 200) {
-                        console.log(`Retrieve all messages in a channel`, {res})
                         setAllMessages(res)
                     } 
                 }
             )   
-        //     .catch((err) => {console.log(err)})
-        // }, 100);
+            .catch((err) => {console.log(err)})
     }
 
 
@@ -262,10 +254,8 @@ const Index = () => {
         .then((res) => 
             {
                 console.log(`message created!`,{res})
-                // if(res?.status === 200) {
                     setSelectChannel(selectChannel)
                     retrieveMessagesinChannel(selectChannel)
-                // }   
             }
         )   
         .catch((err) => {console.log(err)})
@@ -291,7 +281,6 @@ const Index = () => {
                     {
                         if(isLogin){
                             setChannels(res?.data.data)
-                            // setIsLogin(true)
                         }
                     }
                 )
@@ -341,8 +330,6 @@ const Index = () => {
         searchHandler(addUserEmail.current.value)
     }
     
-
-    console.log({allMessages})
 
     return (
         <> 
