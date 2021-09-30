@@ -215,11 +215,13 @@ const Index = () => {
 
     // Retrieve all messages in a Channel
     const retrieveMessagesinChannel = (data) => {
+
         clearTimeout(req1)
         setSelectUser('')
         setAllMessages('')
         setSelectChannel(data)
         console.log({data})
+
         axios({
             url: `http://206.189.91.54/api/v1/messages?receiver_id=${data.id}&receiver_class=Channel`,
             data: {},
@@ -269,6 +271,7 @@ const Index = () => {
                             setAllMessages(res)
                         } 
                     // }, 1500);
+
                 }
             )   
             .catch((err) => {console.log(err)})
@@ -306,6 +309,7 @@ const Index = () => {
                         console.log(`selectUser`)
                         console.log({res})
                     }
+
             }
         )   
         .catch((err) => {console.log(err)})
@@ -412,7 +416,6 @@ const Index = () => {
     const getSearchUserDM = () => {
         searchHandlerDM(addUserEmail.current.value)
     }
-
 
     return (
         <> 
