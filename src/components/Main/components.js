@@ -7,6 +7,7 @@ import MaterialLockIcon from '@mui/icons-material/Lock';
 import MaterialButton from '@mui/material/Button'
 import MaterialAvatarGroup from '@mui/material/AvatarGroup';
 import MaterialSendIcon from '@mui/icons-material/Send';
+import MaterialTypography from '@mui/material/Typography';
 
 
 export const useStyles = makeStyles((theme) => ({
@@ -341,6 +342,7 @@ export const AddUserUsersContainer = styled.div `
 export const ButtonAddUser = styled(Button) `
     color: #fff !important;
     width: unset;
+    text-transform: unset !important;
 `
 export const SendIcon = styled(MaterialSendIcon) `
     color: #34495e !important;
@@ -348,4 +350,7 @@ export const SendIcon = styled(MaterialSendIcon) `
     &:hover {
         opacity: 0.9
     }
+`
+export const Typography = styled(MaterialTypography) `
+    font-size: 0.8rem !important;
 `

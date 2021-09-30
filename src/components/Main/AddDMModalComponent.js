@@ -24,12 +24,12 @@ const AddUserComponent = (props) => {
         handleClose,
         style,
         classes,
-        userID,
+        addUserEmail,
         searchUser,
         getSearchUser,
         users,
         emailRemover,
-        handleAddUser
+        retrieveMessagesinUser
     } = props;
 
 
@@ -44,32 +44,25 @@ const AddUserComponent = (props) => {
             >
                 <Box sx={style}>
                 <Typography id="keep-mounted-modal-title" variant="h6" component="h2">
-                    Add user
+                    Direct message
                 </Typography>
                 <Typography id="keep-mounted-modal-description" sx={{ mt: 2 }}>
-                    <form onSubmit={(e) => {
-                        e.preventDefault();
-                        handleAddUser(userID.current.value)
-                        userID.current.value = ''
-                    }}>
-                        <UidInputContainer>
-                            <TextField 
-                                id="standard-basic"
-                                variant="standard" 
-                                type='number'
-                                InputProps={{ 
-                                    disableUnderline: true, 
-                                    classes: {
-                                    input: classes.resize,
-                                }, }}
-                                inputRef={userID}
-                                value={searchUser}
-                                onChange={getSearchUser}
-                                placeholder="ID number"
-                            />
-                        </UidInputContainer>
-                    </form>
-                    {/* <UsersContainer>
+                    <UidInputContainer>
+                        <TextField 
+                            id="standard-basic"
+                            variant="standard" 
+                            InputProps={{ 
+                                disableUnderline: true, 
+                                classes: {
+                                input: classes.resize,
+                            }, }}
+                            inputRef={addUserEmail}
+                            value={searchUser}
+                            onChange={getSearchUser}
+                            placeholder="search"
+                        />
+                    </UidInputContainer>
+                    <UsersContainer>
                         {users.length > 1 ?
                             users.map((user, index) => {
                                 return (
@@ -79,13 +72,13 @@ const AddUserComponent = (props) => {
                                             {emailRemover(user.uid).charAt(0).toUpperCase()}
                                         </Avatar>
                                     </ContentUserProfileContainer>
-                                    <User>{emailRemover(user.uid).substring(0, 25) + (emailRemover(user.uid).length > 25? '...' : '')}<ButtonAddUser onClick={() => handleAddUser(user.id)}>Add</ButtonAddUser></User>
+                                    <User>{emailRemover(user.uid).substring(0, 25) + (emailRemover(user.uid).length > 25? '...' : '')}<ButtonAddUser onClick={() => retrieveMessagesinUser(user)}>message</ButtonAddUser></User>
                                 </AddUserUsersContainer>
                             )})
                             :
                             <h1 style={{textAlign: 'center'}}>No user available</h1>
                         }
-                    </UsersContainer> */}
+                    </UsersContainer>
                 </Typography>
                 </Box>
             </Modal> 
