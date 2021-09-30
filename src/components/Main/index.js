@@ -27,11 +27,15 @@ import {
     ChatInput,
     ChatsContainer,
     ChatsMessageandChatInput,
-    SendIcon
+    SendIcon,
+    Typography
 } from './components'
 import {useState, useEffect, useRef} from 'react'
 
-import Typography from '@mui/material/Typography';
+// import { css } from 'emotion';
+import ScrollToBottom from 'react-scroll-to-bottom';
+
+
 import channel_logo from '../../assets/sampleLogo.png'
 import ChatUserProfileComponent from './ChatUserProfileComponent'
 import UserChatBoxComponent from './UserChatBoxComponent';
@@ -46,11 +50,15 @@ import {emailRemover} from '../helpers/helpers'
 import AddUserModalComponent from './AddUserComponent'
 import SnackbarComponent from '../Snackbars/index'
 import useSessionStorage from '../helpers/useSessionStorage';
+import AddDMModalComponent from './AddDMModalComponent'
 
 import InputAdornment from '@mui/material/InputAdornment';
 
 
-
+// const ROOT_CSS = css({
+//     height: 600,
+//     width: 400
+//   });
 
 const Index = () => {
     const classes = useStyles();
@@ -59,15 +67,16 @@ const Index = () => {
         loginUser, 
         setLoginUser} = useHooks();
     const addUserEmail = useRef('')
-    // const [channels, setChannels] = useSessionStorage(`channels`, '')
+    const userID = useRef('')
     const [channels, setChannels] = useState('')
-    // const [selectChannel, setSelectChannel] = useSessionStorage(`selectedChannel`,'')
     const [selectChannel, setSelectChannel] = useState('')
+    const [selectUser, setSelectUser] = useState('')
     const [users, setUsers] = useState('')
     const [searchUser, setSearchUser] = useState('')
+    const [searchUserDM, setSearchUserDM] = useState('')
     const [searchResults, setSearchResults] = useState('')
+    const [searchResultsDM, setSearchResultsDM] = useState('')
     const chatMessage = useRef('')
-    // const [allMessages, setAllMessages] = useSessionStorage(`allMessages`, ``)
     const [allMessages, setAllMessages] = useState(``)
     const [state, setState] = useState({
         open: false,
@@ -76,43 +85,21 @@ const Index = () => {
     })
     const messagesEndRef = useRef(null)
     
-    const scrollToBottom = () => {
-        messagesEndRef.current.scrollIntoView({ behavior: "smooth" })
-      }
-    useEffect(() => {if(allMessages) {scrollToBottom()}}, [allMessages]);
-    
+    // const scrollToBottom = () => {
+    //     messagesEndRef.current.scrollIntoView({ behavior: "smooth" })
+    //   }
+    // useEffect(() => {if(allMessages) {scrollToBottom()}}, [allMessages]);
+
+    let req1;
+    let req2;
+    let req3;
+    let req4;
+
     // Modal for Adding User in a Channel
     const [isLoading, setIsLoading] = useState(false)
     const [open, setOpen] = useState(false);
-    const handleOpen = async() => {
+    const handleOpen = () => {
         setOpen(true)
-        if(users.data?.data){
-            setIsLoading(false)
-        } else {
-            setIsLoading(true)
-            await axios({
-                url: 'http://206.189.91.54/api/v1/users',
-                data: {},
-                headers: {
-                    'access-token': loginUser.headers?.['access-token'],
-                    'client': loginUser.headers?.client,
-                    'expiry': loginUser.headers?.expiry,
-                    'uid': loginUser.headers?.uid
-                } || {},
-                method: 'GET'
-            })  
-            .then((res) => 
-                {
-                    if(res.status === 200) {
-                        setIsLoading(false)
-                        setUsers(res)
-                    } 
-                }
-            )
-            .catch((err) => {
-                console.log(err)
-            })
-        }
     };
     // Function for adding a user in a channel
     const handleAddUser = async(id) => {
@@ -134,8 +121,8 @@ const Index = () => {
         })  
         .then((res) => 
             {   
-                console.log(res.data.data?.id.length > 0)
-                console.log(res)
+                // console.log(res.data.data?.id.length > 0)
+                // console.log(res)
                 if(res.status === 200) {
                     setTimeout(() => {
                             if(res.data.data?.id) {
@@ -147,12 +134,21 @@ const Index = () => {
                                 setIsLoading(false)
                             } 
                             else {
-                                setState({...state, 
-                                    open: true, 
-                                    message: `User is already a member of this channel!`, 
-                                    warning: true
-                                })
-                                setIsLoading(false)
+                                if(res.data?.errors === `User is already a member of this channel!`){
+                                    setState({...state, 
+                                        open: true, 
+                                        message: `User is already a member of this channel!`, 
+                                        warning: true
+                                    })
+                                    setIsLoading(false)
+                                } else {
+                                    setState({...state, 
+                                        open: true, 
+                                        message: `Invalid user`, 
+                                        warning: true
+                                    })
+                                    setIsLoading(false)
+                                } 
                             } 
                     }, 1000);
                 }
@@ -170,7 +166,13 @@ const Index = () => {
           ...state, open: false,
         })
     };
-    const handleClose = () => setOpen(false);
+    const handleClose = () => {
+        return (
+            setOpen(false), 
+            setOpenDM(false),
+            setOpenAddChannel(false)
+        )
+    };
     
 
     // Pop Over
@@ -208,14 +210,16 @@ const Index = () => {
         })
         setOpenAddChannel(true);
     };
-    const handleCloseChannel = () => setOpenAddChannel(false);
     // Add Channel Modal
 
 
     // Retrieve all messages in a Channel
     const retrieveMessagesinChannel = (data) => {
+        clearTimeout(req1)
+        setSelectUser('')
+        setAllMessages('')
         setSelectChannel(data)
-
+        console.log({data})
         axios({
             url: `http://206.189.91.54/api/v1/messages?receiver_id=${data.id}&receiver_class=Channel`,
             data: {},
@@ -229,9 +233,42 @@ const Index = () => {
             })  
             .then((res) => 
                 {
-                    if(res?.status === 200) {
-                        setAllMessages(res)
-                    } 
+                    // req2 = setInterval(() => {
+                        if(res?.status === 200) {
+                            setAllMessages(res)
+                        } 
+                    // }, 1500);
+                }
+            )   
+            .catch((err) => {console.log(err)})
+    }
+
+    // Retrieve all messages in a User
+    const retrieveMessagesinUser = (data) => {
+        clearTimeout(req2)
+        setSelectChannel('')
+        setAllMessages('')
+        setSelectUser(data)
+        handleClose();
+        console.log(data)
+        axios({
+            url: `http://206.189.91.54/api/v1/messages?receiver_id=${data.id}&receiver_class=User`,
+            data: {},
+            headers: {
+                'access-token': loginUser.headers?.['access-token'],
+                'client': loginUser.headers?.client,
+                'expiry': loginUser.headers?.expiry,
+                'uid': loginUser.headers?.uid
+            } || {},
+            method: 'GET'
+            })  
+            .then((res) => 
+                {
+                    // req1 = setInterval(() => {
+                        if(res?.status === 200) {
+                            setAllMessages(res)
+                        } 
+                    // }, 1500);
                 }
             )   
             .catch((err) => {console.log(err)})
@@ -239,11 +276,15 @@ const Index = () => {
 
 
 
-    // Create a Message in a channel
-    const createAMessage = (data) => {
+    // Create a Message in a channel || user
+    const createAMessage = () => {
         axios({
             url: `http://206.189.91.54/api/v1/messages`,
-            data: data,
+            data: {
+                'receiver_id': selectChannel.id || selectUser.id,
+                'receiver_class': selectChannel ? 'Channel' : 'User',
+                'body': chatMessage.current.value,
+            },
             headers: {
                 'access-token': loginUser.headers?.['access-token'],
                 'client': loginUser.headers?.client,
@@ -254,8 +295,17 @@ const Index = () => {
         })
         .then((res) => 
             {
-                    setSelectChannel(selectChannel)
-                    retrieveMessagesinChannel(selectChannel)
+                    if(selectChannel){
+                        setSelectChannel(selectChannel)
+                        retrieveMessagesinChannel(selectChannel)
+                        console.log(`selectChannel`)
+                    } 
+                    else if (selectUser) {
+                        setSelectUser(selectUser)
+                        retrieveMessagesinUser(selectUser)
+                        console.log(`selectUser`)
+                        console.log({res})
+                    }
             }
         )   
         .catch((err) => {console.log(err)})
@@ -311,25 +361,58 @@ const Index = () => {
     }
 
 
-    const searchHandler = (searchUser) => {
+
+    const [openDM, setOpenDM] = useState(false)
+    const handleOpenDM = async() => {
+        setOpenDM(true)
+        if(users.data?.data){
+            setIsLoading(false)
+        } else {
+            setIsLoading(true)
+            await axios({
+                url: 'http://206.189.91.54/api/v1/users',
+                data: {},
+                headers: {
+                    'access-token': loginUser.headers?.['access-token'],
+                    'client': loginUser.headers?.client,
+                    'expiry': loginUser.headers?.expiry,
+                    'uid': loginUser.headers?.uid
+                } || {},
+                method: 'GET'
+            })  
+            .then((res) => 
+                {
+                    if(res.status === 200) {
+                        setIsLoading(false)
+                        setUsers(res)
+                    } 
+                }
+            )
+            .catch((err) => {
+                console.log(err)
+            })
+        }
+    };
+
+    const searchHandlerDM = (searchUserDM) => {
         const sortedUsers = users.data?.data.filter(user => {return !(JSON.stringify(user?.id).includes(loginUser.data.data?.id))})
-        setSearchUser(searchUser)
-        if(searchUser !== "") {
+        setSearchUserDM(searchUserDM)
+        if(searchUserDM !== "") {
             const newUsersList = sortedUsers.filter((user) => {
                 return Object.values(user)
                 .join(" ")
                 .toLowerCase()
-                .includes(searchUser.toLowerCase())
+                .includes(searchUserDM.toLowerCase())
             })
-            setSearchResults(newUsersList)
+            setSearchResultsDM(newUsersList)
         } else {
-            setSearchResults(users.data?.data)
+            setSearchResultsDM(users.data?.data)
         }
     }
-    const getSearchUser = () => {
-        searchHandler(addUserEmail.current.value)
+    const getSearchUserDM = () => {
+        searchHandlerDM(addUserEmail.current.value)
     }
-    
+
 
     return (
         <> 
@@ -349,7 +432,7 @@ const Index = () => {
                              })
                         }
                     </ChannelsContainer>
-                    <ChannelsTitleHeader>Direct Messages <AddIcon /></ChannelsTitleHeader>
+                    <ChannelsTitleHeader>Direct Messages <AddIcon onClick={handleOpenDM}/></ChannelsTitleHeader>
                     <ChannelsContainer>
                         <UserChatBoxComponent initial={`M`} imgSrc={``} name={`Mike Camino`}/>
                         <UserChatBoxComponent initial={`M`} imgSrc={``} name={`Mike Camino`}/>
@@ -377,7 +460,7 @@ const Index = () => {
                    </ContentChatBoxHeader>
                    <ContentChatBoxBody>
                        <ChatBoxAddUserContainer>
-                        <ContentChatBoxChannelTitle>{selectChannel && selectChannel.name}</ContentChatBoxChannelTitle>
+                        {/* <ContentChatBoxChannelTitle>{selectChannel ? selectChannel.name : emailRemover(selectUser.uid)}</ContentChatBoxChannelTitle> */}
                         <AvatarnButton>
                             {/* <AvatarGroup max={5} variant="rounded" className={classes.avatarSize} >
                                 <AvatarSmallGroup alt="Remy Sharp" src="/static/images/avatar/1.jpg" variant="rounded" />
@@ -392,32 +475,31 @@ const Index = () => {
                         </AvatarnButton>
                        </ChatBoxAddUserContainer>
 
-                       {selectChannel &&
+                       {(selectChannel || selectUser)  &&
                        <ChatsMessageandChatInput>
-                            <ChatsContainer>
-                                    {allMessages.data?.data.map((data, index)=> {
-                                        return (
-                                        <ChatUserProfileComponent 
-                                            key={index}
-                                            imgSrc={''} 
-                                            initial={emailRemover(data.sender.uid).charAt(0).toUpperCase()} 
-                                            chatUserName={emailRemover(data.sender.uid)}
-                                            chatUserTime={`9:01 PM`}
-                                            chatMessage={data.body}
-                                        />)
-                                    })}
-                                <div ref={messagesEndRef} />
-                            </ChatsContainer>
+                            <ScrollToBottom initialScrollBehavior="smooth" mode="bottom">
+                                <ChatsContainer>
+                                    
+                                        {allMessages.data?.data.map((data, index)=> {
+                                            return (
+                                            <ChatUserProfileComponent 
+                                                key={index}
+                                                imgSrc={''} 
+                                                initial={emailRemover(data.sender.uid).charAt(0).toUpperCase()} 
+                                                chatUserName={emailRemover(data.sender.uid)}
+                                                chatUserTime={`9:01 PM`}
+                                                chatMessage={data.body}
+                                            />)
+                                        })}
+                                    {/* <div ref={messagesEndRef} /> */}
+                                </ChatsContainer>
+                            </ScrollToBottom>
+                               
                             
                             <form onSubmit={(e) => 
                                 {
                                     e.preventDefault()
-                                    createAMessage({
-                                        'receiver_id': selectChannel.id,
-                                        'receiver_class': 'Channel',
-                                        'body': chatMessage.current.value,
-                                        
-                                    })
+                                    createAMessage()
                                 }
                             }>
                                 <ChatInput>
@@ -431,16 +513,11 @@ const Index = () => {
                                             },
                                             endAdornment: (
                                                 <InputAdornment position="start">
-                                                  <SendIcon onClick={() => createAMessage({
-                                                        'receiver_id': selectChannel.id,
-                                                        'receiver_class': 'Channel',
-                                                        'body': chatMessage.current.value,
-                                                        
-                                                    })}/>
+                                                  <SendIcon onClick={createAMessage}/>
                                                 </InputAdornment>
                                               ), }}
                                         
-                                        placeholder={`Send a message to ${selectChannel.name}`}
+                                        placeholder={`Send a message to ${selectChannel ? selectChannel.name : emailRemover(selectUser.uid)}`}
                                         inputRef={chatMessage}
                                     />
                                 </ChatInput>
@@ -454,21 +531,22 @@ const Index = () => {
            </ContentContainer>
 
             {/* Modal for Add User  */}
-            {users.data?.data  &&
+            {/* {users.data?.data  && */}
             <AddUserModalComponent
                 open={open}
                 handleClose={handleClose}
                 style={style}
                 classes={classes}
-                addUserEmail={addUserEmail}
-                searchUser={searchUser}
-                getSearchUser={getSearchUser}
-                users={searchUser.length < 1 ? users.data?.data : searchResults}
+                userID={userID}
+                // searchUser={searchUser}
+                // getSearchUser={getSearchUser}
+                // users={searchUser.length < 1 ? users.data?.data : searchResults}
                 emailRemover={emailRemover}
                 handleAddUser={handleAddUser}
                 selectChannel={selectChannel}
                 loginUser={loginUser}
-            />}
+            />
+            {/* } */}
             {isLoading  &&
                 <Backdrop
                     sx={{ color: '#fff' ,zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -478,6 +556,23 @@ const Index = () => {
                     <CircularProgress color="inherit" />
                 </Backdrop>
             }
+
+            {users.data?.data  &&
+                <AddDMModalComponent
+                    open={openDM}
+                    handleClose={handleClose}
+                    style={style}
+                    classes={classes}
+                    addUserEmail={addUserEmail}
+                    searchUser={searchUserDM}
+                    getSearchUser={getSearchUserDM}
+                    users={searchUserDM.length < 1 ? users.data?.data : searchResultsDM}
+                    emailRemover={emailRemover}
+                    selectChannel={selectChannel}
+                    loginUser={loginUser}
+                    retrieveMessagesinUser={retrieveMessagesinUser}
+                />
+            } 
             
 
             {/* For Logout */}
@@ -488,14 +583,16 @@ const Index = () => {
                     anchorEl={anchorEl}
                     onClose={handleClosePopOver}
                     anchorOrigin={{
-                        vertical: 'bottom',
+                        vertical: 'center',
                         horizontal: 'left',
                     }}
                     transformOrigin={{
                         vertical: 'top',
-                        horizontal: 'center',
+                        horizontal: 'right',
                     }}
                 >
+                    <Typography sx={{ p: 2 }} >ID No: {loginUser.data.data?.id}</Typography>
+                    <Typography sx={{ p: 2 }} >User ID: {emailRemover(loginUser.data.data?.uid)}</Typography>
                     <Typography sx={{ p: 2 }} style={{cursor: 'pointer'}} onClick={() => handleLogout()}>Logout</Typography>
                 </Popover>
             </div>
@@ -503,7 +600,7 @@ const Index = () => {
             {/* Modal for Add Channel */}
             <AddChannelModalComponent
                 openAddChannel={openAddChannel}
-                handleCloseChannel={handleCloseChannel}
+                handleCloseChannel={handleClose}
                 usersList={users}
             />
 
