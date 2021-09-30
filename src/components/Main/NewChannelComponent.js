@@ -56,7 +56,7 @@ const Index = (props) => {
 
                         <UsersContainer>
                             {usersList.data?.data.slice(0,20).map((user) => {
-                                return (<User>{emailRemover(user.uid)}<AddIcon /></User>)
+                                return (<User key={user.id}>{emailRemover(user.uid)}<AddIcon /></User>)
                             })}
                         </UsersContainer>
                         <Button variant="contained" startIcon={<AddIcon />}>Add Channel</Button>
