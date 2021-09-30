@@ -6,6 +6,7 @@ import MaterialAddIcon from '@mui/icons-material/Add';
 import MaterialLockIcon from '@mui/icons-material/Lock';
 import MaterialButton from '@mui/material/Button'
 import MaterialAvatarGroup from '@mui/material/AvatarGroup';
+import MaterialSendIcon from '@mui/icons-material/Send';
 
 
 export const useStyles = makeStyles((theme) => ({
@@ -212,7 +213,7 @@ export const ChatInput = styled.div `
     border: solid 1px #979797;
     padding: 0.5rem 0.75rem;
     border-radius: 0.625rem;
-    margin-top: 33px;
+    margin-top: 20px;
 `
 export const ChatsContainer = styled.div `
     display: flex;
@@ -266,6 +267,8 @@ export const ChatMessageContainer = styled.div `
     display: flex;
     flex-direction: column;
     gap: 3px;
+    width: calc(100vh - 52%);
+    word-wrap: break-word;
 `
 export const ChatMessages = styled.span `
     font-size: 0.875rem;
@@ -334,4 +337,15 @@ export const AddIconAddUser = styled(AddIcon) `
 export const AddUserUsersContainer = styled.div `
     display: flex;
     align-items: center;
+`
+export const ButtonAddUser = styled(Button) `
+    color: #fff !important;
+    width: unset;
+`
+export const SendIcon = styled(MaterialSendIcon) `
+    color: #34495e !important;
+    cursor: pointer;
+    &:hover {
+        opacity: 0.9
+    }
 `

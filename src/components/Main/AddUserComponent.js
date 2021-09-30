@@ -6,7 +6,8 @@ import {
     AddIconAddUser, 
     ContentUserProfileContainer,
     Avatar,
-    AddUserUsersContainer
+    AddUserUsersContainer,
+    ButtonAddUser
 } from './components'
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
@@ -28,10 +29,9 @@ const AddUserComponent = (props) => {
         getSearchUser,
         users,
         emailRemover,
-        handleAddUser,
+        handleAddUser
     } = props;
 
-    
 
     return (
         <>
@@ -66,16 +66,14 @@ const AddUserComponent = (props) => {
                         {users.length > 1 ?
                             users.map((user, index) => {
                                 return (
-                                <>
-                                    <AddUserUsersContainer key={index}>
-                                        <ContentUserProfileContainer>
-                                            <Avatar sx={{ bgcolor: 'green' }} variant="rounded" src="#">
-                                                {emailRemover(user.uid).charAt(0).toUpperCase()}
-                                            </Avatar>
-                                        </ContentUserProfileContainer>
-                                        <User>{emailRemover(user.uid)}<AddIconAddUser onClick={() => handleAddUser(user.id)}/></User>
-                                    </AddUserUsersContainer>
-                                </>
+                                <AddUserUsersContainer key={index}>
+                                    <ContentUserProfileContainer>
+                                        <Avatar sx={{ bgcolor: 'green' }} variant="rounded" src="#">
+                                            {emailRemover(user.uid).charAt(0).toUpperCase()}
+                                        </Avatar>
+                                    </ContentUserProfileContainer>
+                                    <User>{emailRemover(user.uid).substring(0, 25) + (emailRemover(user.uid).length > 25? '...' : '')}<ButtonAddUser onClick={() => handleAddUser(user.id)}>Add</ButtonAddUser></User>
+                                </AddUserUsersContainer>
                             )})
                             :
                             <h1 style={{textAlign: 'center'}}>No user available</h1>
