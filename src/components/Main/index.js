@@ -215,6 +215,7 @@ const Index = () => {
     // Retrieve all messages in a Channel
     const retrieveMessagesinChannel = (data) => {
         setSelectChannel(data)
+
         axios({
             url: `http://206.189.91.54/api/v1/messages?receiver_id=${data.id}&receiver_class=Channel`,
             data: {},
@@ -253,7 +254,6 @@ const Index = () => {
         })
         .then((res) => 
             {
-                console.log(`message created!`,{res})
                     setSelectChannel(selectChannel)
                     retrieveMessagesinChannel(selectChannel)
             }
