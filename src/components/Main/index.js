@@ -31,11 +31,6 @@ import {
     Typography
 } from './components'
 import {useState, useEffect, useRef} from 'react'
-
-// import { css } from 'emotion';
-import ScrollToBottom from 'react-scroll-to-bottom';
-
-
 import channel_logo from '../../assets/sampleLogo.png'
 import ChatUserProfileComponent from './ChatUserProfileComponent'
 import UserChatBoxComponent from './UserChatBoxComponent';
@@ -480,23 +475,21 @@ const Index = () => {
 
                        {(selectChannel || selectUser)  &&
                        <ChatsMessageandChatInput>
-                            <ScrollToBottom initialScrollBehavior="smooth" mode="bottom">
-                                <ChatsContainer>
-                                    
-                                        {allMessages.data?.data.map((data, index)=> {
-                                            return (
-                                            <ChatUserProfileComponent 
-                                                key={index}
-                                                imgSrc={''} 
-                                                initial={emailRemover(data.sender.uid).charAt(0).toUpperCase()} 
-                                                chatUserName={emailRemover(data.sender.uid)}
-                                                chatUserTime={`9:01 PM`}
-                                                chatMessage={data.body}
-                                            />)
-                                        })}
-                                    {/* <div ref={messagesEndRef} /> */}
-                                </ChatsContainer>
-                            </ScrollToBottom>
+                            <ChatsContainer>
+                                
+                                    {allMessages.data?.data.map((data, index)=> {
+                                        return (
+                                        <ChatUserProfileComponent 
+                                            key={index}
+                                            imgSrc={''} 
+                                            initial={emailRemover(data.sender.uid).charAt(0).toUpperCase()} 
+                                            chatUserName={emailRemover(data.sender.uid)}
+                                            chatUserTime={`9:01 PM`}
+                                            chatMessage={data.body}
+                                        />)
+                                    })}
+                                {/* <div ref={messagesEndRef} /> */}
+                            </ChatsContainer>
                                
                             
                             <form onSubmit={(e) => 
