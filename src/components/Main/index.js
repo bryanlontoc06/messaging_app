@@ -258,38 +258,6 @@ const Index = () => {
         // }, 1500);
     }
 
-    // Retrieve all messages in a User
-    const retrieveMessagesinUser = (data) => {
-        clearTimeout(req2)
-        setSelectChannel('')
-        setAllMessages('')
-        setSelectUser(data)
-        handleClose();
-        console.log(data)
-        axios({
-            url: `http://206.189.91.54/api/v1/messages?receiver_id=${data.id}&receiver_class=User`,
-            data: {},
-            headers: {
-                'access-token': loginUser.headers?.['access-token'],
-                'client': loginUser.headers?.client,
-                'expiry': loginUser.headers?.expiry,
-                'uid': loginUser.headers?.uid
-            } || {},
-            method: 'GET'
-            })  
-            .then((res) => 
-                {
-                    // req1 = setInterval(() => {
-                        if(res?.status === 200) {
-                            setAllMessages(res)
-                        } 
-                    // }, 1500);
-
-                }
-            )   
-            .catch((err) => {console.log(err)})
-    }
-
     // Create a Message in a channel || user
     const createAMessage = () => {
         axios({
