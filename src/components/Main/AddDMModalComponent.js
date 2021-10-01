@@ -63,7 +63,7 @@ const AddUserComponent = (props) => {
                         />
                     </UidInputContainer>
                     <UsersContainer>
-                        {users.length > 1 ?
+                        {users.length > 0 ?
                             users.map((user, index) => {
                                 return (
                                 <AddUserUsersContainer key={index}>

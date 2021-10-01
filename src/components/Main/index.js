@@ -28,7 +28,8 @@ import {
     ChatsContainer,
     ChatsMessageandChatInput,
     SendIcon,
-    Typography
+    Typography,
+    UserName
 } from './components'
 import {useState, useEffect, useRef} from 'react'
 import channel_logo from '../../assets/sampleLogo.png'
@@ -44,16 +45,12 @@ import AddChannelModalComponent from './NewChannelComponent'
 import {emailRemover} from '../helpers/helpers'
 import AddUserModalComponent from './AddUserComponent'
 import SnackbarComponent from '../Snackbars/index'
-import useSessionStorage from '../helpers/useSessionStorage';
 import AddDMModalComponent from './AddDMModalComponent'
-
 import InputAdornment from '@mui/material/InputAdornment';
+import ScrollableFeed from 'react-scrollable-feed'
+import moment from 'moment'
 
 
-// const ROOT_CSS = css({
-//     height: 600,
-//     width: 400
-//   });
 
 const Index = () => {
     const classes = useStyles();
@@ -67,9 +64,7 @@ const Index = () => {
     const [selectChannel, setSelectChannel] = useState('')
     const [selectUser, setSelectUser] = useState('')
     const [users, setUsers] = useState('')
-    const [searchUser, setSearchUser] = useState('')
     const [searchUserDM, setSearchUserDM] = useState('')
-    const [searchResults, setSearchResults] = useState('')
     const [searchResultsDM, setSearchResultsDM] = useState('')
     const chatMessage = useRef('')
     const [allMessages, setAllMessages] = useState(``)
@@ -78,17 +73,9 @@ const Index = () => {
         message: '',
         warning: false,
     })
-    const messagesEndRef = useRef(null)
-    
-    // const scrollToBottom = () => {
-    //     messagesEndRef.current.scrollIntoView({ behavior: "smooth" })
-    //   }
-    // useEffect(() => {if(allMessages) {scrollToBottom()}}, [allMessages]);
 
-    let req1;
-    let req2;
-    let req3;
-    let req4;
+    var int1;
+    var int2;
 
     // Modal for Adding User in a Channel
     const [isLoading, setIsLoading] = useState(false)
@@ -116,8 +103,6 @@ const Index = () => {
         })  
         .then((res) => 
             {   
-                // console.log(res.data.data?.id.length > 0)
-                // console.log(res)
                 if(res.status === 200) {
                     setTimeout(() => {
                             if(res.data.data?.id) {
@@ -210,66 +195,62 @@ const Index = () => {
 
     // Retrieve all messages in a Channel
     const retrieveMessagesinChannel = (data) => {
-
-        clearTimeout(req1)
+        clearTimeout(int2)
         setSelectUser('')
-        setAllMessages('')
         setSelectChannel(data)
-        console.log({data})
-
-        axios({
-            url: `http://206.189.91.54/api/v1/messages?receiver_id=${data.id}&receiver_class=Channel`,
-            data: {},
-            headers: {
-                'access-token': loginUser.headers?.['access-token'],
-                'client': loginUser.headers?.client,
-                'expiry': loginUser.headers?.expiry,
-                'uid': loginUser.headers?.uid
-            } || {},
-            method: 'GET'
-            })  
-            .then((res) => 
-                {
-                    // req2 = setInterval(() => {
+        // int1 = setInterval(() => {
+            axios({
+                url: `http://206.189.91.54/api/v1/messages?receiver_id=${data.id}&receiver_class=Channel`,
+                data: {},
+                headers: {
+                    'access-token': loginUser.headers?.['access-token'],
+                    'client': loginUser.headers?.client,
+                    'expiry': loginUser.headers?.expiry,
+                    'uid': loginUser.headers?.uid
+                } || {},
+                method: 'GET'
+                })  
+                .then((res) => 
+                    {
                         if(res?.status === 200) {
                             setAllMessages(res)
                         } 
-                    // }, 1500);
-                }
-            )   
-            .catch((err) => {console.log(err)})
+                    }
+                )   
+                .catch((err) => {console.log(err)})
+        // }, 1500);
     }
 
     // Retrieve all messages in a User
     const retrieveMessagesinUser = (data) => {
-        clearTimeout(req2)
+        // clearTimeout(int1)
         setSelectChannel('')
-        setAllMessages('')
         setSelectUser(data)
         handleClose();
-        console.log(data)
-        axios({
-            url: `http://206.189.91.54/api/v1/messages?receiver_id=${data.id}&receiver_class=User`,
-            data: {},
-            headers: {
-                'access-token': loginUser.headers?.['access-token'],
-                'client': loginUser.headers?.client,
-                'expiry': loginUser.headers?.expiry,
-                'uid': loginUser.headers?.uid
-            } || {},
-            method: 'GET'
-            })  
-            .then((res) => 
-                {
-                    // req1 = setInterval(() => {
-                        if(res?.status === 200) {
-                            setAllMessages(res)
-                        } 
-                    // }, 1500);
+        // int2 = setInterval(() => {
+            axios({
+                url: `http://206.189.91.54/api/v1/messages?receiver_id=${data.id}&receiver_class=User`,
+                data: {},
+                headers: {
+                    'access-token': loginUser.headers?.['access-token'],
+                    'client': loginUser.headers?.client,
+                    'expiry': loginUser.headers?.expiry,
+                    'uid': loginUser.headers?.uid
+                } || {},
+                method: 'GET'
+                })  
+                .then((res) => 
+                    {
+                        // req1 = setInterval(() => {
+                            if(res?.status === 200) {
+                                setAllMessages(res)
+                            } 
+                        // }, 1500);
 
-                }
-            )   
-            .catch((err) => {console.log(err)})
+                    }
+                )   
+                .catch((err) => {console.log(err)})
+        // }, 1500);
     }
 
 
@@ -296,13 +277,10 @@ const Index = () => {
                     if(selectChannel){
                         setSelectChannel(selectChannel)
                         retrieveMessagesinChannel(selectChannel)
-                        console.log(`selectChannel`)
                     } 
                     else if (selectUser) {
                         setSelectUser(selectUser)
                         retrieveMessagesinUser(selectUser)
-                        console.log(`selectUser`)
-                        console.log({res})
                     }
 
             }
@@ -313,6 +291,8 @@ const Index = () => {
 
     // Retrieve a Channel
     useEffect(() => {
+        setSelectChannel('')
+        setSelectUser('')
         axios.all([
             // Retrieve All Channels where user was invited
             axios({
@@ -342,7 +322,6 @@ const Index = () => {
                 }),
         ])
         
-        console.log(channels)
         if(channels){
             setSelectChannel(channels[0])
         }
@@ -412,6 +391,7 @@ const Index = () => {
         searchHandlerDM(addUserEmail.current.value)
     }
 
+
     return (
         <> 
         <Container>
@@ -441,7 +421,7 @@ const Index = () => {
 
                <ContentChatBoxSection>
                    <ContentChatBoxHeader>
-                        <ContentChannelSearchBox>
+                        {/* <ContentChannelSearchBox>
                             <TextField 
                                 id="standard-basic"
                                 variant="standard" 
@@ -449,7 +429,8 @@ const Index = () => {
                                     disableUnderline: true}}
                                 placeholder="Search Avion School"
                             />
-                        </ContentChannelSearchBox>
+                        </ContentChannelSearchBox> */}
+                        <UserName>{emailRemover(loginUser.data.data?.uid)}</UserName>
                         <ContentUserProfileContainer onClick={handleClickPopOver}>
                             <Avatar sx={{ bgcolor: 'green' }} variant="rounded">
                                 {loginUser.data?.data ? emailRemover(loginUser.data.data?.email).charAt(0).toUpperCase() : null}
@@ -458,7 +439,7 @@ const Index = () => {
                    </ContentChatBoxHeader>
                    <ContentChatBoxBody>
                        <ChatBoxAddUserContainer>
-                        {/* <ContentChatBoxChannelTitle>{selectChannel ? selectChannel.name : emailRemover(selectUser.uid)}</ContentChatBoxChannelTitle> */}
+                        <ContentChatBoxChannelTitle>{selectChannel ? selectChannel.name : selectUser.uid}</ContentChatBoxChannelTitle>
                         <AvatarnButton>
                             {/* <AvatarGroup max={5} variant="rounded" className={classes.avatarSize} >
                                 <AvatarSmallGroup alt="Remy Sharp" src="/static/images/avatar/1.jpg" variant="rounded" />
@@ -475,23 +456,23 @@ const Index = () => {
 
                        {(selectChannel || selectUser)  &&
                        <ChatsMessageandChatInput>
-                            <ChatsContainer>
-                                
-                                    {allMessages.data?.data.map((data, index)=> {
-                                        return (
-                                        <ChatUserProfileComponent 
-                                            key={index}
-                                            imgSrc={''} 
-                                            initial={emailRemover(data.sender.uid).charAt(0).toUpperCase()} 
-                                            chatUserName={emailRemover(data.sender.uid)}
-                                            chatUserTime={`9:01 PM`}
-                                            chatMessage={data.body}
-                                        />)
-                                    })}
-                                {/* <div ref={messagesEndRef} /> */}
-                            </ChatsContainer>
-                               
-                            
+                                <ChatsContainer>
+                                    <ScrollableFeed forceScroll='true'>
+                                        {allMessages.data?.data.map((data, index)=> {
+                                            return (
+                                            <ChatUserProfileComponent 
+                                                key={index}
+                                                imgSrc={''} 
+                                                initial={emailRemover(data.sender.uid).charAt(0).toUpperCase()}
+                                                chatUserName={emailRemover(data.sender.uid)}
+                                                chatUserTime={moment(data.created_at).fromNow()}
+                                                chatMessage={data.body}
+                                                loginUser={loginUser}
+                                                data={data}
+                                            />)
+                                        })}
+                                    </ScrollableFeed>
+                                </ChatsContainer>
                             <form onSubmit={(e) => 
                                 {
                                     e.preventDefault()

@@ -15,22 +15,25 @@ const ChatUserProfileComponent = (props) => {
         initial,
         chatUserName,
         chatUserTime,
-        chatMessage
+        chatMessage,
+        loginUser,
+        data,
     } = props;
+
     return (
         <>
-           <ChatsUserProfile>
+           <ChatsUserProfile right={loginUser.data.data?.uid === data.sender.uid}>
                 <ContentUserProfileContainer>
                     <Avatar sx={{ bgcolor: 'green' }} variant="rounded" src={imgSrc}>
                         {initial}
                     </Avatar>
                 </ContentUserProfileContainer>
-                <ChatMessageContainer>
-                    <ChatUsernTime>
+                <ChatMessageContainer right={loginUser.data.data?.uid === data.sender.uid}>
+                    <ChatUsernTime right={loginUser.data.data?.uid === data.sender.uid}>
                         <ChatUserName>{chatUserName}</ChatUserName>
                         <ChatUserTime>{chatUserTime}</ChatUserTime>
                     </ChatUsernTime>
-                    <ChatMessages>{chatMessage}</ChatMessages>
+                    <ChatMessages >{chatMessage}</ChatMessages>
                 </ChatMessageContainer>
             </ChatsUserProfile> 
         </>

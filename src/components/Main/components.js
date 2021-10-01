@@ -105,13 +105,13 @@ export const AddIcon = styled(MaterialAddIcon) `
 `
 export const ChannelsContainer = styled.div `
     height: calc(100vh - 31rem);
-    overflow-y: hidden;
+    overflow-y: auto;
     
-    &:hover {
-        overflow-y: scroll;
-        transition: overflow-y 2s;
-        transition-timing-function: ease-in-out;
-    }
+    /* &:hover {
+    //     overflow-y: scroll;
+    //     transition: overflow-y 2s;
+    //     transition-timing-function: ease-in-out;
+    // } */
     /* width */
     &::-webkit-scrollbar {
     width: 10px;
@@ -172,7 +172,8 @@ export const ContentChatBoxHeader = styled.div `
     justify-content: center;
     align-items: center;
     padding: 1.125rem 1rem 1.125rem 0;
-    justify-content: space-between;
+    justify-content: flex-end;
+    gap: 0.5rem;
 `
 export const ContentChatBoxBody = styled.div `
     background: #fff;
@@ -224,13 +225,13 @@ export const ChatsContainer = styled.div `
     flex-direction: column;
     gap: 17px;
     max-height: calc(100vh - 17rem);
-    overflow-y: hidden;
+    overflow-y: auto;
     
-    &:hover {
-        overflow-y: scroll;
-        transition: overflow-y 2s;
-        transition-timing-function: ease-in-out;
-    }
+    /* &:hover {
+    //     overflow-y: scroll;
+    //     transition: overflow-y 2s;
+    //     transition-timing-function: ease-in-out;
+    // } */
     /* width */
     &::-webkit-scrollbar {
     width: 10px;
@@ -252,17 +253,21 @@ export const ChatsContainer = styled.div `
 `
 export const ChatUsernTime = styled.div `
     display: flex;
-    gap: 9px;
+    flex-direction: column;
 `
 export const ChatUserName = styled.div `
     cursor: pointer;
 `
 export const ChatUserTime = styled.div `
     font-weight: 400 !important;
+    font-size: 0.7rem;
 `   
 export const ChatsUserProfile = styled.div `
     display: flex;
+    flex-direction: ${props => props.right ? 'row-reverse' : ''};
     gap: 9px;
+    padding: 0 1rem 0 0;
+    margin-top: 0.8rem;
 `
 export const ChatMessageContainer = styled.div `
     display: flex;
@@ -270,6 +275,7 @@ export const ChatMessageContainer = styled.div `
     gap: 3px;
     width: calc(100vh - 52%);
     word-wrap: break-word;
+    text-align: ${props => props.right ? 'right' : ''};
 `
 export const ChatMessages = styled.span `
     font-size: 0.875rem;
@@ -353,4 +359,8 @@ export const SendIcon = styled(MaterialSendIcon) `
 `
 export const Typography = styled(MaterialTypography) `
     font-size: 0.8rem !important;
+`
+export const UserName = styled.span `
+    font-weight: 600;
+    color: #85929e;
 `
