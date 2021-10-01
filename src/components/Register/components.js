@@ -33,7 +33,6 @@ export const Button = styled(MaterialButton) `
 `
 export const Link = styled(MaterialLink) `
     color: #34495e !important;
-    text-decoration: none !important;
 `
 export const Box = styled(MaterialBox) ``
 export const Checkbox = styled(MaterialCheckbox) ``
