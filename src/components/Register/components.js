@@ -15,10 +15,10 @@ const fadeInAnimation = keyframes`${fadeIn}`;
 
 
 export const Container = styled(MaterialContainer) `
-    display: flex;
-    align-items: center;
-    height: 100vh;
-    font-family: 'Source Sans Pro', sans-serif;
+    display: flex !important;
+    align-items: center !important;
+    height: 100vh !important;
+    font-family: 'Source Sans Pro', sans-serif !important;
     text-align: center;
     display: flex;
     justify-content: center;
