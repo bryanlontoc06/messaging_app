@@ -33,7 +33,7 @@ import {
     UserDetailsContainer,
     UserID
 } from './components'
-import {useState, useEffect, useRef} from 'react'
+import {useState, useEffect, useRef, useCallback} from 'react'
 import channel_logo from '../../assets/sampleLogo.png'
 import ChatUserProfileComponent from './ChatUserProfileComponent'
 import UserChatBoxComponent from './UserChatBoxComponent';
@@ -91,9 +91,9 @@ const Index = () => {
     // Modal for Adding User in a Channel
     const [isLoading, setIsLoading] = useState(false)
     const [open, setOpen] = useState(false);
-    const handleOpen = () => {
+    const handleOpen = useCallback(() => {
         setOpen(true)
-    };
+    }, [open]) ;
     // Function for adding a user in a channel
     const handleAddUser = async(id) => {
         setIsLoading(true)
