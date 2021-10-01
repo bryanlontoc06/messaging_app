@@ -367,3 +367,11 @@ export const UserName = styled.span `
     font-weight: 600;
     color: #85929e;
 `
+export const UserDetailsContainer = styled.div `
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+`
+export const UserID = styled(UserName) `
+    font-size: 0.8rem;
+`

@@ -29,7 +29,9 @@ import {
     ChatsMessageandChatInput,
     SendIcon,
     Typography,
-    UserName
+    UserName,
+    UserDetailsContainer,
+    UserID
 } from './components'
 import {useState, useEffect, useRef} from 'react'
 import channel_logo from '../../assets/sampleLogo.png'
@@ -467,7 +469,10 @@ const Index = () => {
                                 placeholder="Search Avion School"
                             />
                         </ContentChannelSearchBox> */}
-                        <UserName>{emailRemover(loginUser.data.data?.uid)}</UserName>
+                        <UserDetailsContainer>
+                            <UserID>ID: {loginUser.data.data?.id}</UserID>
+                            <UserName>{emailRemover(loginUser.data.data?.uid)}</UserName>
+                        </UserDetailsContainer>
                         <ContentUserProfileContainer onClick={handleClickPopOver}>
                             <Avatar sx={{ bgcolor: 'green' }} variant="rounded">
                                 {loginUser.data?.data ? emailRemover(loginUser.data.data?.email).charAt(0).toUpperCase() : null}

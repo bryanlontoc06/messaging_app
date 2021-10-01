@@ -13,6 +13,9 @@ export const Container = styled(MaterialContainer) `
     align-items: center !important;
     height: 100vh !important;
     font-family: 'Source Sans Pro', sans-serif !important;
+    text-align: center;
+    display: flex;
+    justify-content: center;
 `
 export const Button = styled(MaterialButton) `
     background: #34495e !important;
