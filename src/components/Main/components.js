@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import { makeStyles } from '@material-ui/styles';
 import MaterialTextField from '@mui/material/TextField';
 import MaterialAvatar from '@mui/material/Avatar';
@@ -8,6 +8,10 @@ import MaterialButton from '@mui/material/Button'
 import MaterialAvatarGroup from '@mui/material/AvatarGroup';
 import MaterialSendIcon from '@mui/icons-material/Send';
 import MaterialTypography from '@mui/material/Typography';
+import { fadeIn } from 'react-animations';
+
+
+const fadeInAnimation = keyframes`${fadeIn}`;
 
 
 export const useStyles = makeStyles((theme) => ({
@@ -43,7 +47,7 @@ export const Container = styled.div `
     max-width: 1024px;
     margin-left: auto;
     margin-right: auto;
-
+    animation: 1s ${fadeInAnimation};
 `
 export const LogoContainer = styled.div `
     margin-right: 1.25rem;
