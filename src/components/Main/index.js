@@ -30,7 +30,6 @@ import {
     SendIcon,
     Typography,
     UserName
-
 } from './components'
 import {useState, useEffect, useRef} from 'react'
 import channel_logo from '../../assets/sampleLogo.png'
@@ -51,10 +50,14 @@ import InputAdornment from '@mui/material/InputAdornment';
 import ScrollableFeed from 'react-scrollable-feed'
 import moment from 'moment'
 
-// const ROOT_CSS = css({
-//     height: 600,
-//     width: 400
-//   });
+
+
+let int1;
+let int2;
+let int3;
+let int4;
+
+
 
 const Index = () => {
     const classes = useStyles();
@@ -77,9 +80,10 @@ const Index = () => {
         message: '',
         warning: false,
     })
+    const [duplicateForChannel, setDuplicateForChannel] = useState(false);
+    const [duplicateForUser, setDuplicateForUser] = useState(false);
 
-    var int1;
-    var int2;
+    
 
 
     // Modal for Adding User in a Channel
@@ -200,10 +204,6 @@ const Index = () => {
 
     // Retrieve all messages in a Channel
     const retrieveMessagesinChannel = (data) => {
-        clearTimeout(int2)
-        setSelectUser('')
-        setSelectChannel(data)
-        // int1 = setInterval(() => {
             axios({
                 url: `http://206.189.91.54/api/v1/messages?receiver_id=${data.id}&receiver_class=Channel`,
                 data: {},
@@ -223,40 +223,74 @@ const Index = () => {
                     }
                 )   
                 .catch((err) => {console.log(err)})
-        // }, 1500);
+    }
+
+    // For Real Time Fetching Message in Channel
+    const intervalRetrieveMessagesinChannel = (data) => {
+        clearTimeout(int1)
+        clearTimeout(int2)
+        setSelectUser('')
+        setSelectChannel(data)
+        retrieveMessagesinChannel(data)
+        setDuplicateForChannel(!duplicateForChannel)
+        if(duplicateForChannel) {
+            int3 = setInterval(() => {
+                retrieveMessagesinChannel(data)
+            }, 1500);
+            clearTimeout(int4)
+        } else {
+            int4 = setInterval(() => {
+                retrieveMessagesinChannel(data)
+            }, 1500);
+            clearTimeout(int3)
+        }
     }
 
     // Retrieve all messages in a User
     const retrieveMessagesinUser = (data) => {
-        // clearTimeout(int1)
+        axios({
+            url: `http://206.189.91.54/api/v1/messages?receiver_id=${data.id}&receiver_class=User`,
+            data: {},
+            headers: {
+                'access-token': loginUser.headers?.['access-token'],
+                'client': loginUser.headers?.client,
+                'expiry': loginUser.headers?.expiry,
+                'uid': loginUser.headers?.uid
+            } || {},
+            method: 'GET'
+            })  
+            .then((res) => 
+                {
+                    if(res?.status === 200) {
+                        setAllMessages(res)
+                    } 
+                }
+            )   
+            .catch((err) => {console.log(err)})
+    }
+
+    // For Real Time Fetching Message in User
+    const intervalRetrieveMessagesinUser = (data) => {
+        clearTimeout(int3)
+        clearTimeout(int4)
         setSelectChannel('')
         setSelectUser(data)
         handleClose();
-        // int2 = setInterval(() => {
-            axios({
-                url: `http://206.189.91.54/api/v1/messages?receiver_id=${data.id}&receiver_class=User`,
-                data: {},
-                headers: {
-                    'access-token': loginUser.headers?.['access-token'],
-                    'client': loginUser.headers?.client,
-                    'expiry': loginUser.headers?.expiry,
-                    'uid': loginUser.headers?.uid
-                } || {},
-                method: 'GET'
-                })  
-                .then((res) => 
-                    {
-                        // req1 = setInterval(() => {
-                            if(res?.status === 200) {
-                                setAllMessages(res)
-                            } 
-                        // }, 1500);
-
-                    }
-                )   
-                .catch((err) => {console.log(err)})
-        // }, 1500);
+        retrieveMessagesinUser(data)
+        setDuplicateForUser(!duplicateForUser)
+        if(duplicateForUser) {
+            int1 = setInterval(() => {
+                retrieveMessagesinUser(data)
+            }, 1500);
+            clearTimeout(int2)
+        } else {
+            int2 = setInterval(() => {
+                retrieveMessagesinUser(data)
+            }, 1500);
+            clearTimeout(int1)
+        }
     }
+    
 
     // Create a Message in a channel || user
     const createAMessage = () => {
@@ -409,16 +443,16 @@ const Index = () => {
                     <ChannelsContainer>
                         {channels &&
                             channels.map((data) => {
-                                return (<Channel key={data.id} active={selectChannel.id === data.id} onClick={() => {return retrieveMessagesinChannel(data)}}>{data.name}</Channel>)
+                                return (<Channel key={data.id} active={selectChannel.id === data.id} onClick={() => {return intervalRetrieveMessagesinChannel(data)}}>{data.name}</Channel>)
                              })
                         }
                     </ChannelsContainer>
                     <ChannelsTitleHeader>Direct Messages <AddIcon onClick={handleOpenDM}/></ChannelsTitleHeader>
-                    <ChannelsContainer>
+                    {/* <ChannelsContainer>
                         <UserChatBoxComponent initial={`M`} imgSrc={``} name={`Mike Camino`}/>
                         <UserChatBoxComponent initial={`M`} imgSrc={``} name={`Mike Camino`}/>
                         <UserChatBoxComponent initial={`M`} imgSrc={``} name={`Mike Camino`}/>
-                    </ChannelsContainer>
+                    </ChannelsContainer> */}
                    </ChannelsAndMessagesContainer>
                </ContentChannelSection>
 
@@ -460,7 +494,7 @@ const Index = () => {
                        {(selectChannel || selectUser)  &&
                        <ChatsMessageandChatInput>
                                 <ChatsContainer>
-                                    <ScrollableFeed forceScroll='true'>
+                                    {/* <ScrollableFeed forceScroll='true'> */}
                                         {allMessages.data?.data.map((data, index)=> {
                                             return (
                                             <ChatUserProfileComponent 
@@ -474,7 +508,7 @@ const Index = () => {
                                                 data={data}
                                             />)
                                         })}
-                                    </ScrollableFeed>
+                                    {/* </ScrollableFeed> */}
                                 </ChatsContainer>
 
                             <form onSubmit={(e) => 
@@ -512,22 +546,17 @@ const Index = () => {
            </ContentContainer>
 
             {/* Modal for Add User  */}
-            {/* {users.data?.data  && */}
             <AddUserModalComponent
                 open={open}
                 handleClose={handleClose}
                 style={style}
                 classes={classes}
                 userID={userID}
-                // searchUser={searchUser}
-                // getSearchUser={getSearchUser}
-                // users={searchUser.length < 1 ? users.data?.data : searchResults}
                 emailRemover={emailRemover}
                 handleAddUser={handleAddUser}
                 selectChannel={selectChannel}
                 loginUser={loginUser}
             />
-            {/* } */}
             {isLoading  &&
                 <Backdrop
                     sx={{ color: '#fff' ,zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -551,7 +580,7 @@ const Index = () => {
                     emailRemover={emailRemover}
                     selectChannel={selectChannel}
                     loginUser={loginUser}
-                    retrieveMessagesinUser={retrieveMessagesinUser}
+                    intervalRetrieveMessagesinUser={intervalRetrieveMessagesinUser}
                 />
             } 
             

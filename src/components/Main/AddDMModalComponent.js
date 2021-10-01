@@ -29,7 +29,7 @@ const AddUserComponent = (props) => {
         getSearchUser,
         users,
         emailRemover,
-        retrieveMessagesinUser
+        intervalRetrieveMessagesinUser
     } = props;
 
 
@@ -73,7 +73,7 @@ const AddUserComponent = (props) => {
                                             {emailRemover(user.uid).charAt(0).toUpperCase()}
                                         </Avatar>
                                     </ContentUserProfileContainer>
-                                    <User>{emailRemover(user.uid).substring(0, 25) + (emailRemover(user.uid).length > 25? '...' : '')}<ButtonAddUser onClick={() => retrieveMessagesinUser(user)}>message</ButtonAddUser></User>
+                                    <User>{emailRemover(user.uid).substring(0, 25) + (emailRemover(user.uid).length > 25? '...' : '')}<ButtonAddUser onClick={() => intervalRetrieveMessagesinUser(user)}>message</ButtonAddUser></User>
                                 </AddUserUsersContainer>
                             )})
                             :

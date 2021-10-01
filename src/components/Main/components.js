@@ -273,13 +273,16 @@ export const ChatMessageContainer = styled.div `
     display: flex;
     flex-direction: column;
     gap: 3px;
-    width: calc(100vh - 52%);
+    width: calc(100vh - 80%);
     word-wrap: break-word;
     text-align: ${props => props.right ? 'right' : ''};
 `
 export const ChatMessages = styled.span `
     font-size: 0.875rem;
     font-weight: normal;
+    /* background: #e8edea; */
+    border-radius: 8px;
+    padding: 0.5rem
 `
 export const ChatsMessageandChatInput = styled.div `
     position: absolute;

@@ -33,7 +33,7 @@ const ChatUserProfileComponent = (props) => {
                         <ChatUserName>{chatUserName}</ChatUserName>
                         <ChatUserTime>{chatUserTime}</ChatUserTime>
                     </ChatUsernTime>
-                    <ChatMessages >{chatMessage}</ChatMessages>
+                    <ChatMessages>{chatMessage}</ChatMessages>
                 </ChatMessageContainer>
             </ChatsUserProfile> 
         </>
