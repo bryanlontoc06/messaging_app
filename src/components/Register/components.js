@@ -25,15 +25,15 @@ export const Container = styled(MaterialContainer) `
     animation: 1s ${fadeInAnimation};
 `
 export const Button = styled(MaterialButton) `
-    background: #34495e;
+    background: #34495e !important;
     &:hover {
-        opacity: 0.9;
-        background: #34495e;
+        opacity: 0.9 !important;
+        background: #34495e !important;
     }
 `
 export const Link = styled(MaterialLink) `
-    color: #34495e;
-    text-decoration: none;
+    color: #34495e !important;
+    text-decoration: none !important;
 `
 export const Box = styled(MaterialBox) ``
 export const Checkbox = styled(MaterialCheckbox) ``
