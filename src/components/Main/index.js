@@ -49,8 +49,10 @@ import AddUserModalComponent from './AddUserComponent'
 import SnackbarComponent from '../Snackbars/index'
 import AddDMModalComponent from './AddDMModalComponent'
 import InputAdornment from '@mui/material/InputAdornment';
-import ScrollableFeed from 'react-scrollable-feed'
-import moment from 'moment'
+import ScrollableFeed from 'react-scrollable-feed';
+import moment from 'moment';
+import { debounce } from 'lodash';
+
 
 
 
@@ -84,6 +86,7 @@ const Index = () => {
     })
     const [duplicateForChannel, setDuplicateForChannel] = useState(false);
     const [duplicateForUser, setDuplicateForUser] = useState(false);
+    const [query, setQuery] = useState('')
 
     
 
@@ -91,13 +94,39 @@ const Index = () => {
     // Modal for Adding User in a Channel
     const [isLoading, setIsLoading] = useState(false)
     const [open, setOpen] = useState(false);
-    const handleOpen = useCallback(() => {
+    const handleOpen = async() => {
         setOpen(true)
-    }, [open]) ;
+        if(users.data?.data){
+            setIsLoading(false)
+        } else {
+            setIsLoading(true)
+            await axios({
+                url: 'http://206.189.91.54/api/v1/users',
+                data: {},
+                headers: {
+                    'access-token': loginUser.headers?.['access-token'],
+                    'client': loginUser.headers?.client,
+                    'expiry': loginUser.headers?.expiry,
+                    'uid': loginUser.headers?.uid
+                } || {},
+                method: 'GET'
+            })  
+            .then((res) => 
+                {
+                    if(res.status === 200) {
+                        setIsLoading(false)
+                        setUsers(res)
+                    } 
+                }
+            )
+            .catch((err) => {
+                console.log(err)
+            })
+        }
+    };
     // Function for adding a user in a channel
     const handleAddUser = async(id) => {
         setIsLoading(true)
-        setOpen(false)
         await axios({
             url: 'http://206.189.91.54/api/v1/channel/add_member',
             data: {
@@ -115,7 +144,8 @@ const Index = () => {
         .then((res) => 
             {   
                 if(res.status === 200) {
-                    setTimeout(() => {
+                    console.log({res})
+                    // setTimeout(() => {
                             if(res.data.data?.id) {
                                 setState({...state, 
                                     open: true, 
@@ -123,15 +153,17 @@ const Index = () => {
                                     warning: false
                                 })
                                 setIsLoading(false)
+                                setOpen(false)
                             } 
                             else {
-                                if(res.data?.errors === `User is already a member of this channel!`){
+                                if(res.data?.errors[0] === `User is already a member of this channel!`){
                                     setState({...state, 
                                         open: true, 
                                         message: `User is already a member of this channel!`, 
                                         warning: true
                                     })
                                     setIsLoading(false)
+                                    setOpen(false)
                                 } else {
                                     setState({...state, 
                                         open: true, 
@@ -139,9 +171,10 @@ const Index = () => {
                                         warning: true
                                     })
                                     setIsLoading(false)
+                                    setOpen(false)
                                 } 
                             } 
-                    }, 1000);
+                    // }, 1000);
                 }
             }
         )
@@ -281,14 +314,14 @@ const Index = () => {
         retrieveMessagesinUser(data)
         setDuplicateForUser(!duplicateForUser)
         if(duplicateForUser) {
-            int1 = setInterval(() => {
+            // int1 = setInterval(() => {
                 retrieveMessagesinUser(data)
-            }, 1500);
+            // }, 1500);
             clearTimeout(int2)
         } else {
-            int2 = setInterval(() => {
+            // int2 = setInterval(() => {
                 retrieveMessagesinUser(data)
-            }, 1500);
+            // }, 1500);
             clearTimeout(int1)
         }
     }
@@ -378,8 +411,15 @@ const Index = () => {
     }
 
 
-
     const [openDM, setOpenDM] = useState(false)
+    const getFilteredItems = (query, users) => {
+        console.log({users})
+        if(!query) {
+            return users.data?.data
+        } 
+        return users.data?.data.filter((user) => user.uid.includes(query))
+    }
+
     const handleOpenDM = async() => {
         setOpenDM(true)
         if(users.data?.data){
@@ -410,25 +450,32 @@ const Index = () => {
             })
         }
     };
+    const filteredItems = getFilteredItems(query, users)
+    const updateQuery = (e) => setQuery(e?.target?.value);
+    const debounceOnChange = debounce(updateQuery, 500)
 
-    const searchHandlerDM = (searchUserDM) => {
-        const sortedUsers = users.data?.data.filter(user => {return !(JSON.stringify(user?.id).includes(loginUser.data.data?.id))})
-        setSearchUserDM(searchUserDM)
-        if(searchUserDM !== "") {
-            const newUsersList = sortedUsers.filter((user) => {
-                return Object.values(user)
-                .join(" ")
-                .toLowerCase()
-                .includes(searchUserDM.toLowerCase())
-            })
-            setSearchResultsDM(newUsersList)
-        } else {
-            setSearchResultsDM(users.data?.data)
-        }
-    }
-    const getSearchUserDM = () => {
-        searchHandlerDM(addUserEmail.current.value)
-    }
+    
+    // const searchHandlerDM = (searchUserDM) => {
+    //     const sortedUsers = users.data?.data.filter(user => {return !(JSON.stringify(user?.id).includes(loginUser.data.data?.id))})
+    //     setSearchUserDM(searchUserDM)
+    //     if(searchUserDM !== "") {
+    //         const newUsersList = sortedUsers.filter((user) => {
+    //             return Object.values(user)
+    //             .join(" ")
+    //             .toLowerCase()
+    //             .includes(searchUserDM.toLowerCase())
+    //         })
+    //         setSearchResultsDM(newUsersList)
+    //     } else {
+    //         setSearchResultsDM(users.data?.data)
+    //     }
+    // }
+    // const getSearchUserDM = () => {
+    //     searchHandlerDM(addUserEmail.current.value)
+    // }
+    // const debounceDMSearch = debounce(searchHandlerDM(addUserEmail.current.value), 200);
+
+
 
 
     return (
@@ -551,6 +598,7 @@ const Index = () => {
            </ContentContainer>
 
             {/* Modal for Add User  */}
+            {users.data?.data  &&
             <AddUserModalComponent
                 open={open}
                 handleClose={handleClose}
@@ -561,7 +609,11 @@ const Index = () => {
                 handleAddUser={handleAddUser}
                 selectChannel={selectChannel}
                 loginUser={loginUser}
+                debounceOnChange={debounceOnChange}
+                filteredItems={filteredItems}
+                query={query}
             />
+            }
             {isLoading  &&
                 <Backdrop
                     sx={{ color: '#fff' ,zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -580,12 +632,14 @@ const Index = () => {
                     classes={classes}
                     addUserEmail={addUserEmail}
                     searchUser={searchUserDM}
-                    getSearchUser={getSearchUserDM}
+                    // getSearchUser={getSearchUserDM}
                     users={searchUserDM.length < 1 ? users.data?.data : searchResultsDM}
                     emailRemover={emailRemover}
                     selectChannel={selectChannel}
                     loginUser={loginUser}
                     intervalRetrieveMessagesinUser={intervalRetrieveMessagesinUser}
+                    debounceOnChange={debounceOnChange}
+                    filteredItems={filteredItems}
                 />
             } 
             
