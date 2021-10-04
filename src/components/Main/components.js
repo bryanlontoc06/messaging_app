@@ -204,6 +204,8 @@ export const Button = styled(MaterialButton) `
 `
 export const AvatarGroup = styled(MaterialAvatarGroup) `
     background: unset;  
+    display: flex;
+    justify-content: center;
 `
 export const AvatarSmallGroup = styled(MaterialAvatar) `
     width: 24px !important;
@@ -228,7 +230,7 @@ export const ChatsContainer = styled.div `
     color: #85929e;
     flex-direction: column;
     gap: 17px;
-    max-height: calc(100vh - 17rem);
+    max-height: calc(100vh - 16rem);
     overflow-y: auto;
     
     /* &:hover {
@@ -384,4 +386,8 @@ export const InviteUsersTitle = styled.div `
     font-family: 'Source Sans Pro', sans-serif;
     font-weight: bold;
     font-size: 1rem;
+`
+export const ButtonAddChannel = styled(Button) `
+    margin-top: 1rem !important;
+    width: 100% !important;
 `

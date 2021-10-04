@@ -7,7 +7,8 @@ import {
     ContentUserProfileContainer,
     Avatar,
     AddUserUsersContainer,
-    ButtonAddUser
+    ButtonAddUser,
+    InviteUsersTitle
 } from './components'
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
@@ -68,8 +69,10 @@ const AddUserComponent = (props) => {
                             placeholder="user ID"
                         />
                     </UidInputContainer>
+                    <InviteUsersTitle>Note: Type 'all' to load all users</InviteUsersTitle>
                     <UsersContainer>
-                        {filteredItems.length > 0 ?
+                        {filteredItems === null ? '' :
+                        filteredItems.length > 0 ?
                             filteredItems.map((user, index) => {
                                 return (
                                 <AddUserUsersContainer key={index}>

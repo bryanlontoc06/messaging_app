@@ -37,6 +37,7 @@ const useHooks = () => {
     const [openDM, setOpenDM] = useState(false)
     const [anchorEl, setAnchorEl] = useState(null);
     const [openAddChannel, setOpenAddChannel] = useState(false);
+    const channelName = useRef('')
 
     // Retrieve All Users
     const handleOpen = async() => {
@@ -90,7 +91,6 @@ const useHooks = () => {
         .then((res) => 
             {   
                 if(res.status === 200) {
-                    console.log({res})
                     // setTimeout(() => {
                             if(res.data.data?.id) {
                                 setState({...state, 
@@ -159,24 +159,34 @@ const useHooks = () => {
 
     // Add Channel Modal
     const handleOpenAddChannel = async() => {
-        await axios({
-            url: `${url}/users`,
-            data: {},
-            headers: {
-                'access-token': loginUser.headers?.['access-token'],
-                'client': loginUser.headers?.client,
-                'expiry': loginUser.headers?.expiry,
-                'uid': loginUser.headers?.uid
-            } || {},
-            method: 'GET'
-        })  
-        .then((res) => 
-            setUsers(res)
-        )
-        .catch((err) => {
-            console.log(err)
-        })
-        setOpenAddChannel(true);
+        setOpenAddChannel(true)
+        if(users.data?.data){
+            setIsLoading(false)
+        } else {
+            setIsLoading(true)
+            await axios({
+                url: `${url}/users`,
+                data: {},
+                headers: {
+                    'access-token': loginUser.headers?.['access-token'],
+                    'client': loginUser.headers?.client,
+                    'expiry': loginUser.headers?.expiry,
+                    'uid': loginUser.headers?.uid
+                } || {},
+                method: 'GET'
+            }) 
+            .then((res) => 
+                {
+                    if(res.status === 200) {
+                        setIsLoading(false)
+                        setUsers(res)
+                    } 
+                }
+            )
+            .catch((err) => {
+                console.log(err)
+            })
+        }
     };
     // Add Channel Modal
 
@@ -213,14 +223,14 @@ const useHooks = () => {
         retrieveMessagesinChannel(data)
         setDuplicateForChannel(!duplicateForChannel)
         if(duplicateForChannel) {
-            int3 = setInterval(() => {
+            // int3 = setInterval(() => {
                 retrieveMessagesinChannel(data)
-            }, 1500);
+            // }, 1500);
             clearTimeout(int4)
         } else {
-            int4 = setInterval(() => {
+            // int4 = setInterval(() => {
                 retrieveMessagesinChannel(data)
-            }, 1500);
+            // }, 1500);
             clearTimeout(int3)
         }
     }
@@ -258,14 +268,14 @@ const useHooks = () => {
         retrieveMessagesinUser(data)
         setDuplicateForUser(!duplicateForUser)
         if(duplicateForUser) {
-            int1 = setInterval(() => {
+            // int1 = setInterval(() => {
                 retrieveMessagesinUser(data)
-            }, 1500);
+            // }, 1500);
             clearTimeout(int2)
         } else {
-            int2 = setInterval(() => {
+            // int2 = setInterval(() => {
                 retrieveMessagesinUser(data)
-            }, 1500);
+            // }, 1500);
             clearTimeout(int1)
         }
     }
@@ -304,36 +314,118 @@ const useHooks = () => {
         chatMessage.current.value = ''
     }
 
+    // Create a Message in a channel || user
+    const createAChannel = async(data) => {
+        await axios({
+            url: `${url}/channels`,
+            data: {
+                'name': channelName.current.value,
+                'user_ids': data
+            },
+            headers: {
+                'access-token': loginUser.headers?.['access-token'],
+                'client': loginUser.headers?.client,
+                'expiry': loginUser.headers?.expiry,
+                'uid': loginUser.headers?.uid
+            } || {},
+            method: 'POST'
+        })
+        .then((res) => 
+            {
+                if(res.data.data?.id) {
+                    setState({...state, 
+                        open: true, 
+                        message: `Added Successfully!`, 
+                        warning: false
+                    })
+                    setIsLoading(false)
+                    setOpen(false)
+                    retrieveAllChannels();
+                    setOpenAddChannel(false)
+                    channelName.current.value = '';
+                } 
+                else {
+                    if(res.data?.errors[0] === `Name has already been taken`){
+                        setState({...state, 
+                            open: true, 
+                            message: `Name has already been taken!`, 
+                            warning: true
+                        })
+                        setIsLoading(false)
+                        setOpen(false)
+                    } else if (res.data?.errors[0] === `Name is too short (minimum is 3 characters)`) {
+                        setState({...state, 
+                            open: true, 
+                            message: `Name is too short (minimum is 3 characters)`, 
+                            warning: true
+                        })
+                        setIsLoading(false)
+                        setOpen(false)
+                    } else if (res.data?.errors[0] === `Name is too long (maximum is 15 characters)`) {
+                        setState({...state, 
+                            open: true, 
+                            message:  `Name is too long (maximum is 15 characters)`, 
+                            warning: true
+                        })
+                        setIsLoading(false)
+                        setOpen(false)
+                    } else if (res.data?.errors.length === 2) {
+                        setState({...state, 
+                            open: true, 
+                            message:  `Name can't be blank.  Name is too short (minimum is 3 characters)`, 
+                            warning: true
+                        })
+                        setIsLoading(false)
+                        setOpen(false)
+                    }  else {
+                        setState({...state, 
+                            open: true, 
+                            message:  `Error`, 
+                            warning: true
+                        })
+                        setIsLoading(false)
+                        setOpen(false)
+                    }
+                } 
+            }
+        )   
+        .catch((err) => {console.log(err)})
+    }
+
+    const retrieveAllChannels = async() => {
+        axios({
+            url: `${url}/channels`,
+            data: {},
+            headers: {
+                'access-token': loginUser.headers?.['access-token'],
+                'client': loginUser.headers?.client,
+                'expiry': loginUser.headers?.expiry,
+                'uid': loginUser.headers?.uid
+            } || {},
+            method: 'GET'
+            }) 
+        .then((res) => 
+            {
+                if(isLogin){
+                    setChannels(res?.data.data)
+                }
+            }
+        )
+        .catch((err) => {
+            if(!isLogin){
+                return
+            } else {
+                console.error('Error in main page', err)
+            }
+        })
+    }
+
     useEffect(() => {
         setSelectChannel('')
         setSelectUser('')
         axios.all([
             // Retrieve All Channels where user was invited
-            axios({
-                url: `${url}/channels`,
-                data: {},
-                headers: {
-                    'access-token': loginUser.headers?.['access-token'],
-                    'client': loginUser.headers?.client,
-                    'expiry': loginUser.headers?.expiry,
-                    'uid': loginUser.headers?.uid
-                } || {},
-                method: 'GET'
-                }) 
-            .then((res) => 
-                {
-                    if(isLogin){
-                        setChannels(res?.data.data)
-                    }
-                }
-            )
-            .catch((err) => {
-                if(!isLogin){
-                    return
-                } else {
-                    console.error('Error in main page', err)
-                }
-            }),
+            retrieveAllChannels()
         ])
         
         if(channels){
@@ -351,10 +443,12 @@ const useHooks = () => {
 
     
     const getFilteredItems = (query, users) => {
-        console.log({users})
         if(!query) {
-            return users.data?.data
-        } 
+            return null;
+        }
+        else if (query.toLowerCase() === 'all') {
+            return users?.data?.data;
+        }
         return users.data?.data.filter((user) => user.uid.includes(query))
     }
 
@@ -447,7 +541,9 @@ const useHooks = () => {
         handleClose,
         query,
         anchorEl,
-        state
+        state,
+        channelName,
+        createAChannel
     }
 }
 

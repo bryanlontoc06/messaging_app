@@ -57,7 +57,10 @@ const Index = () => {
         handleClose,
         query,
         anchorEl,
-        state} = useHooks();
+        state,
+        createAChannel,
+        channelName
+    } = useHooks();
 
     return (
         <> 
@@ -68,10 +71,10 @@ const Index = () => {
            <ContentContainer>
                <ContentChannelSectionComponent 
                     handleOpenAddChannel={handleOpenAddChannel}
+                    handleOpenDM={handleOpenDM}
                     channels={channels}
                     selectChannel={selectChannel}
                     intervalRetrieveMessagesinChannel={intervalRetrieveMessagesinChannel}
-                    handleOpenDM={handleOpenDM}
                />
 
                <ContentChatBoxSectionComponent 
@@ -160,10 +163,15 @@ const Index = () => {
                 <AddChannelModalComponent
                     openAddChannel={openAddChannel}
                     handleCloseChannel={handleClose}
-                    // createAChannel={createAChannel}
-                    // channelName={channelName}
+                    classes={classes}
+                    createAChannel={createAChannel}
+                    channelName={channelName}
                     // inputUsers={inputUsers}
                     usersList={users}
+                    loginUser={loginUser}
+                    intervalRetrieveMessagesinUser={intervalRetrieveMessagesinUser}
+                    debounceOnChange={debounceOnChange}
+                    filteredItems={filteredItems}
                 />
             }
 
