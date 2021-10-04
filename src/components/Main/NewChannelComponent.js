@@ -1,4 +1,4 @@
-import Box from '@mui/material/Box';
+
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import { 
@@ -15,7 +15,8 @@ import {
     ButtonAddUser, 
     Avatar,
     AvatarGroup,
-    AvatarSmallGroup
+    AvatarSmallGroup,
+    Box
 } from './components'
 import {emailRemover} from '../helpers/helpers'
 import {useState} from 'react'
@@ -41,7 +42,8 @@ const Index = (props) => {
         inputUsers, 
         filteredItems,
         debounceOnChange,
-        classes
+        classes,
+        matchesMD
     } = props;
 
     const [usersToAdd, setUsersToAdd] = useState([])
@@ -125,13 +127,13 @@ const Index = (props) => {
                             filteredItems.length > 0 ?
                                 filteredItems.map((user, index) => {
                                     return (
-                                    <AddUserUsersContainer key={index}>
+                                    <AddUserUsersContainer key={index} onClick={() => addUsersToChannel(user)}>
                                         <ContentUserProfileContainer>
                                             <Avatar sx={{ bgcolor: 'green' }} variant="rounded" src="#">
                                                 {emailRemover(user.uid).charAt(0).toUpperCase()}
                                             </Avatar>
                                         </ContentUserProfileContainer>
-                                        <User>{emailRemover(user.uid).substring(0, 25) + (emailRemover(user.uid).length > 25? '...' : '')}<ButtonAddUser onClick={() => addUsersToChannel(user)}><AddIcon /></ButtonAddUser></User>
+                                        <User>{emailRemover(user.uid).substring(0, 25) + (emailRemover(user.uid).length > 25? '...' : '')}{matchesMD && <ButtonAddUser><AddIcon /></ButtonAddUser>}</User>
                                     </AddUserUsersContainer>
                                 )})
                                 :

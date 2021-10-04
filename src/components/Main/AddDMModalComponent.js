@@ -8,9 +8,9 @@ import {
     Avatar,
     AddUserUsersContainer,
     ButtonAddUser,
-    InviteUsersTitle
+    InviteUsersTitle,
+    BoxDM
 } from './components'
-import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 
@@ -34,7 +34,8 @@ const AddUserComponent = (props) => {
         debounceDMSearch,
         setQuery,
         filteredItems,
-        debounceOnChange
+        debounceOnChange,
+        matchesMD
     } = props;
 
 
@@ -47,7 +48,7 @@ const AddUserComponent = (props) => {
                 aria-labelledby="keep-mounted-modal-title"
                 aria-describedby="keep-mounted-modal-description"
             >
-                <Box sx={style}>
+                <BoxDM sx={style}>
                 <Typography id="keep-mounted-modal-title" variant="h6" component="h2">
                     Direct message
                 </Typography>
@@ -75,13 +76,13 @@ const AddUserComponent = (props) => {
                         filteredItems.length > 0 ?
                             filteredItems.map((user, index) => {
                                 return (
-                                <AddUserUsersContainer key={index}>
+                                <AddUserUsersContainer key={index} onClick={() => intervalRetrieveMessagesinUser(user)}>
                                     <ContentUserProfileContainer>
                                         <Avatar sx={{ bgcolor: 'green' }} variant="rounded" src="#">
                                             {emailRemover(user.uid).charAt(0).toUpperCase()}
                                         </Avatar>
                                     </ContentUserProfileContainer>
-                                    <User>{emailRemover(user.uid).substring(0, 25) + (emailRemover(user.uid).length > 25? '...' : '')}<ButtonAddUser onClick={() => intervalRetrieveMessagesinUser(user)}>message</ButtonAddUser></User>
+                                    <User>{emailRemover(user.uid).substring(0, 25) + (emailRemover(user.uid).length > 25? '...' : '')}{matchesMD && <ButtonAddUser>message</ButtonAddUser>}</User>
                                 </AddUserUsersContainer>
                             )})
                             :
@@ -89,7 +90,7 @@ const AddUserComponent = (props) => {
                         }
                     </UsersContainer>
                 </Typography>
-                </Box>
+                </BoxDM>
             </Modal> 
         </>
     )

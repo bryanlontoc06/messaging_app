@@ -3,6 +3,7 @@ import {AppContext} from '../Global/AppContext'
 import { debounce } from 'lodash';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 let int1;
 let int2;
@@ -38,6 +39,9 @@ const useHooks = () => {
     const [anchorEl, setAnchorEl] = useState(null);
     const [openAddChannel, setOpenAddChannel] = useState(false);
     const channelName = useRef('')
+
+    const matchesMD = useMediaQuery('(min-width: 768px)');
+
 
     // Retrieve All Users
     const handleOpen = async() => {
@@ -543,7 +547,8 @@ const useHooks = () => {
         anchorEl,
         state,
         channelName,
-        createAChannel
+        createAChannel,
+        matchesMD
     }
 }
 

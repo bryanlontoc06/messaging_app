@@ -6,6 +6,11 @@ import {
     Logo,
     ContentContainer,
     Typography,
+    ChannelsAndMessagesContainer,
+    ChannelsTitleHeader,
+    AddIcon,
+    Channel,
+    ChannelsContainer
 } from './components'
 import channel_logo from '../../assets/sampleLogo.png'
 import Popover from '@mui/material/Popover';
@@ -19,6 +24,7 @@ import SnackbarComponent from '../Snackbars/index'
 import AddDMModalComponent from './AddDMModalComponent'
 import ContentChatBoxSectionComponent from './ContentChatBoxSectionComponent';
 import ContentChannelSectionComponent from './ContentChannelSectionComponent';
+import { useHistory } from 'react-router-dom';
 
 
 const Index = () => {
@@ -59,15 +65,17 @@ const Index = () => {
         anchorEl,
         state,
         createAChannel,
-        channelName
+        channelName,
+        matchesMD
     } = useHooks();
-
+    const history = useHistory();
     return (
         <> 
         <Container>
+            {matchesMD &&
            <LogoContainer>
                 <Logo src={channel_logo} />
-           </LogoContainer>
+           </LogoContainer>}
            <ContentContainer>
                <ContentChannelSectionComponent 
                     handleOpenAddChannel={handleOpenAddChannel}
@@ -75,8 +83,37 @@ const Index = () => {
                     channels={channels}
                     selectChannel={selectChannel}
                     intervalRetrieveMessagesinChannel={intervalRetrieveMessagesinChannel}
+                    matchesMD={matchesMD}
+                    handleClickPopOver={handleClickPopOver}
+                    loginUser={loginUser}
                />
 
+            {!matchesMD &&
+                <ChannelsAndMessagesContainer>
+                    <ChannelsTitleHeader>Channels <AddIcon onClick={handleOpenAddChannel}/></ChannelsTitleHeader>
+                    <ChannelsContainer>
+                        {channels &&
+                            channels.map((data) => {
+                                return (<Channel key={data.id} active={selectChannel.id === data.id} 
+                                    onClick={() => {
+                                        return (
+                                            intervalRetrieveMessagesinChannel(data),
+                                            !matchesMD && history.push(`/chat`)
+                                        )
+                                    }}>{data.name}</Channel>)
+                                })
+                        }
+                    </ChannelsContainer>
+                    <ChannelsTitleHeader>Direct Messages <AddIcon onClick={handleOpenDM}/></ChannelsTitleHeader>
+                    {/* <ChannelsContainer>
+                        <UserChatBoxComponent initial={`M`} imgSrc={``} name={`Mike Camino`}/>
+                        <UserChatBoxComponent initial={`M`} imgSrc={``} name={`Mike Camino`}/>
+                        <UserChatBoxComponent initial={`M`} imgSrc={``} name={`Mike Camino`}/>
+                    </ChannelsContainer> */}
+                </ChannelsAndMessagesContainer>
+            }
+
+            {matchesMD &&
                <ContentChatBoxSectionComponent 
                     loginUser={loginUser}
                     handleClickPopOver={handleClickPopOver}
@@ -87,7 +124,7 @@ const Index = () => {
                     createAMessage={createAMessage}
                     classes={classes}
                     chatMessage={chatMessage}
-               />
+               /> }
            </ContentContainer>
 
             {/* Modal for Add User  */}
@@ -133,6 +170,7 @@ const Index = () => {
                     intervalRetrieveMessagesinUser={intervalRetrieveMessagesinUser}
                     debounceOnChange={debounceOnChange}
                     filteredItems={filteredItems}
+                    matchesMD={matchesMD}
                 />
             } 
             
@@ -172,6 +210,7 @@ const Index = () => {
                     intervalRetrieveMessagesinUser={intervalRetrieveMessagesinUser}
                     debounceOnChange={debounceOnChange}
                     filteredItems={filteredItems}
+                    matchesMD={matchesMD}
                 />
             }
 

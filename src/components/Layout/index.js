@@ -19,7 +19,8 @@ import useHooks from './hooks';
 
 const Index = () => {
     const { isLogin,
-        loginUser } = useHooks();
+        loginUser, 
+        matchesMD } = useHooks();
     
     
     return (
@@ -36,6 +37,7 @@ const Index = () => {
                     Route={Route} 
                     isLogin={isLogin}
                     loginUser={loginUser}
+                    matchesMD={matchesMD}
                 />
             </Router>
         </>

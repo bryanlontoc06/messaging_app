@@ -9,9 +9,10 @@ import { Redirect } from 'react-router-dom'
 import MainPage from '../Main'
 import Login from '../Login'
 import Register from "../Register";
+import ContentChatBoxBodyComponent from '../Main/ContentChatBoxBody'
 
 const Index = (props) => {
-  const {Switch, Route, isLogin, loginUser} = props;
+  const {Switch, Route, isLogin, loginUser, matchesMD} = props;
   return (
     <>
       <Switch>
@@ -19,6 +20,7 @@ const Index = (props) => {
           <Route exact path="/login" component={() => isLogin ? <Redirect to={`/app/${loginUser.data?.data?.id}`}/> : <Login />} />
           <Route exact path="/" component={() => isLogin ? <Redirect to={`/app/${loginUser.data?.data?.id}`}/> : <Login />} />
           <Route exact path="/register" component={() => isLogin ? <Redirect to={`/app/${loginUser.data?.data?.id}`}/> : <Register />} />
+          {!matchesMD && <Route exact path="/chat" component={() => isLogin ? <ContentChatBoxBodyComponent/> : <Login />} />}
       </Switch>
     </>
   )

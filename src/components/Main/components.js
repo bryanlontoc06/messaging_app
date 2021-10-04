@@ -9,6 +9,7 @@ import MaterialAvatarGroup from '@mui/material/AvatarGroup';
 import MaterialSendIcon from '@mui/icons-material/Send';
 import MaterialTypography from '@mui/material/Typography';
 import { fadeIn } from 'react-animations';
+import MaterialBox from '@mui/material/Box';
 
 
 const fadeInAnimation = keyframes`${fadeIn}`;
@@ -42,17 +43,22 @@ export const style = {
 export const Container = styled.div `
     background: #f6f7fb;
     display: flex;
-    height: 100vh;
     font-family: 'Source Sans Pro', sans-serif;
     max-width: 1024px;
     margin-left: auto;
     margin-right: auto;
     animation: 1s ${fadeInAnimation};
+    @media (min-width: 768px) {
+        height: 100vh;
+    }
 `
-export const LogoContainer = styled.div `
-    margin-right: 1.25rem;
+export const LogoContainer = styled.div `   
     padding: 1.0625rem 0.6875rem;
-    background-color: #34495e;
+    background-color: unset;
+    @media (min-width: 768px) {
+        background-color: #34495e;
+        margin-right: 1.25rem;
+    }
 `
 export const Logo = styled.img `
     width: 38px;
@@ -60,18 +66,33 @@ export const Logo = styled.img `
     border-radius: 5px;
 `
 export const ContentContainer = styled.div `
-    display: flex;
     width: 100%;
-`
-export const ContentChannelSection = styled.div `   
-    width: 30%;
+    height: 100vh;
+    @media (min-width: 768px) {
+        display: flex;
+        height: unset;
+    }
+` 
+export const ContentChannelSection = styled.div `
+    display: flex; 
+    background-color: #34495e;
+    align-items: center;
+    @media (min-width: 768px) {
+        display: unset;
+        width: 30%;
+        background-color: unset;
+        align-items: unset;
+    }
 `
 export const ContentChannelTitle = styled.div `
-    color: #34495e;
+    color: #fff;
     font-family: 'Source Sans Pro', sans-serif;
     font-weight: bold;
     font-size: 1.25rem;
-    padding: 1.4375rem 0rem 1.0625rem 0rem;
+    @media (min-width: 768px) {
+        color: #34495e;
+        padding: 1.4375rem 0rem 1.0625rem 0rem;
+    }
 `
 export const ContentChannelSearchBox = styled.div `
     border: solid 1px #979797;
@@ -86,13 +107,23 @@ export const TextField = styled(MaterialTextField) `
 `
 export const ContentUserProfileContainer = styled.div `
     cursor: pointer;
+    margin-left: auto;
+    margin-right: 0.6875rem;
+    @media (min-width: 768px) {
+        margin-left: unset;
+    }
 `
 export const Avatar = styled(MaterialAvatar) `
     width: 38px !important;
     height: 38px !important;
     margin-left: auto;
 `
-export const ChannelsAndMessagesContainer = styled.div ``
+export const ChannelsAndMessagesContainer = styled.div `
+    padding: 0 1.3125rem;
+    @media (min-width: 768px) {
+        padding: 0;
+    }
+`
 export const ChannelsTitleHeader = styled.div `
     font-size: 1.125rem;
     color: #34495e;
@@ -108,7 +139,7 @@ export const AddIcon = styled(MaterialAddIcon) `
     cursor: pointer;
 `
 export const ChannelsContainer = styled.div `
-    height: calc(100vh - 31rem);
+    height: calc(100vh - 25rem);
     overflow-y: auto;
     
     /* &:hover {
@@ -134,6 +165,9 @@ export const ChannelsContainer = styled.div `
     &::-webkit-scrollbar-thumb:hover {
     background: #555; 
     }
+    @media (min-width: 768px) {
+        height: calc(100vh - 31rem);
+    }   
 `
 export const Channel = styled.div `
     font-size: 1rem;
@@ -306,7 +340,7 @@ export const UidInputContainer = styled.div `
 export const UsersContainer = styled.div `
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 31rem);
+    height: calc(100vh - 24rem);
     overflow-y: auto;
     
     /* // &:hover {
@@ -331,6 +365,10 @@ export const UsersContainer = styled.div `
     /* Handle on hover */
     &::-webkit-scrollbar-thumb:hover {
     background: #555; 
+    }
+
+    @media (min-width: 768px) {
+        height: calc(100vh - 24rem);
     }
 `
 export const User = styled.span `
@@ -390,4 +428,18 @@ export const InviteUsersTitle = styled.div `
 export const ButtonAddChannel = styled(Button) `
     margin-top: 1rem !important;
     width: 100% !important;
+`
+export const Box = styled(MaterialBox) `
+    width: 17rem !important;
+    height: calc(100vh - 7rem);
+    @media (min-width: 768px) {
+        width: 25rem !important;
+        height: unset;
+    }
+`
+export const BoxDM = styled(Box) `
+    height: calc(100vh - 15rem);
+    @media (min-width: 768px) {
+        height: unset;
+    }
 `
