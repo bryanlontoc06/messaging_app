@@ -15,38 +15,19 @@ import axios from 'axios'
 import Snackbar from '../Snackbars'
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
-
-
-
-
-
+import useHooks from './hooks'
+import { userRegistrationAPI } from '../api/api';
 
 
 const Register = (props) => {
-  const {isLogin, setIsLogin} = props;
-  const email = useRef('')
-  const password = useRef('')
-  const retypePassword = useRef('')
-
-  const [state, setState] = useState({
-    open: false,
-    loading: false,
-    response: '',
-    responseMessage: '',
-    warning: false,
-  });
-
-  const history = useHistory();
-
-  const handleClose = (event, reason) => {
-      if (reason === 'clickaway') {
-        return;
-      };
-      setState({
-        ...state, open: false,
-      })
-  };
-
+  const {email,
+    password,
+    retypePassword,
+    history,
+    handleClose,
+    state,
+    setState} = useHooks();
+  
 
   return (
     <>
@@ -81,16 +62,7 @@ const Register = (props) => {
           // User Registration
             onSubmit={async() => {
               setState({...state, loading: true})
-                await axios({
-                  url: 'http://206.189.91.54/api/v1/auth',
-                  data: {
-                    'email': email.current.value,
-                    'password': password.current.value,
-                    'password_confirmation': retypePassword.current.value,
-                  },
-                  headers: {},
-                  method: 'POST'
-                })
+                userRegistrationAPI(email, password, retypePassword)
                 .then((res) => 
                   {
                       if(res.status === 200){

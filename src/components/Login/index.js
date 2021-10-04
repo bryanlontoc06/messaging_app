@@ -1,5 +1,4 @@
-import React, {useRef, useState} from 'react'
-import { Link as RouterLink, useHistory, Redirect } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import {
@@ -10,90 +9,20 @@ import {
   TextField,
   Typography
 } from './components'
-import axios from 'axios'
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Snackbar from '../Snackbars'
 import useHooks from './hooks'
-import Cookies from 'js-cookie'
-
 
 
 const Index = (props) => {
-  const {isLogin,
-    setIsLogin, 
-    loginUser, 
-    setLoginUser} = useHooks();
-  const { authorized } = props;
-  const email = useRef('')
-  const password = useRef('')
-  const [state, setState] = useState({
-    open: false,
-    isLoading: false,
-    response: '',
-    responseMessage: '',
-    warning: false,
-  })
-  const history = useHistory();
-
-
+  const {
+    handleClose,
+    email,
+    password,
+    state,
+    handleLogin} = useHooks();
   
-  // Creating a User Session
-  const handleLogin = async() => {
-      setState({isLoading: true})
-      await axios({
-        url: 'http://206.189.91.54/api/v1/auth/sign_in',
-        data: {
-          'email': email.current.value,
-          'password': password.current.value,
-        },
-        headers: {},
-        method: 'POST'
-      })
-      .then((res) => 
-        {
-            // var date = new Date();
-            // date.setTime(date.getTime() + (30 * 1000));
-            if(res.status === 200){     
-              Cookies.set('user', 'loginTrue', { expires: 1 })
-              setState({...state, 
-                open: true,
-                response: res?.data,
-              })
-              setLoginUser(res)
-              setIsLogin(true)
-            }
-            setTimeout(() => {
-              setState({...state, isLoading: false})
-              history.push(`/app/${res.data?.data.id}`)
-            },)
-        } 
-      )
-      .catch((err) => 
-      {
-          const { errors } = err.response.data;
-          if(err.response.status === 401) {
-            setState({...state, 
-              open: true,
-              isLoading: false,
-              responseMessage: errors[errors.length - 1],
-              warning: true
-            })
-          }   
-        }
-      )
-  }
-
-
-  const handleClose = (event, reason) => {
-      if (reason === 'clickaway') {
-        return;
-      };
-      setState({
-        ...state, open: false,
-      })
-  };
-
     return (
         <>
          <Box
