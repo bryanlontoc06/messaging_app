@@ -7,12 +7,14 @@ import {
   Link, 
   Box,
   TextField,
-  Typography
+  Typography,
+  LogoTitle
 } from './components'
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Snackbar from '../Snackbars'
 import useHooks from './hooks'
+import channel_logo from '../../assets/sampleLogo.png'
 
 
 const Index = (props) => {
@@ -62,8 +64,10 @@ const Index = (props) => {
                   <Typography
                     color="textPrimary"
                     variant="h2"
+                    style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}
                   >
-                    {`{App Logo}`}
+                    <img src={channel_logo} width='30%' height='30%' />
+                    <LogoTitle>Avion School</LogoTitle>
                   </Typography>
                 </Box>
                 <Box

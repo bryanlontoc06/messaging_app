@@ -35,3 +35,5 @@ export const Box = styled(MaterialBox) `
 `
 export const TextField = styled(MaterialTextField) ``
 export const Typography = styled(MaterialTypography) ``
+export const LogoTitle = styled.span ``
+    

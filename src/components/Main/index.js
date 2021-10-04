@@ -64,7 +64,7 @@ const Index = () => {
         <> 
         <Container>
            <LogoContainer>
-                <Logo src={channel_logo } />
+                <Logo src={channel_logo} />
            </LogoContainer>
            <ContentContainer>
                <ContentChannelSectionComponent 
