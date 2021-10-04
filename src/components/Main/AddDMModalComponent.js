@@ -29,7 +29,11 @@ const AddUserComponent = (props) => {
         getSearchUser,
         users,
         emailRemover,
-        intervalRetrieveMessagesinUser
+        intervalRetrieveMessagesinUser,
+        debounceDMSearch,
+        setQuery,
+        filteredItems,
+        debounceOnChange
     } = props;
 
 
@@ -57,15 +61,16 @@ const AddUserComponent = (props) => {
                                 input: classes.resize,
                             }, }}
                             inputRef={addUserEmail}
-                            value={searchUser}
-                            onChange={getSearchUser}
-                            placeholder="search"
+                            // value={searchUser}
+                            // onChange={getSearchUser}
+                            // onChange={(e) => setQuery(e.target.value)}
+                            onChange={debounceOnChange}
+                            placeholder="user ID"
                         />
                     </UidInputContainer>
                     <UsersContainer>
-                        {users.length > 0 ?
-
-                            users.map((user, index) => {
+                        {filteredItems.length > 0 ?
+                            filteredItems.map((user, index) => {
                                 return (
                                 <AddUserUsersContainer key={index}>
                                     <ContentUserProfileContainer>

@@ -35,3 +35,8 @@ export const Box = styled(MaterialBox) `
 `
 export const TextField = styled(MaterialTextField) ``
 export const Typography = styled(MaterialTypography) ``
+export const LogoTitle = styled.span ``
+export const LogoImg = styled.img `
+    width: 30%; 
+    height: 30%;
+`

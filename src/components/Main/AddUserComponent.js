@@ -29,7 +29,11 @@ const AddUserComponent = (props) => {
         getSearchUser,
         users,
         emailRemover,
-        handleAddUser
+        handleAddUser,
+        handleDebounceAddUser,
+        filteredItems,
+        debounceOnChange,
+        query
     } = props;
 
 
@@ -47,28 +51,29 @@ const AddUserComponent = (props) => {
                     Add user
                 </Typography>
                 <Typography id="keep-mounted-modal-description" sx={{ mt: 2 }}>
-                    <form onSubmit={(e) => {
-                        e.preventDefault();
-                        handleAddUser(userID.current.value)
-                        userID.current.value = ''
-                    }}>
+                    {/* <form onSubmit={(e) => {
+                        // e.preventDefault();
+                        // handleAddUser(userID.current.value)
+                        // userID.current.value = ''
+                    }}> */}
                         <UidInputContainer>
                             <TextField 
                                 id="standard-basic"
                                 variant="standard" 
-                                type='number'
+                                type='text'
                                 InputProps={{ 
                                     disableUnderline: true, 
                                     classes: {
                                     input: classes.resize,
                                 }, }}
                                 inputRef={userID}
-                                value={searchUser}
-                                onChange={getSearchUser}
-                                placeholder="ID number"
+                                // value={searchUser}
+                                // onChange={getSearchUser}
+                                onChange={debounceOnChange}
+                                placeholder="user ID"
                             />
                         </UidInputContainer>
-                    </form>
+                    {/* </form> */}
                     {/* <UsersContainer>
                         {users.length > 1 ?
                             users.map((user, index) => {
@@ -86,6 +91,24 @@ const AddUserComponent = (props) => {
                             <h1 style={{textAlign: 'center'}}>No user available</h1>
                         }
                     </UsersContainer> */}
+
+                    <UsersContainer>
+                        {filteredItems.length > 0 ?
+                            filteredItems.map((user, index) => {
+                                return (
+                                <AddUserUsersContainer key={index}>
+                                    <ContentUserProfileContainer>
+                                        <Avatar sx={{ bgcolor: 'green' }} variant="rounded" src="#">
+                                            {emailRemover(user.uid).charAt(0).toUpperCase()}
+                                        </Avatar>
+                                    </ContentUserProfileContainer>
+                                    <User>{emailRemover(user.uid).substring(0, 25) + (emailRemover(user.uid).length > 25? '...' : '')}<ButtonAddUser onClick={() => handleAddUser(user.id)}>Add</ButtonAddUser></User>
+                                </AddUserUsersContainer>
+                            )})
+                            :
+                            <h1 style={{textAlign: 'center'}}>No user available</h1>
+                        }
+                    </UsersContainer>
                 </Typography>
                 </Box>
             </Modal> 

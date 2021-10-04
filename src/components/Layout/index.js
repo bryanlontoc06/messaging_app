@@ -14,27 +14,14 @@ import {
 
 import SwitchComponent from '../Routes';
 import useHooks from './hooks';
-import Cookies from 'js-cookie'
+
 
 
 const Index = () => {
     const { isLogin,
-        setIsLogin,
-        loginUser,
-        setLoginUser } = useHooks();
+        loginUser } = useHooks();
     
-    const readCookie = () => {
-        const user = Cookies.get("user")
-        if(user) {
-            setIsLogin(true)
-        } else {
-            setIsLogin(false)
-        }
-    } 
-
-    useEffect(() => {
-        readCookie();
-    }, [])
+    
     return (
         <>
             {/* <Router>
