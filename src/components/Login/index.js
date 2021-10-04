@@ -8,7 +8,8 @@ import {
   Box,
   TextField,
   Typography,
-  LogoTitle
+  LogoTitle,
+  LogoImg
 } from './components'
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -66,7 +67,7 @@ const Index = (props) => {
                     variant="h2"
                     style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}
                   >
-                    <img src={channel_logo} width='30%' height='30%' />
+                    <LogoImg src={channel_logo} />
                     <LogoTitle>Avion School</LogoTitle>
                   </Typography>
                 </Box>
