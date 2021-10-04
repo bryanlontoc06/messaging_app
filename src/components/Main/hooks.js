@@ -3,19 +3,14 @@ import {AppContext} from '../Global/AppContext'
 import { debounce } from 'lodash';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import {
-    inviteUsersAPI, 
-    retrieveAllChannelsAPI, 
-    retrieveAllUsersAPI, 
-    retrieveAllMessagesinChannelAPI,
-    retrieveAllMessageswithaUserAPI,
-    createAMessageAPI
-} from '../api/api'
 
 let int1;
 let int2;
 let int3;
 let int4;
+
+let url = `http://206.189.91.54/api/v1`
+
 
 const useHooks = () => {
     const {isLogin, setIsLogin, loginUser, setLoginUser} = useContext(AppContext)
@@ -50,7 +45,17 @@ const useHooks = () => {
             setIsLoading(false)
         } else {
             setIsLoading(true)
-            retrieveAllUsersAPI(loginUser)
+            await axios({
+                url: `${url}/users`,
+                data: {},
+                headers: {
+                    'access-token': loginUser.headers?.['access-token'],
+                    'client': loginUser.headers?.client,
+                    'expiry': loginUser.headers?.expiry,
+                    'uid': loginUser.headers?.uid
+                } || {},
+                method: 'GET'
+            })  
             .then((res) => 
                 {
                     if(res.status === 200) {
@@ -67,7 +72,21 @@ const useHooks = () => {
     // Function for adding a user in a channel
     const handleAddUser = async(id) => {
         setIsLoading(true)
-        inviteUsersAPI(selectChannel, id, loginUser)
+        setOpen(false)
+        await axios({
+            url: `${url}/channel/add_member`,
+            data: {
+                'id': selectChannel.id,
+                'member_id': id,
+            },
+            headers: {
+                'access-token': loginUser.headers?.['access-token'],
+                'client': loginUser.headers?.client,
+                'expiry': loginUser.headers?.expiry,
+                'uid': loginUser.headers?.uid
+            } || {},
+            method: 'POST'
+        })  
         .then((res) => 
             {   
                 if(res.status === 200) {
@@ -141,7 +160,7 @@ const useHooks = () => {
     // Add Channel Modal
     const handleOpenAddChannel = async() => {
         await axios({
-            url: 'http://206.189.91.54/api/v1/users',
+            url: `${url}/users`,
             data: {},
             headers: {
                 'access-token': loginUser.headers?.['access-token'],
@@ -163,8 +182,18 @@ const useHooks = () => {
 
 
     // Retrieve all messages in a Channel
-    const retrieveMessagesinChannel = (loginUser, data) => {
-        retrieveAllMessagesinChannelAPI(loginUser, data)
+    const retrieveMessagesinChannel = async(data) => {
+        await axios({
+            url: `${url}/messages?receiver_id=${data.id}&receiver_class=Channel`,
+            data: {},
+            headers: {
+                'access-token': loginUser.headers?.['access-token'],
+                'client': loginUser.headers?.client,
+                'expiry': loginUser.headers?.expiry,
+                'uid': loginUser.headers?.uid
+            } || {},
+            method: 'GET'
+            }) 
         .then((res) => 
             {
                 if(res?.status === 200) {
@@ -197,8 +226,18 @@ const useHooks = () => {
     }
 
     // Retrieve all messages in a User
-    const retrieveMessagesinUser = (data) => {
-        retrieveAllMessageswithaUserAPI(loginUser, data)
+    const retrieveMessagesinUser = async(data) => {
+        await axios({
+            url: `${url}/messages?receiver_id=${data.id}&receiver_class=User`,
+            data: {},
+            headers: {
+                'access-token': loginUser.headers?.['access-token'],
+                'client': loginUser.headers?.client,
+                'expiry': loginUser.headers?.expiry,
+                'uid': loginUser.headers?.uid
+            } || {},
+            method: 'GET'
+            }) 
         .then((res) => 
             {
                 if(res?.status === 200) {
@@ -233,8 +272,22 @@ const useHooks = () => {
     
 
     // Create a Message in a channel || user
-    const createAMessage = () => {
-        createAMessageAPI(loginUser, selectChannel, selectUser, chatMessage)
+    const createAMessage = async() => {
+        await axios({
+            url: `${url}/messages`,
+            data: {
+                'receiver_id': selectChannel.id || selectUser.id,
+                'receiver_class': selectChannel ? 'Channel' : 'User',
+                'body': chatMessage.current.value,
+            },
+            headers: {
+                'access-token': loginUser.headers?.['access-token'],
+                'client': loginUser.headers?.client,
+                'expiry': loginUser.headers?.expiry,
+                'uid': loginUser.headers?.uid
+            } || {},
+            method: 'POST'
+        })
         .then((res) => 
             {
                 if(selectChannel){
@@ -256,7 +309,17 @@ const useHooks = () => {
         setSelectUser('')
         axios.all([
             // Retrieve All Channels where user was invited
-            retrieveAllChannelsAPI(loginUser)
+            axios({
+                url: `${url}/channels`,
+                data: {},
+                headers: {
+                    'access-token': loginUser.headers?.['access-token'],
+                    'client': loginUser.headers?.client,
+                    'expiry': loginUser.headers?.expiry,
+                    'uid': loginUser.headers?.uid
+                } || {},
+                method: 'GET'
+                }) 
             .then((res) => 
                 {
                     if(isLogin){
@@ -301,7 +364,17 @@ const useHooks = () => {
             setIsLoading(false)
         } else {
             setIsLoading(true)
-            retrieveAllUsersAPI(loginUser) 
+            await axios({
+                url: `${url}/users`,
+                data: {},
+                headers: {
+                    'access-token': loginUser.headers?.['access-token'],
+                    'client': loginUser.headers?.client,
+                    'expiry': loginUser.headers?.expiry,
+                    'uid': loginUser.headers?.uid
+                } || {},
+                method: 'GET'
+            }) 
             .then((res) => 
                 {
                     if(res.status === 200) {

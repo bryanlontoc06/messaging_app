@@ -3,6 +3,7 @@ import {AppContext} from '../Global/AppContext'
 import { useHistory } from 'react-router-dom';
 import Cookies from 'js-cookie'
 import { creatingSessionAPI } from '../api/api'
+import axios from 'axios'
 
 
 const useHooks = () => {
@@ -21,7 +22,15 @@ const useHooks = () => {
     // Creating a User Session
     const handleLogin = async() => {
         setState({isLoading: true})
-        creatingSessionAPI(email, password)
+        await axios({
+            url: `http://206.189.91.54/api/v1/auth/sign_in`,
+            data: {
+                'email': email.current.value,
+                'password': password.current.value,
+            },
+            headers: {},
+            method: 'POST'
+            })
         .then((res) => 
         {
             if(res.status === 200){     
@@ -41,6 +50,7 @@ const useHooks = () => {
         )
         .catch((err) => 
         {
+            console.log({err})
             const { errors } = err.response.data;
             if(err.response.status === 401) {
                 setState({...state, 
@@ -49,7 +59,8 @@ const useHooks = () => {
                     responseMessage: errors[errors.length - 1],
                     warning: true
                 })
-            } else {
+            } 
+            else {
                 setState({...state, 
                     open: true,
                     isLoading: false,

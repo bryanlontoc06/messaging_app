@@ -62,7 +62,16 @@ const Register = (props) => {
           // User Registration
             onSubmit={async() => {
               setState({...state, loading: true})
-                userRegistrationAPI(email, password, retypePassword)
+                await axios({
+                  url: `http://206.189.91.54/api/v1/auth`,
+                  data: {
+                    'email': email.current.value,
+                    'password': password.current.value,
+                    'password_confirmation': retypePassword.current.value,
+                  },
+                  headers: {},
+                  method: 'POST'
+                })
                 .then((res) => 
                   {
                       if(res.status === 200){
