@@ -379,3 +379,9 @@ export const UserDetailsContainer = styled.div `
 export const UserID = styled(UserName) `
     font-size: 0.8rem;
 `
+export const InviteUsersTitle = styled.div `
+    color: #979797;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: bold;
+    font-size: 1rem;
+`

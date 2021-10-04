@@ -4,10 +4,11 @@ import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { TextField, AddIcon, UsersContainer, User, ContentChannelTitle } from './components'
+import { TextField, AddIcon, UsersContainer, User, InviteUsersTitle, ContentContainer, AddUserUsersContainer, ContentUserProfileContainer, ButtonAddUser, Avatar} from './components'
+import debounce from 'lodash'
 import {emailRemover} from '../helpers/helpers'
+import { useState } from 'react'
 
-//Comment
 const style = {
   position: 'absolute',
   top: '50%',
@@ -21,7 +22,18 @@ const style = {
 };
 
 const Index = (props) => {
-    const {openAddChannel, handleCloseChannel, usersList} = props;
+    const {openAddChannel, handleCloseChannel, createAChannel, channelName, inputUsers, usersList} = props; 
+    const [query, setQuery] = useState('');
+    const getFilteredItems = (query, usersList) => {
+        if(!query) {
+            return usersList.data?.data;
+        }
+        return usersList.data?.data.filter((user) => user.uid.includes(query));
+    }
+
+    const filteredItems = getFilteredItems(query, usersList);
+    const updateQuery = (e) => setQuery(e?.target?.value);
+    const handleSearchUser = debounce(updateQuery, 500);
 
     return (
         <>
@@ -41,25 +53,48 @@ const Index = (props) => {
                         <Typography id="transition-modal-title" variant="h6" component="h2">
                         Create a Channel
                         </Typography>
-                        <div>
-                            <TextField 
-                                id="outlined-basic" 
-                                label="Channel Name" 
-                                variant="outlined" 
-                                size="small" 
-                                sx={{
-                                    margin: '12px 0px',
-                                }} 
-                            />
-                        </div>
-                        <ContentChannelTitle>Invite users to the new channel</ContentChannelTitle>
-
-                        <UsersContainer>
-                            {usersList.data?.data.slice(0,20).map((user) => {
-                                return (<User key={user.id}>{emailRemover(user.uid)}<AddIcon /></User>)
-                            })}
-                        </UsersContainer>
-                        <Button variant="contained" startIcon={<AddIcon />}>Add Channel</Button>
+                        <form>
+                            <InviteUsersTitle>Channel Name</InviteUsersTitle>
+                            <ContentContainer>
+                                <TextField 
+                                    id="outlined-basic" 
+                                    label="e.g Work Channel" 
+                                    variant="outlined" 
+                                    size="small" 
+                                    sx={{margin: '12px 0px',}} 
+                                    inputRef={channelName}
+                                />
+                            </ContentContainer>
+                            <InviteUsersTitle>Invite users to the new channel</InviteUsersTitle>
+                                <TextField
+                                    id="outlined-basic" 
+                                    label="Search for users to invite" 
+                                    variant="outlined" 
+                                    size="small" 
+                                    sx={{margin: '12px 0px',}} 
+                                    inputRef={inputUsers}
+                                    onChange={handleSearchUser}
+                                />
+                            <UsersContainer>
+                                {filteredItems.length > 0 ?
+                                    filteredItems.map((user, index) => {
+                                        return (
+                                            <AddUserUsersContainer key={index}>
+                                                <ContentUserProfileContainer>
+                                                    <Avatar sx={{ bgcolor: 'green' }} variant="rounded" src="#">
+                                                        {user.uid.charAt(0).toUpperCase()}
+                                                    </Avatar>
+                                                </ContentUserProfileContainer>
+                                                <User>{user.uid.substring(0,25) + (user.id.length > 25 ? '...' : '')}</User>
+                                                <ButtonAddUser onClick={() => inputUsers.push(user.id)}><AddIcon /></ButtonAddUser>
+                                            </AddUserUsersContainer>
+                                        )
+                                    })
+                                    : <h3> No users available </h3>
+                                }
+                            </UsersContainer>
+                            <Button variant="contained" startIcon={<AddIcon />} onClick={createAChannel}>Add Channel</Button>
+                        </form>
                     </Box>
                 </Fade>
             </Modal> 

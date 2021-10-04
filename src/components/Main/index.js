@@ -58,7 +58,6 @@ const Index = () => {
         query,
         anchorEl,
         state} = useHooks();
-  
 
     return (
         <> 
@@ -157,11 +156,16 @@ const Index = () => {
             </div>
 
             {/* Modal for Add Channel */}
-            <AddChannelModalComponent
-                openAddChannel={openAddChannel}
-                handleCloseChannel={handleClose}
-                usersList={users}
-            />
+            {users.data?.data && 
+                <AddChannelModalComponent
+                    openAddChannel={openAddChannel}
+                    handleCloseChannel={handleClose}
+                    // createAChannel={createAChannel}
+                    // channelName={channelName}
+                    // inputUsers={inputUsers}
+                    usersList={users}
+                />
+            }
 
             {/* Snackbar */}
             <SnackbarComponent 
