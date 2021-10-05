@@ -132,7 +132,7 @@ const Index = (props) => {
                 >
                   Don&apos;t have an account?
                   {' '}
-                  <Link component={RouterLink} to="/register" variant="h6" underline="hover">
+                  <Link component={RouterLink} to="/messaging_app/register" variant="h6" underline="hover">
                     Sign up
                   </Link>
                 </Typography>
