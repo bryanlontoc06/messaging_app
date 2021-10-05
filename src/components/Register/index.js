@@ -161,7 +161,7 @@ const Register = (props) => {
                 >
                   Have an account?
                   {' '}
-                  <Link component={RouterLink} to="/messaging_app/login" variant="h6" underline="hover">
+                  <Link component={RouterLink} to="/login" variant="h6" underline="hover">
                     Sign in
                   </Link>
                 </Typography>
