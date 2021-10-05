@@ -5,7 +5,7 @@
 // import HeaderComponent from './Header.js';
 // import FooterComponent from './Footer.js';
 
-import React, {useEffect} from "react";
+import React from "react";
 import {
     HashRouter as Router,
     Switch,

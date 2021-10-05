@@ -27,7 +27,7 @@ export const useStyles = makeStyles((theme) => ({
         }
     },
     paper: {
-        width: '100%'
+        width: '100% !important'
     }
 }))
 
