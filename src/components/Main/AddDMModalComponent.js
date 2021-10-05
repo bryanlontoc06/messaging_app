@@ -9,7 +9,9 @@ import {
     AddUserUsersContainer,
     ButtonAddUser,
     InviteUsersTitle,
-    BoxDM
+    BoxDM,
+    CloseIcon,
+    ModalTitle
 } from './components'
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
@@ -49,9 +51,12 @@ const AddUserComponent = (props) => {
                 aria-describedby="keep-mounted-modal-description"
             >
                 <BoxDM sx={style}>
-                <Typography id="keep-mounted-modal-title" variant="h6" component="h2">
-                    Direct message
-                </Typography>
+                <ModalTitle>
+                    <Typography id="keep-mounted-modal-title" variant="h6" component="h2">
+                        Direct message
+                    </Typography>
+                        <CloseIcon onClick={handleClose}/>
+                </ModalTitle>
                 <Typography id="keep-mounted-modal-description" sx={{ mt: 2 }}>
                     <UidInputContainer>
                         <TextField 

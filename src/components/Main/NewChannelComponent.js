@@ -16,7 +16,9 @@ import {
     Avatar,
     AvatarGroup,
     AvatarSmallGroup,
-    Box
+    Box,
+    CloseIcon,
+    ModalTitle
 } from './components'
 import {emailRemover} from '../helpers/helpers'
 import {useState} from 'react'
@@ -82,9 +84,12 @@ const Index = (props) => {
                 aria-describedby="keep-mounted-modal-description"
             >
                 <Box sx={style}>
-                <Typography id="keep-mounted-modal-title" variant="h6" component="h2">
-                    Create a Channel
-                </Typography>
+                <ModalTitle>
+                    <Typography id="keep-mounted-modal-title" variant="h6" component="h2">
+                        Create a Channel
+                    </Typography>
+                        <CloseIcon onClick={handleCloseChannel}/>
+                </ModalTitle>
                 <Typography id="keep-mounted-modal-description" sx={{ mt: 2 }}>
                     <UidInputContainer>
                         <TextField 

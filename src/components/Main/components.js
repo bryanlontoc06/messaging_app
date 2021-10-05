@@ -10,6 +10,7 @@ import MaterialSendIcon from '@mui/icons-material/Send';
 import MaterialTypography from '@mui/material/Typography';
 import { fadeIn } from 'react-animations';
 import MaterialBox from '@mui/material/Box';
+import MaterialCloseIcon from '@mui/icons-material/Close';
 
 
 const fadeInAnimation = keyframes`${fadeIn}`;
@@ -468,4 +469,10 @@ export const BoxDM = styled(Box) `
     @media (min-width: 768px) {
         height: unset;
     }
+`
+export const CloseIcon = styled(MaterialCloseIcon) ``
+export const ModalTitle = styled.div `
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 `
