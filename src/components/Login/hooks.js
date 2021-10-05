@@ -1,9 +1,7 @@
 import {useContext, useState, useRef} from 'react'
 import {AppContext} from '../Global/AppContext'
 import { useHistory } from 'react-router-dom';
-import Cookies from 'js-cookie'
-import { creatingSessionAPI } from '../api/api'
-import axios from 'axios'
+import { creatingUserSessionAPI } from '../api/api'
 
 
 const useHooks = () => {
@@ -22,54 +20,7 @@ const useHooks = () => {
     // Creating a User Session
     const handleLogin = async() => {
         setState({isLoading: true})
-        await axios({
-            url: `http://206.189.91.54/api/v1/auth/sign_in`,
-            data: {
-                'email': email.current.value,
-                'password': password.current.value,
-            },
-            headers: {},
-            method: 'POST'
-            })
-        .then((res) => 
-        {
-            if(res.status === 200){     
-                Cookies.set('user', 'loginTrue', { expires: 1 })
-                setState({...state, 
-                open: true,
-                response: res?.data,
-                })
-                setLoginUser(res)
-                setIsLogin(true)
-            }
-            setTimeout(() => {
-                setState({...state, isLoading: false})
-                history.push(`/app/${res.data?.data.id}`)
-            },)
-        } 
-        )
-        .catch((err) => 
-        {
-            console.log({err})
-            const { errors } = err.response.data;
-            if(err.response.status === 401) {
-                setState({...state, 
-                    open: true,
-                    isLoading: false,
-                    responseMessage: errors[errors.length - 1],
-                    warning: true
-                })
-            } 
-            else {
-                setState({...state, 
-                    open: true,
-                    isLoading: false,
-                    responseMessage: `Internal Server Error`,
-                    warning: true
-                })
-            } 
-        }
-        )
+        creatingUserSessionAPI(email, password, state, setState, setLoginUser, setIsLogin, history)
     }
 
     const handleClose = (event, reason) => {

@@ -62,47 +62,7 @@ const Register = (props) => {
           // User Registration
             onSubmit={async() => {
               setState({...state, loading: true})
-                await axios({
-                  url: `http://206.189.91.54/api/v1/auth`,
-                  data: {
-                    'email': email.current.value,
-                    'password': password.current.value,
-                    'password_confirmation': retypePassword.current.value,
-                  },
-                  headers: {},
-                  method: 'POST'
-                })
-                .then((res) => 
-                  {
-                      if(res.status === 200){
-                          setState({...state, 
-                            open: true,
-                            loading: false,
-                            response: res,
-                            responseMessage: `Registered successfully!`,
-                            warning: false
-                          })
-                          setTimeout(() => {
-                            history.push('/login')
-                          }, 1500)
-                      }
-                  },
-                )
-                .catch((err) =>
-                  { 
-                    const {full_messages} = err.response.data?.errors;
-                    console.log({full_messages})
-                    if(err.response.status === 422) {
-                      setState({...state, 
-                        open: true,
-                        loading: false,
-                        response: err.response, 
-                        responseMessage: full_messages[full_messages.length - 1], 
-                        warning: true
-                      })
-                    }
-                  }
-                )
+              userRegistrationAPI(email, password, retypePassword, state, setState, history)
             }}
           >
             

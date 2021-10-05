@@ -349,7 +349,8 @@ export const ChatsMessageandChatInput = styled.div `
     right: 18px;
     left: 22px;
     @media (min-width: 768px) {
-        left: 22px;
+        left: 55px;
+        right: 26px;
     }
 `
 export const UidInputContainer = styled.div `

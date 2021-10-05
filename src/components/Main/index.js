@@ -71,7 +71,8 @@ const Index = () => {
         state,
         createAChannel,
         channelName,
-        matchesMD
+        matchesMD,
+        channel
     } = useHooks();
 
     const [states, setStates] = useState({
@@ -86,7 +87,8 @@ const Index = () => {
           setStates({right: false})
       }
 
-    
+    console.log({channel})
+
     return (
         <> 
         <Container>
@@ -143,6 +145,7 @@ const Index = () => {
                     classes={classes}
                     chatMessage={chatMessage}
                     matchesMD={matchesMD}
+                    channel={channel}
                /> 
             }
            </ContentContainer>

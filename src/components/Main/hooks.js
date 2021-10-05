@@ -4,13 +4,20 @@ import { debounce } from 'lodash';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import {retrieveAllUsersAPI, 
+    retrieveAllChannelsAPI, 
+    retrieveAChannelAPI,
+    inviteUserToChannelAPI, 
+    createAChannelAPI, 
+    retrieveAllMessagesinaChannelAPI, 
+    retrieveAllMessageswithaUserAPI,
+    createAMessageAPI } from '../api/api'
 
 let int1;
 let int2;
 let int3;
 let int4;
 
-let url = `http://206.189.91.54/api/v1`
 
 
 const useHooks = () => {
@@ -39,7 +46,7 @@ const useHooks = () => {
     const [anchorEl, setAnchorEl] = useState(null);
     const [openAddChannel, setOpenAddChannel] = useState(false);
     const channelName = useRef('')
-
+    const [channel, setChannel] = useState()
     const matchesMD = useMediaQuery('(min-width: 768px)');
 
 
@@ -50,87 +57,14 @@ const useHooks = () => {
             setIsLoading(false)
         } else {
             setIsLoading(true)
-            await axios({
-                url: `${url}/users`,
-                data: {},
-                headers: {
-                    'access-token': loginUser.headers?.['access-token'],
-                    'client': loginUser.headers?.client,
-                    'expiry': loginUser.headers?.expiry,
-                    'uid': loginUser.headers?.uid
-                } || {},
-                method: 'GET'
-            })  
-            .then((res) => 
-                {
-                    if(res.status === 200) {
-                        setIsLoading(false)
-                        setUsers(res)
-                    } 
-                }
-            )
-            .catch((err) => {
-                console.log(err)
-            })
+            retrieveAllUsersAPI(loginUser, setIsLoading, setUsers) 
         }
     };
     // Function for adding a user in a channel
     const handleAddUser = async(id) => {
         setIsLoading(true)
         setOpen(false)
-        await axios({
-            url: `${url}/channel/add_member`,
-            data: {
-                'id': selectChannel.id,
-                'member_id': id,
-            },
-            headers: {
-                'access-token': loginUser.headers?.['access-token'],
-                'client': loginUser.headers?.client,
-                'expiry': loginUser.headers?.expiry,
-                'uid': loginUser.headers?.uid
-            } || {},
-            method: 'POST'
-        })  
-        .then((res) => 
-            {   
-                if(res.status === 200) {
-                    // setTimeout(() => {
-                            if(res.data.data?.id) {
-                                setState({...state, 
-                                    open: true, 
-                                    message: `Added Successfully!`, 
-                                    warning: false
-                                })
-                                setIsLoading(false)
-                                setOpen(false)
-                            } 
-                            else {
-                                if(res.data?.errors[0] === `User is already a member of this channel!`){
-                                    setState({...state, 
-                                        open: true, 
-                                        message: `User is already a member of this channel!`, 
-                                        warning: true
-                                    })
-                                    setIsLoading(false)
-                                    setOpen(false)
-                                } else {
-                                    setState({...state, 
-                                        open: true, 
-                                        message: `Invalid user`, 
-                                        warning: true
-                                    })
-                                    setIsLoading(false)
-                                    setOpen(false)
-                                } 
-                            } 
-                    // }, 1000);
-                }
-            }
-        )
-        .catch((err) => {
-            console.log(err)
-        })
+        inviteUserToChannelAPI(selectChannel, id, loginUser, state, setState, setIsLoading, setOpen)
     }
     const handleCloseAddUserModal = (event, reason) => {
         if (reason === 'clickaway') {
@@ -168,28 +102,7 @@ const useHooks = () => {
             setIsLoading(false)
         } else {
             setIsLoading(true)
-            await axios({
-                url: `${url}/users`,
-                data: {},
-                headers: {
-                    'access-token': loginUser.headers?.['access-token'],
-                    'client': loginUser.headers?.client,
-                    'expiry': loginUser.headers?.expiry,
-                    'uid': loginUser.headers?.uid
-                } || {},
-                method: 'GET'
-            }) 
-            .then((res) => 
-                {
-                    if(res.status === 200) {
-                        setIsLoading(false)
-                        setUsers(res)
-                    } 
-                }
-            )
-            .catch((err) => {
-                console.log(err)
-            })
+            retrieveAllUsersAPI(loginUser, setIsLoading, setUsers)
         }
     };
     // Add Channel Modal
@@ -197,25 +110,9 @@ const useHooks = () => {
 
     // Retrieve all messages in a Channel
     const retrieveMessagesinChannel = async(data) => {
-        await axios({
-            url: `${url}/messages?receiver_id=${data.id}&receiver_class=Channel`,
-            data: {},
-            headers: {
-                'access-token': loginUser.headers?.['access-token'],
-                'client': loginUser.headers?.client,
-                'expiry': loginUser.headers?.expiry,
-                'uid': loginUser.headers?.uid
-            } || {},
-            method: 'GET'
-            }) 
-        .then((res) => 
-            {
-                if(res?.status === 200) {
-                    setAllMessages(res)
-                } 
-            }
-        )   
-        .catch((err) => {console.log(err)})
+        await axios.all([
+            retrieveAllMessagesinaChannelAPI(data, loginUser, setAllMessages)
+        ])
     }
 
     // For Real Time Fetching Message in Channel
@@ -227,39 +124,21 @@ const useHooks = () => {
         retrieveMessagesinChannel(data)
         setDuplicateForChannel(!duplicateForChannel)
         if(duplicateForChannel) {
-            int3 = setInterval(() => {
+            // int3 = setInterval(() => {
                 retrieveMessagesinChannel(data)
-            }, 1500);
+            // }, 1500);
             clearTimeout(int4)
         } else {
-            int4 = setInterval(() => {
+            // int4 = setInterval(() => {
                 retrieveMessagesinChannel(data)
-            }, 1500);
+            // }, 1500);
             clearTimeout(int3)
         }
     }
 
     // Retrieve all messages in a User
     const retrieveMessagesinUser = async(data) => {
-        await axios({
-            url: `${url}/messages?receiver_id=${data.id}&receiver_class=User`,
-            data: {},
-            headers: {
-                'access-token': loginUser.headers?.['access-token'],
-                'client': loginUser.headers?.client,
-                'expiry': loginUser.headers?.expiry,
-                'uid': loginUser.headers?.uid
-            } || {},
-            method: 'GET'
-            }) 
-        .then((res) => 
-            {
-                if(res?.status === 200) {
-                    setAllMessages(res)
-                } 
-            }
-        )   
-        .catch((err) => {console.log(err)})
+        retrieveAllMessageswithaUserAPI(data, loginUser,setAllMessages)
     }
 
     // For Real Time Fetching Message in User
@@ -272,14 +151,14 @@ const useHooks = () => {
         retrieveMessagesinUser(data)
         setDuplicateForUser(!duplicateForUser)
         if(duplicateForUser) {
-            // int1 = setInterval(() => {
+            // int1 = setInterval(() => {   
                 retrieveMessagesinUser(data)
-            // }, 1500);
+            // }, 1500);    
             clearTimeout(int2)
         } else {
-            // int2 = setInterval(() => {
+            // int2 = setInterval(() => {   
                 retrieveMessagesinUser(data)
-            // }, 1500);
+            // }, 1500);    
             clearTimeout(int1)
         }
     }
@@ -287,149 +166,24 @@ const useHooks = () => {
 
     // Create a Message in a channel || user
     const createAMessage = async() => {
-        await axios({
-            url: `${url}/messages`,
-            data: {
-                'receiver_id': selectChannel.id || selectUser.id,
-                'receiver_class': selectChannel ? 'Channel' : 'User',
-                'body': chatMessage.current.value,
-            },
-            headers: {
-                'access-token': loginUser.headers?.['access-token'],
-                'client': loginUser.headers?.client,
-                'expiry': loginUser.headers?.expiry,
-                'uid': loginUser.headers?.uid
-            } || {},
-            method: 'POST'
-        })
-        .then((res) => 
-            {
-                if(selectChannel){
-                    setSelectChannel(selectChannel)
-                    retrieveMessagesinChannel(selectChannel)
-                } 
-                else if (selectUser) {
-                    setSelectUser(selectUser)
-                    retrieveMessagesinUser(selectUser)
-                }
-            }
-        )   
-        .catch((err) => {console.log(err)})
+        createAMessageAPI(selectChannel, selectUser, chatMessage, loginUser, setSelectChannel, retrieveMessagesinChannel, setSelectUser, retrieveMessagesinUser)
         chatMessage.current.value = ''
     }
 
-    // Create a Message in a channel || user
+    // Create a Channel
     const createAChannel = async(data) => {
-        await axios({
-            url: `${url}/channels`,
-            data: {
-                'name': channelName.current.value,
-                'user_ids': data
-            },
-            headers: {
-                'access-token': loginUser.headers?.['access-token'],
-                'client': loginUser.headers?.client,
-                'expiry': loginUser.headers?.expiry,
-                'uid': loginUser.headers?.uid
-            } || {},
-            method: 'POST'
-        })
-        .then((res) => 
-            {
-                if(res.data.data?.id) {
-                    setState({...state, 
-                        open: true, 
-                        message: `Added Successfully!`, 
-                        warning: false
-                    })
-                    setIsLoading(false)
-                    setOpen(false)
-                    retrieveAllChannels();
-                    setOpenAddChannel(false)
-                    channelName.current.value = '';
-                } 
-                else {
-                    if(res.data?.errors[0] === `Name has already been taken`){
-                        setState({...state, 
-                            open: true, 
-                            message: `Name has already been taken!`, 
-                            warning: true
-                        })
-                        setIsLoading(false)
-                        setOpen(false)
-                    } else if (res.data?.errors[0] === `Name is too short (minimum is 3 characters)`) {
-                        setState({...state, 
-                            open: true, 
-                            message: `Name is too short (minimum is 3 characters)`, 
-                            warning: true
-                        })
-                        setIsLoading(false)
-                        setOpen(false)
-                    } else if (res.data?.errors[0] === `Name is too long (maximum is 15 characters)`) {
-                        setState({...state, 
-                            open: true, 
-                            message:  `Name is too long (maximum is 15 characters)`, 
-                            warning: true
-                        })
-                        setIsLoading(false)
-                        setOpen(false)
-                    } else if (res.data?.errors.length === 2) {
-                        setState({...state, 
-                            open: true, 
-                            message:  `Name can't be blank.  Name is too short (minimum is 3 characters)`, 
-                            warning: true
-                        })
-                        setIsLoading(false)
-                        setOpen(false)
-                    }  else {
-                        setState({...state, 
-                            open: true, 
-                            message:  `Error`, 
-                            warning: true
-                        })
-                        setIsLoading(false)
-                        setOpen(false)
-                    }
-                } 
-            }
-        )   
-        .catch((err) => {console.log(err)})
+        createAChannelAPI(data, channelName, loginUser, state, setState, setIsLoading, setOpen, isLogin, setChannels, setOpenAddChannel) 
     }
 
-    const retrieveAllChannels = async() => {
-        axios({
-            url: `${url}/channels`,
-            data: {},
-            headers: {
-                'access-token': loginUser.headers?.['access-token'],
-                'client': loginUser.headers?.client,
-                'expiry': loginUser.headers?.expiry,
-                'uid': loginUser.headers?.uid
-            } || {},
-            method: 'GET'
-            }) 
-        .then((res) => 
-            {
-                if(isLogin){
-                    setChannels(res?.data.data)
-                }
-            }
-        )
-        .catch((err) => {
-            if(!isLogin){
-                return
-            } else {
-                console.error('Error in main page', err)
-            }
-        })
-    }
+    
 
     useEffect(() => {
         setSelectChannel('')
         setSelectUser('')
         axios.all([
             // Retrieve All Channels where user was invited
-            retrieveAllChannels()
+            retrieveAllChannelsAPI(loginUser, isLogin, setChannels),
+            retrieveAllUsersAPI(loginUser, setIsLoading, setUsers)
         ])
         
         if(channels){
@@ -456,60 +210,20 @@ const useHooks = () => {
         return users.data?.data.filter((user) => user.uid.includes(query))
     }
 
-    const handleOpenDM = async() => {
+    const handleOpenDM = () => {
         setOpenDM(true)
         if(users.data?.data){
             setIsLoading(false)
         } else {
             setIsLoading(true)
-            await axios({
-                url: `${url}/users`,
-                data: {},
-                headers: {
-                    'access-token': loginUser.headers?.['access-token'],
-                    'client': loginUser.headers?.client,
-                    'expiry': loginUser.headers?.expiry,
-                    'uid': loginUser.headers?.uid
-                } || {},
-                method: 'GET'
-            }) 
-            .then((res) => 
-                {
-                    if(res.status === 200) {
-                        setIsLoading(false)
-                        setUsers(res)
-                    } 
-                }
-            )
-            .catch((err) => {
-                console.log(err)
-            })
+            retrieveAllUsersAPI(loginUser, setIsLoading, setUsers)
         }
     };
     const filteredItems = getFilteredItems(query, users)
     const updateQuery = (e) => setQuery(e?.target?.value);
     const debounceOnChange = debounce(updateQuery, 500)
 
-    
-    // const searchHandlerDM = (searchUserDM) => {
-    //     const sortedUsers = users.data?.data.filter(user => {return !(JSON.stringify(user?.id).includes(loginUser.data.data?.id))})
-    //     setSearchUserDM(searchUserDM)
-    //     if(searchUserDM !== "") {
-    //         const newUsersList = sortedUsers.filter((user) => {
-    //             return Object.values(user)
-    //             .join(" ")
-    //             .toLowerCase()
-    //             .includes(searchUserDM.toLowerCase())
-    //         })
-    //         setSearchResultsDM(newUsersList)
-    //     } else {
-    //         setSearchResultsDM(users.data?.data)
-    //     }
-    // }
-    // const getSearchUserDM = () => {
-    //     searchHandlerDM(addUserEmail.current.value)
-    // }
-    // const debounceDMSearch = debounce(searchHandlerDM(addUserEmail.current.value), 200);
+
 
     return {
         loginUser,
@@ -548,7 +262,8 @@ const useHooks = () => {
         state,
         channelName,
         createAChannel,
-        matchesMD
+        matchesMD,
+        channel
     }
 }
 
