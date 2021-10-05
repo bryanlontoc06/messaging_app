@@ -18,8 +18,8 @@ const Index = (props) => {
       <Switch>
           <Route exact path="/app/:id" component={() => isLogin ? <MainPage/> : <Redirect to='/login'/>} />
           <Route exact path="/login" component={() => isLogin ? <Redirect to={`/app/${loginUser.data?.data?.id}`}/> : <Login />} />
-          <Route exact path="/" component={() => isLogin ? <Redirect to={`/app/${loginUser.data?.data?.id}`}/> : <Login />} />
-          <Route exact path="//register" component={() => isLogin ? <Redirect to={`/app/${loginUser.data?.data?.id}`}/> : <Register />} />
+          <Route exact path="/messaging_app" component={() => isLogin ? <Redirect to={`/app/${loginUser.data?.data?.id}`}/> : <Login />} />
+          <Route exact path="/register" component={() => isLogin ? <Redirect to={`/app/${loginUser.data?.data?.id}`}/> : <Register />} />
       </Switch>
     </>
   )
