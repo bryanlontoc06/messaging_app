@@ -366,7 +366,7 @@ export const UidInputContainer = styled.div `
 export const UsersContainer = styled.div `
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 24rem);
+    height: calc(100vh - 26rem);
     overflow-y: auto;
     
     /* // &:hover {

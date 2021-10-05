@@ -2,7 +2,7 @@ import axios from 'axios'
 import Cookies from 'js-cookie'
 
 
-let url = `http://206.189.91.54/api/v1`
+let url = `https://slackapi.avionschool.com/api/v1`
 
 // Creating User Session
 export const creatingUserSessionAPI = async(email, password, state, setState, setLoginUser, setIsLogin, history) => {
