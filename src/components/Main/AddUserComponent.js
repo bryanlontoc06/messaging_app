@@ -8,9 +8,9 @@ import {
     Avatar,
     AddUserUsersContainer,
     ButtonAddUser,
-    InviteUsersTitle
+    InviteUsersTitle,
+    BoxDM
 } from './components'
-import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 
@@ -34,7 +34,8 @@ const AddUserComponent = (props) => {
         handleDebounceAddUser,
         filteredItems,
         debounceOnChange,
-        query
+        query,
+        matchesMD
     } = props;
 
 
@@ -47,7 +48,7 @@ const AddUserComponent = (props) => {
                 aria-labelledby="keep-mounted-modal-title"
                 aria-describedby="keep-mounted-modal-description"
             >
-                <Box sx={style}>
+                <BoxDM sx={style}>
                 <Typography id="keep-mounted-modal-title" variant="h6" component="h2">
                     Add user
                 </Typography>
@@ -98,13 +99,13 @@ const AddUserComponent = (props) => {
                         filteredItems.length > 0 ?
                             filteredItems.map((user, index) => {
                                 return (
-                                <AddUserUsersContainer key={index}>
+                                <AddUserUsersContainer key={index} onClick={() => handleAddUser(user.id)}>
                                     <ContentUserProfileContainer>
                                         <Avatar sx={{ bgcolor: 'green' }} variant="rounded" src="#">
                                             {emailRemover(user.uid).charAt(0).toUpperCase()}
                                         </Avatar>
                                     </ContentUserProfileContainer>
-                                    <User>{emailRemover(user.uid).substring(0, 25) + (emailRemover(user.uid).length > 25? '...' : '')}<ButtonAddUser onClick={() => handleAddUser(user.id)}>Add</ButtonAddUser></User>
+                                    <User>{emailRemover(user.uid).substring(0, 25) + (emailRemover(user.uid).length > 25? '...' : '')}{matchesMD && <ButtonAddUser>Add</ButtonAddUser>}</User>
                                 </AddUserUsersContainer>
                             )})
                             :
@@ -112,7 +113,7 @@ const AddUserComponent = (props) => {
                         }
                     </UsersContainer>
                 </Typography>
-                </Box>
+                </BoxDM>
             </Modal> 
         </>
     )

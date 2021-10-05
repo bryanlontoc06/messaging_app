@@ -23,7 +23,7 @@ const ChatUserProfileComponent = (props) => {
     return (
         <>
            <ChatsUserProfile right={loginUser.data.data?.uid === data.sender.uid}>
-                <ContentUserProfileContainer>
+                <ContentUserProfileContainer style={{marginLeft: 'unset'}}>
                     <Avatar sx={{ bgcolor: 'green' }} variant="rounded" src={imgSrc}>
                         {initial}
                     </Avatar>

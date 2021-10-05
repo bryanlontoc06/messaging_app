@@ -35,9 +35,9 @@ const AddUserComponent = (props) => {
         setQuery,
         filteredItems,
         debounceOnChange,
-        matchesMD
+        matchesMD,
+        toggleDrawer
     } = props;
-
 
     return (
         <>
@@ -76,7 +76,7 @@ const AddUserComponent = (props) => {
                         filteredItems.length > 0 ?
                             filteredItems.map((user, index) => {
                                 return (
-                                <AddUserUsersContainer key={index} onClick={() => intervalRetrieveMessagesinUser(user)}>
+                                <AddUserUsersContainer key={index} onClick={() => {return (intervalRetrieveMessagesinUser(user), toggleDrawer())}}>
                                     <ContentUserProfileContainer>
                                         <Avatar sx={{ bgcolor: 'green' }} variant="rounded" src="#">
                                             {emailRemover(user.uid).charAt(0).toUpperCase()}

@@ -15,6 +15,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import { emailRemover } from '../helpers/helpers';
 import moment from 'moment';
 import ScrollableFeed from 'react-scrollable-feed';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const ContentChatBoxBodyComponent = (props) => {
     const {
@@ -25,24 +26,27 @@ const ContentChatBoxBodyComponent = (props) => {
         loginUser,
         createAMessage,
         classes,
-        chatMessage
+        chatMessage,
+        handleCloseDrawer,
+        matchesMD
     } = props;
     return (
         <ContentChatBoxBody>
                        <ChatBoxAddUserContainer>
-                        <ContentChatBoxChannelTitle>{selectChannel ? selectChannel.name : selectUser.uid}</ContentChatBoxChannelTitle>
-                        <AvatarnButton>
-                            {/* <AvatarGroup max={5} variant="rounded" className={classes.avatarSize} >
-                                <AvatarSmallGroup alt="Remy Sharp" src="/static/images/avatar/1.jpg" variant="rounded" />
-                                <AvatarSmallGroup alt="Travis Howard" src="/static/images/avatar/2.jpg" variant="rounded" />
-                                <AvatarSmallGroup alt="Cindy Baker" src="/static/images/avatar/3.jpg" variant="rounded" />
-                                <AvatarSmallGroup alt="Agnes Walker" src="/static/images/avatar/4.jpg" variant="rounded" />
-                                <AvatarSmallGroup alt="Trevor Henderson" src="/static/images/avatar/5.jpg" variant="rounded" />
-                                <AvatarSmallGroup alt="Trevor Henderson" src="/static/images/avatar/5.jpg" variant="rounded" />
-                                <AvatarSmallGroup alt="Trevor Henderson" src="/static/images/avatar/5.jpg" variant="rounded" />
-                            </AvatarGroup> */}
-                           {selectChannel && <Button variant="contained" onClick={handleOpen}>ADD USER</Button> }
-                        </AvatarnButton>
+                            {!matchesMD && <ArrowBackIcon onClick={handleCloseDrawer}/>}
+                            <ContentChatBoxChannelTitle>{selectChannel ? selectChannel.name : selectUser.uid}</ContentChatBoxChannelTitle>
+                            <AvatarnButton>
+                                {/* <AvatarGroup max={5} variant="rounded" className={classes.avatarSize} >
+                                    <AvatarSmallGroup alt="Remy Sharp" src="/static/images/avatar/1.jpg" variant="rounded" />
+                                    <AvatarSmallGroup alt="Travis Howard" src="/static/images/avatar/2.jpg" variant="rounded" />
+                                    <AvatarSmallGroup alt="Cindy Baker" src="/static/images/avatar/3.jpg" variant="rounded" />
+                                    <AvatarSmallGroup alt="Agnes Walker" src="/static/images/avatar/4.jpg" variant="rounded" />
+                                    <AvatarSmallGroup alt="Trevor Henderson" src="/static/images/avatar/5.jpg" variant="rounded" />
+                                    <AvatarSmallGroup alt="Trevor Henderson" src="/static/images/avatar/5.jpg" variant="rounded" />
+                                    <AvatarSmallGroup alt="Trevor Henderson" src="/static/images/avatar/5.jpg" variant="rounded" />
+                                </AvatarGroup> */}
+                            {selectChannel && <Button variant="contained" onClick={handleOpen} >ADD USER</Button> }
+                            </AvatarnButton>
                        </ChatBoxAddUserContainer>
 
                        {(selectChannel || selectUser)  &&

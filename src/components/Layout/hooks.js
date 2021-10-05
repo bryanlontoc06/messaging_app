@@ -1,12 +1,10 @@
 import {useContext, useEffect} from 'react'
 import {AppContext} from '../Global/AppContext'
 import Cookies from 'js-cookie'
-import useMediaQuery from '@mui/material/useMediaQuery';
 
 
 const useHooks = () => {
     const {isLogin, setIsLogin, loginUser, setLoginUser} = useContext(AppContext)
-    const matchesMD = useMediaQuery('(min-width: 768px)');
 
     const readCookie = () => {
         const user = Cookies.get("user")
@@ -25,8 +23,7 @@ const useHooks = () => {
         isLogin,
         setIsLogin,
         loginUser,
-        setLoginUser,
-        matchesMD
+        setLoginUser
     }
 }
 

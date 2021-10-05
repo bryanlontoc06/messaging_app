@@ -223,11 +223,19 @@ export const ContentChatBoxChannelTitle = styled.div `
     font-weight: bold;
     color: #34495e;
     font-size: 1.125rem;
+    margin-left: 0.5rem;
+    @media (min-width: 768px) {
+        margin-left: unset;
+    }
 `
 export const ChatBoxAddUserContainer = styled.div `
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    width: 100%;
+    @media (min-width: 768px) {
+        width: unset;
+        justify-content: space-between;
+    }
 `
 export const Button = styled(MaterialButton) `
     font-weight: bold !important;
@@ -250,6 +258,10 @@ export const AvatarnButton = styled.div `
     display: flex;
     gap: 1.75rem;
     align-items: center;
+    margin-left: auto;
+    @media (min-width: 768px) {
+        margin-left: unset;
+    }
 `
 export const ChatInput = styled.div `
     border: solid 1px #979797;
@@ -264,7 +276,7 @@ export const ChatsContainer = styled.div `
     color: #85929e;
     flex-direction: column;
     gap: 17px;
-    max-height: calc(100vh - 16rem);
+    max-height: calc(100vh - 12rem);
     overflow-y: auto;
     
     /* &:hover {
@@ -290,6 +302,10 @@ export const ChatsContainer = styled.div `
     &::-webkit-scrollbar-thumb:hover {
     background: #555; 
     }
+
+    @media (min-width: 768px) {
+        max-height: calc(100vh - 16rem);
+    }
 `
 export const ChatUsernTime = styled.div `
     display: flex;
@@ -313,9 +329,12 @@ export const ChatMessageContainer = styled.div `
     display: flex;
     flex-direction: column;
     gap: 3px;
-    width: calc(100vh - 80%);
+    width: 80%;
     word-wrap: break-word;
     text-align: ${props => props.right ? 'right' : ''};
+    @media (min-width: 768px) {
+        width: calc(100vh - 80%);
+    }
 `
 export const ChatMessages = styled.span `
     font-size: 0.875rem;
@@ -328,7 +347,10 @@ export const ChatsMessageandChatInput = styled.div `
     position: absolute;
     bottom: 26px;
     right: 18px;
-    left: 58px;
+    left: 22px;
+    @media (min-width: 768px) {
+        left: 22px;
+    }
 `
 export const UidInputContainer = styled.div `
     border: solid 1px #979797;

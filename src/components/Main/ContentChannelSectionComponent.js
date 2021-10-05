@@ -14,6 +14,7 @@ import {
 import UserChatBoxComponent from './UserChatBoxComponent';
 import channel_logo from '../../assets/sampleLogo.png'
 import { emailRemover } from '../helpers/helpers';
+import React from 'react';
 
 
 const ContentChannelSectionComponent = (props) => {
@@ -27,6 +28,7 @@ const ContentChannelSectionComponent = (props) => {
         handleClickPopOver,
         loginUser
     } = props;
+
 
     return (
         <ContentChannelSection>

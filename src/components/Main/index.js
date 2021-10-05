@@ -12,6 +12,7 @@ import {
     Channel,
     ChannelsContainer
 } from './components'
+import './App.css'
 import channel_logo from '../../assets/sampleLogo.png'
 import Popover from '@mui/material/Popover';
 import useHooks from './hooks'
@@ -24,7 +25,11 @@ import SnackbarComponent from '../Snackbars/index'
 import AddDMModalComponent from './AddDMModalComponent'
 import ContentChatBoxSectionComponent from './ContentChatBoxSectionComponent';
 import ContentChannelSectionComponent from './ContentChannelSectionComponent';
-import { useHistory } from 'react-router-dom';
+
+
+import SwipeableDrawer from '@mui/material/SwipeableDrawer';
+import ContentChatBoxBodyComponent from './ContentChatBoxBody';
+import {useState} from 'react';
 
 
 const Index = () => {
@@ -68,7 +73,20 @@ const Index = () => {
         channelName,
         matchesMD
     } = useHooks();
-    const history = useHistory();
+
+    const [states, setStates] = useState({
+        right: false,
+      });
+    
+      const toggleDrawer = () => {
+        setStates({right: true})
+      };
+
+      const handleCloseDrawer = () => {
+          setStates({right: false})
+      }
+
+    
     return (
         <> 
         <Container>
@@ -98,7 +116,7 @@ const Index = () => {
                                     onClick={() => {
                                         return (
                                             intervalRetrieveMessagesinChannel(data),
-                                            !matchesMD && history.push(`/chat`)
+                                            toggleDrawer()
                                         )
                                     }}>{data.name}</Channel>)
                                 })
@@ -124,7 +142,9 @@ const Index = () => {
                     createAMessage={createAMessage}
                     classes={classes}
                     chatMessage={chatMessage}
-               /> }
+                    matchesMD={matchesMD}
+               /> 
+            }
            </ContentContainer>
 
             {/* Modal for Add User  */}
@@ -142,6 +162,7 @@ const Index = () => {
                 debounceOnChange={debounceOnChange}
                 filteredItems={filteredItems}
                 query={query}
+                matchesMD={matchesMD}
             />
             }
             {isLoading  &&
@@ -171,6 +192,7 @@ const Index = () => {
                     debounceOnChange={debounceOnChange}
                     filteredItems={filteredItems}
                     matchesMD={matchesMD}
+                    toggleDrawer={toggleDrawer}
                 />
             } 
             
@@ -221,6 +243,26 @@ const Index = () => {
                 message={state.message}
                 status={state.warning ? `warning` : `success`}
             />
+
+            {!matchesMD &&
+                    <SwipeableDrawer
+                        anchor='right'
+                        open={states.right}
+                        style={{ width: '100%'}}
+                    >
+                        <ContentChatBoxBodyComponent 
+                            selectChannel={selectChannel}
+                            selectUser={selectUser}
+                            handleOpen={handleOpen}
+                            allMessages={allMessages}
+                            loginUser={loginUser}
+                            createAMessage={createAMessage}
+                            classes={classes}
+                            chatMessage={chatMessage}
+                            handleCloseDrawer={handleCloseDrawer}
+                        />
+                    </SwipeableDrawer>
+            }
         </Container>
         </>
     )
