@@ -12,7 +12,6 @@ import {
     Channel,
     ChannelsContainer
 } from './components'
-import './App.css'
 import channel_logo from '../../assets/sampleLogo.png'
 import Popover from '@mui/material/Popover';
 import useHooks from './hooks'
