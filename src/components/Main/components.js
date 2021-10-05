@@ -26,6 +26,9 @@ export const useStyles = makeStyles((theme) => ({
             color: '#34495e'
         }
     },
+    paper: {
+        width: '100%'
+    }
 }))
 
 export const style = {

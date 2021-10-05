@@ -252,6 +252,7 @@ const Index = () => {
                         anchor='right'
                         open={states.right}
                         style={{ width: '100%'}}
+                        classes={{ paper: classes.paper }}
                     >
                         <ContentChatBoxBodyComponent 
                             selectChannel={selectChannel}
