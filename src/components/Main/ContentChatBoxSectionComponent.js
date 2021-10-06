@@ -5,21 +5,15 @@ import {
     UserID,
     UserName,
     ContentUserProfileContainer,
-    ContentChatBoxBody,
-    ChatBoxAddUserContainer,
-    ContentChatBoxChannelTitle,
-    AvatarnButton,
-    Button,
-    ChatsMessageandChatInput,
-    ChatsContainer,
-    ChatInput,
-    TextField,
-    SendIcon,
-    Avatar
+    Avatar,
+    EmptyChatBoxContainer,
+    Image,
+    EmptyChatTitle
 } from './components'
 
 import {emailRemover} from '../helpers/helpers'
 import ContentChatBoxBodyComponent from './ContentChatBoxBody';
+import EmptyChatPic from '../../assets/Group-Chat-pana.png'
 
 const ContentChatBoxSectionComponent = (props) => {
     const {
@@ -33,7 +27,10 @@ const ContentChatBoxSectionComponent = (props) => {
         classes,
         chatMessage,
         matchesMD,
-        channel
+        channel,
+        openChannelMembersModal,
+        handleOpenChannelMembers,
+        setOpenChannelMembersModal
     } = props;
     return (
         <ContentChatBoxSection>
@@ -58,7 +55,7 @@ const ContentChatBoxSectionComponent = (props) => {
                         </ContentUserProfileContainer>
                    </ContentChatBoxHeader>
 
-                   
+                   {(selectChannel || selectUser)  ?
                    <ContentChatBoxBodyComponent 
                         selectChannel={selectChannel}
                         selectUser={selectUser}
@@ -70,7 +67,18 @@ const ContentChatBoxSectionComponent = (props) => {
                         chatMessage={chatMessage}
                         matchesMD={matchesMD}
                         channel={channel}
+                        openChannelMembersModal={openChannelMembersModal}
+                        handleOpenChannelMembers={handleOpenChannelMembers}
+                        setOpenChannelMembersModal={setOpenChannelMembersModal}
                    />
+                   : 
+                       <EmptyChatBoxContainer>
+                           <Image src={EmptyChatPic} width="100%" loading='eager'/>
+                           <EmptyChatTitle>
+                                Let's Chat!
+                            </EmptyChatTitle>
+                       </EmptyChatBoxContainer>
+                    }
                </ContentChatBoxSection>
     )
 }

@@ -47,6 +47,7 @@ const useHooks = () => {
     const channelName = useRef('')
     const [channel, setChannel] = useState()
     const matchesMD = useMediaQuery('(min-width: 768px)');
+    const [openChannelMembersModal, setOpenChannelMembersModal] = useState(false)
 
 
     // Retrieve All Users
@@ -224,6 +225,10 @@ const useHooks = () => {
     const debounceOnChange = debounce(updateQuery, 500)
 
 
+    const handleOpenChannelMembers = (data) => {
+        setOpenChannelMembersModal(true)
+        retrieveAChannelAPI(data, loginUser, isLogin, setChannel, users)
+    }
 
     return {
         loginUser,
@@ -263,7 +268,10 @@ const useHooks = () => {
         channelName,
         createAChannel,
         matchesMD,
-        channel
+        channel,
+        openChannelMembersModal,
+        handleOpenChannelMembers,
+        setOpenChannelMembersModal
     }
 }
 

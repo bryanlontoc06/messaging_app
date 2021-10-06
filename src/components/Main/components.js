@@ -19,12 +19,13 @@ const fadeInAnimation = keyframes`${fadeIn}`;
 export const useStyles = makeStyles((theme) => ({
     avatarSize: {
         '& .MuiAvatar-root.MuiAvatar-rounded.MuiAvatar-colorDefault.MuiAvatarGroup-avatar.css-16fxgir-MuiAvatar-root-MuiAvatarGroup-avatar': {
-            width: '24px',
-            height: '24px',
-            fontSize: '0.75rem',
-            background: 'unset',
-            fontFamily: 'Source Sans Pro',
-            color: '#34495e'
+            width: '24px !important',
+            height: '24px !important',
+            fontSize: '0.75rem !important',
+            background: 'unset !important',
+            fontFamily: 'Source Sans Pro !important',
+            color: '#34495e !important',
+            cursor: 'pointer !important'
         }
     },
     paper: {
@@ -252,6 +253,7 @@ export const AvatarGroup = styled(MaterialAvatarGroup) `
     background: unset;  
     display: flex;
     justify-content: center;
+    cursor: pointer;
 `
 export const AvatarSmallGroup = styled(MaterialAvatar) `
     width: 24px !important;

@@ -71,7 +71,10 @@ const Index = () => {
         createAChannel,
         channelName,
         matchesMD,
-        channel
+        channel,
+        openChannelMembersModal,
+        handleOpenChannelMembers,
+        setOpenChannelMembersModal
     } = useHooks();
 
     const [states, setStates] = useState({
@@ -144,6 +147,9 @@ const Index = () => {
                     chatMessage={chatMessage}
                     matchesMD={matchesMD}
                     channel={channel}
+                    openChannelMembersModal={openChannelMembersModal}
+                    handleOpenChannelMembers={handleOpenChannelMembers}
+                    setOpenChannelMembersModal={setOpenChannelMembersModal}
                /> 
             }
            </ContentContainer>
@@ -263,6 +269,9 @@ const Index = () => {
                             chatMessage={chatMessage}
                             handleCloseDrawer={handleCloseDrawer}
                             channel={channel}
+                            openChannelMembersModal={openChannelMembersModal}
+                            handleOpenChannelMembers={handleOpenChannelMembers}
+                            setOpenChannelMembersModal={setOpenChannelMembersModal}
                         />
                     </SwipeableDrawer>
             }

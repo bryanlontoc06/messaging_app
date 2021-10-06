@@ -62,3 +62,11 @@ export const AvatarSmallGroup = styled(MaterialSkeleton) `
     height: 34px !important;
     font-size: 0.8rem !important;
 `
+export const ContentChatBoxChannelTitle = styled(MaterialSkeleton) `
+    font-weight: bold;
+    color: #34495e;
+    font-size: 1.125rem;
+    margin-left: 0.5rem;
+    width: 8rem !important;
+    height: 2rem !important;
+`
