@@ -11,10 +11,12 @@ import {
     InviteUsersTitle,
     BoxDM,
     CloseIcon,
-    ModalTitle
+    ModalTitle,
 } from './components'
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
+import Tooltip from '@mui/material/Tooltip';
+import Zoom from '@mui/material/Zoom';
 
 
 
@@ -81,14 +83,18 @@ const AddUserComponent = (props) => {
                         filteredItems.length > 0 ?
                             filteredItems.map((user, index) => {
                                 return (
-                                <AddUserUsersContainer key={index} onClick={() => {return (intervalRetrieveMessagesinUser(user), toggleDrawer())}}>
-                                    <ContentUserProfileContainer>
-                                        <Avatar sx={{ bgcolor: 'green' }} variant="rounded" src="#">
-                                            {emailRemover(user.uid).charAt(0).toUpperCase()}
-                                        </Avatar>
-                                    </ContentUserProfileContainer>
-                                    <User>{emailRemover(user.uid).substring(0, 25) + (emailRemover(user.uid).length > 25? '...' : '')}{matchesMD && <ButtonAddUser>message</ButtonAddUser>}</User>
-                                </AddUserUsersContainer>
+                                    
+                                        <AddUserUsersContainer key={index} onClick={() => {return (intervalRetrieveMessagesinUser(user), toggleDrawer())}}>
+                                            <Tooltip title={user.uid} arrow TransitionComponent={Zoom}>
+                                                <ContentUserProfileContainer>
+                                                    <Avatar sx={{ bgcolor: 'green' }} variant="rounded" src="#">
+                                                        {emailRemover(user.uid).charAt(0).toUpperCase()}
+                                                    </Avatar>
+                                                </ContentUserProfileContainer>
+                                            </Tooltip>
+                                            <User>{emailRemover(user.uid).substring(0, 25) + (emailRemover(user.uid).length > 25? '...' : '')}{matchesMD && <ButtonAddUser>message</ButtonAddUser>}</User>
+                                        </AddUserUsersContainer>
+                                    
                             )})
                             :
                             <h1 style={{textAlign: 'center'}}>No user available</h1>

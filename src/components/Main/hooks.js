@@ -61,10 +61,10 @@ const useHooks = () => {
         }
     };
     // Function for adding a user in a channel
-    const handleAddUser = async(id) => {
+    const handleAddUser = async(data) => {
         setIsLoading(true)
         setOpen(false)
-        inviteUserToChannelAPI(selectChannel, id, loginUser, state, setState, setIsLoading, setOpen)
+        inviteUserToChannelAPI(selectChannel, data, loginUser, state, setState, setIsLoading, setOpen, setChannel)
     }
     const handleCloseAddUserModal = (event, reason) => {
         if (reason === 'clickaway') {
@@ -122,6 +122,8 @@ const useHooks = () => {
         setSelectUser('')
         setSelectChannel(data)
         retrieveMessagesinChannel(data)
+        retrieveAllUsersAPI(loginUser, setIsLoading, setUsers)
+        retrieveAChannelAPI(data, loginUser, isLogin, setChannel, users)
         setDuplicateForChannel(!duplicateForChannel)
         if(duplicateForChannel) {
             int3 = setInterval(() => {

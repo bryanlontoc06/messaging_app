@@ -86,7 +86,6 @@ const Index = () => {
           setStates({right: false})
       }
 
-    console.log({channel})
 
     return (
         <> 
@@ -263,6 +262,7 @@ const Index = () => {
                             classes={classes}
                             chatMessage={chatMessage}
                             handleCloseDrawer={handleCloseDrawer}
+                            channel={channel}
                         />
                     </SwipeableDrawer>
             }

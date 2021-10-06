@@ -32,7 +32,8 @@ const ContentChatBoxSectionComponent = (props) => {
         createAMessage,
         classes,
         chatMessage,
-        matchesMD
+        matchesMD,
+        channel
     } = props;
     return (
         <ContentChatBoxSection>
@@ -68,6 +69,7 @@ const ContentChatBoxSectionComponent = (props) => {
                         classes={classes}
                         chatMessage={chatMessage}
                         matchesMD={matchesMD}
+                        channel={channel}
                    />
                </ContentChatBoxSection>
     )

@@ -11,7 +11,21 @@ import {
     SendIcon,
     EmptyChatBoxContainer,
     Image,
-    EmptyChatTitle
+    EmptyChatTitle,
+    AvatarGroup,
+    AvatarSmallGroup,
+    Box,
+    AddUserUsersContainer,
+    Avatar,
+    ContentUserProfileContainer,
+    User,
+    MembersTitle,
+    ChannelMembersContainer,
+    BoxDM,
+    ModalTitle,
+    Typography,
+    CloseIcon,
+    UsersContainer
 } from './components'
 import ChatUserProfileComponent from './ChatUserProfileComponent'
 import InputAdornment from '@mui/material/InputAdornment';
@@ -20,6 +34,23 @@ import moment from 'moment';
 import ScrollableFeed from 'react-scrollable-feed';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import EmptyChatPic from '../../assets/Group-Chat-pana.png'
+import {useState} from 'react'
+import Modal from '@mui/material/Modal';
+import Tooltip from '@mui/material/Tooltip';
+import Zoom from '@mui/material/Zoom';
+
+
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
 
 
 const ContentChatBoxBodyComponent = (props) => {
@@ -33,23 +64,39 @@ const ContentChatBoxBodyComponent = (props) => {
         classes,
         chatMessage,
         handleCloseDrawer,
-        matchesMD
+        matchesMD,
+        channel
     } = props;
+
+    const [openChannelMembersModal, setOpenChannelMembersModal] = useState(false)
+
+
+    const handleOpenChannelMembers = () => {
+        setOpenChannelMembersModal(true)
+    }
+    
+    const handleClose = () => {
+        return (
+            setOpenChannelMembersModal(false)
+        )
+    };
+
+
     return (
         <ContentChatBoxBody>
                        <ChatBoxAddUserContainer>
                             {!matchesMD && <ArrowBackIcon onClick={handleCloseDrawer}/>}
                             <ContentChatBoxChannelTitle>{selectChannel ? selectChannel.name : selectUser.uid}</ContentChatBoxChannelTitle>
                             <AvatarnButton>
-                                {/* <AvatarGroup max={5} variant="rounded" className={classes.avatarSize} >
-                                    <AvatarSmallGroup alt="Remy Sharp" src="/static/images/avatar/1.jpg" variant="rounded" />
-                                    <AvatarSmallGroup alt="Travis Howard" src="/static/images/avatar/2.jpg" variant="rounded" />
-                                    <AvatarSmallGroup alt="Cindy Baker" src="/static/images/avatar/3.jpg" variant="rounded" />
-                                    <AvatarSmallGroup alt="Agnes Walker" src="/static/images/avatar/4.jpg" variant="rounded" />
-                                    <AvatarSmallGroup alt="Trevor Henderson" src="/static/images/avatar/5.jpg" variant="rounded" />
-                                    <AvatarSmallGroup alt="Trevor Henderson" src="/static/images/avatar/5.jpg" variant="rounded" />
-                                    <AvatarSmallGroup alt="Trevor Henderson" src="/static/images/avatar/5.jpg" variant="rounded" />
-                                </AvatarGroup> */}
+                            {channel &&
+                                <AvatarGroup max={5} variant="rounded" className={classes.avatarSize} style={{cursor: 'pointer'}} onClick={handleOpenChannelMembers}>
+                                    {channel.map((member, index) => {
+                                        return (
+                                            <AvatarSmallGroup key={index} alt={emailRemover(member[0].uid).toUpperCase()} src="/static/images/avatar/5.jpg" variant="rounded" />
+                                        )
+                                    })}
+                                </AvatarGroup>
+                            }
                             {selectChannel && <Button variant="contained" onClick={handleOpen} >ADD USER</Button> }
                             </AvatarnButton>
                        </ChatBoxAddUserContainer>
@@ -110,6 +157,43 @@ const ContentChatBoxBodyComponent = (props) => {
                                 Let's Chat!
                             </EmptyChatTitle>
                        </EmptyChatBoxContainer>
+                        }
+
+                        {channel && 
+                            <Modal
+                                keepMounted
+                                open={openChannelMembersModal}
+                                onClose={handleClose}
+                                aria-labelledby="keep-mounted-modal-title"
+                                aria-describedby="keep-mounted-modal-description"
+                            >
+                                <BoxDM sx={style}>
+                                    <ModalTitle>
+                                        <MembersTitle>
+                                            {`${selectChannel.name} members`}
+                                        </MembersTitle>
+                                            <CloseIcon onClick={handleClose}/>
+                                    </ModalTitle>
+                                    <Typography id="keep-mounted-modal-description" sx={{ mt: 2 }}>
+                                        <UsersContainer>
+                                                {channel.map((user, index) => {
+                                                    return (
+                                                        <AddUserUsersContainer key={index}>
+                                                            <Tooltip title={user[0].uid} arrow TransitionComponent={Zoom}>
+                                                            <ContentUserProfileContainer>
+                                                                <Avatar sx={{ bgcolor: 'green' }} variant="rounded" src="#">
+                                                                    {emailRemover(user[0].uid).charAt(0).toUpperCase()}
+                                                                </Avatar>
+                                                            </ContentUserProfileContainer>
+                                                            </Tooltip>
+                                                            <User>{emailRemover(user[0].uid).substring(0, 25) + (emailRemover(user[0].uid).length > 25? '...' : '')}</User>
+                                                        </AddUserUsersContainer>
+                                                    )
+                                                })}
+                                        </UsersContainer>
+                                    </Typography>
+                                </BoxDM>
+                            </Modal>
                         }
                    </ContentChatBoxBody>
     )

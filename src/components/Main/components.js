@@ -470,7 +470,9 @@ export const BoxDM = styled(Box) `
         height: unset;
     }
 `
-export const CloseIcon = styled(MaterialCloseIcon) ``
+export const CloseIcon = styled(MaterialCloseIcon) `
+    cursor: pointer;
+`
 export const ModalTitle = styled.div `
     display: flex;
     align-items: center;
@@ -488,4 +490,38 @@ export const EmptyChatTitle = styled.span `
     font-size: 2rem;
     font-weight: 600;
     color: #85929e;
+`
+export const MembersTitle = styled.span `
+    font-size: 1.3rem !important;
+    font-weight: bold;
+    color: #34495e;
+`
+export const ChannelMembersContainer = styled.div `
+    margin-top: 1rem;
+    height: calc(100vh - 26rem);
+    overflow-y: auto;
+
+
+    /* width */
+    &::-webkit-scrollbar {
+    width: 10px;
+    }
+    /* Track */
+    &::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+    }
+    
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+    background: #888; 
+    }
+
+    /* Handle on hover */
+    &::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+    }
+
+    @media (min-width: 768px) {
+        height: calc(100vh - 24rem);
+    }   
 `

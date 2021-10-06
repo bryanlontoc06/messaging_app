@@ -15,7 +15,8 @@ import {
 } from './components'
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
-
+import Tooltip from '@mui/material/Tooltip';
+import Zoom from '@mui/material/Zoom';
 
 
 
@@ -104,12 +105,14 @@ const AddUserComponent = (props) => {
                         filteredItems.length > 0 ?
                             filteredItems.map((user, index) => {
                                 return (
-                                <AddUserUsersContainer key={index} onClick={() => handleAddUser(user.id)}>
+                                <AddUserUsersContainer key={index} onClick={() => handleAddUser(user)}>
+                                    <Tooltip title={user.uid} arrow TransitionComponent={Zoom}>
                                     <ContentUserProfileContainer>
                                         <Avatar sx={{ bgcolor: 'green' }} variant="rounded" src="#">
                                             {emailRemover(user.uid).charAt(0).toUpperCase()}
                                         </Avatar>
                                     </ContentUserProfileContainer>
+                                    </Tooltip>
                                     <User>{emailRemover(user.uid).substring(0, 25) + (emailRemover(user.uid).length > 25? '...' : '')}{matchesMD && <ButtonAddUser>Add</ButtonAddUser>}</User>
                                 </AddUserUsersContainer>
                             )})

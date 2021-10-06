@@ -22,6 +22,8 @@ import {
 } from './components'
 import {emailRemover} from '../helpers/helpers'
 import {useState} from 'react'
+import Tooltip from '@mui/material/Tooltip';
+import Zoom from '@mui/material/Zoom';
 
 const style = {
   position: 'absolute',
@@ -121,9 +123,9 @@ const Index = (props) => {
                     </UidInputContainer>
                     <InviteUsersTitle>Note: Type 'all' to load all users</InviteUsersTitle>
                     <AvatarGroup max={5} variant="rounded" className={classes.avatarSize} style={{cursor: 'pointer'}} onClick={handleOpenPreAddedUsers}>
-                        {usersToAdd.map(user => {
+                        {usersToAdd.map((user, index) => {
                             return (
-                                <AvatarSmallGroup alt={emailRemover(user.uid).toUpperCase()} src="/static/images/avatar/1.jpg" variant="rounded" />
+                                <AvatarSmallGroup key={index} alt={emailRemover(user.uid).toUpperCase()} src="/static/images/avatar/1.jpg" variant="rounded" />
                             )
                         })}
                     </AvatarGroup>
@@ -133,11 +135,13 @@ const Index = (props) => {
                                 filteredItems.map((user, index) => {
                                     return (
                                     <AddUserUsersContainer key={index} onClick={() => addUsersToChannel(user)}>
-                                        <ContentUserProfileContainer>
-                                            <Avatar sx={{ bgcolor: 'green' }} variant="rounded" src="#">
-                                                {emailRemover(user.uid).charAt(0).toUpperCase()}
-                                            </Avatar>
-                                        </ContentUserProfileContainer>
+                                        <Tooltip title={user.uid} arrow TransitionComponent={Zoom}>
+                                            <ContentUserProfileContainer>
+                                                <Avatar sx={{ bgcolor: 'green' }} variant="rounded" src="#">
+                                                    {emailRemover(user.uid).charAt(0).toUpperCase()}
+                                                </Avatar>
+                                            </ContentUserProfileContainer>
+                                        </Tooltip>
                                         <User>{emailRemover(user.uid).substring(0, 25) + (emailRemover(user.uid).length > 25? '...' : '')}{matchesMD && <ButtonAddUser><AddIcon /></ButtonAddUser>}</User>
                                     </AddUserUsersContainer>
                                 )})

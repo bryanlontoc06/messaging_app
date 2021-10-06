@@ -187,12 +187,12 @@ export const retrieveAChannelAPI = async(data, loginUser, isLogin, setChannel, u
 }
 
 // Invite User to a channel
-export const inviteUserToChannelAPI = async(selectChannel, id, loginUser, state, setState, setIsLoading, setOpen) => {
+export const inviteUserToChannelAPI = async(selectChannel, data, loginUser, state, setState, setIsLoading, setOpen, setChannel, users, isLogin) => {
     await axios({
         url: `${url}/channel/add_member`,
         data: {
             'id': selectChannel.id,
-            'member_id': id,
+            'member_id': data.id,
         },
         headers: {
             'access-token': loginUser.headers?.['access-token'],
@@ -207,6 +207,7 @@ export const inviteUserToChannelAPI = async(selectChannel, id, loginUser, state,
             if(res.status === 200) {
                 // setTimeout(() => {
                         if(res.data.data?.id) {
+                            retrieveAChannelAPI(selectChannel, loginUser, isLogin, setChannel, users)
                             setState({...state, 
                                 open: true, 
                                 message: `Added Successfully!`, 
