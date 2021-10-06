@@ -8,7 +8,10 @@ import {
     ChatsContainer,
     ChatInput,
     TextField,
-    SendIcon
+    SendIcon,
+    EmptyChatBoxContainer,
+    Image,
+    EmptyChatTitle
 } from './components'
 import ChatUserProfileComponent from './ChatUserProfileComponent'
 import InputAdornment from '@mui/material/InputAdornment';
@@ -16,6 +19,8 @@ import { emailRemover } from '../helpers/helpers';
 import moment from 'moment';
 import ScrollableFeed from 'react-scrollable-feed';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import EmptyChatPic from '../../assets/Group-Chat-pana.png'
+
 
 const ContentChatBoxBodyComponent = (props) => {
     const {
@@ -49,7 +54,7 @@ const ContentChatBoxBodyComponent = (props) => {
                             </AvatarnButton>
                        </ChatBoxAddUserContainer>
 
-                       {(selectChannel || selectUser)  &&
+                       {(selectChannel || selectUser)  ?
                        <ChatsMessageandChatInput>
                                 <ChatsContainer>
                                     {/* <ScrollableFeed forceScroll='true'> */}
@@ -98,6 +103,13 @@ const ContentChatBoxBodyComponent = (props) => {
                             </form>
                             
                        </ChatsMessageandChatInput>
+                       : 
+                       <EmptyChatBoxContainer>
+                           <Image src={EmptyChatPic} width="100%" />
+                           <EmptyChatTitle>
+                                Let's Chat!
+                            </EmptyChatTitle>
+                       </EmptyChatBoxContainer>
                         }
                    </ContentChatBoxBody>
     )

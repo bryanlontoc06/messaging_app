@@ -476,3 +476,16 @@ export const ModalTitle = styled.div `
     align-items: center;
     justify-content: space-between;
 `
+export const EmptyChatBoxContainer = styled.div `
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+`
+export const Image = styled.img ``
+export const EmptyChatTitle = styled.span `
+    font-size: 2rem;
+    font-weight: 600;
+    color: #85929e;
+`
