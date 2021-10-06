@@ -90,18 +90,18 @@ const ContentChatBoxBodyComponent = (props) => {
                             {!matchesMD && <ArrowBackIcon onClick={handleCloseDrawer}/>}
                             <ContentChatBoxChannelTitle>{selectChannel ? selectChannel.name : selectUser.uid}</ContentChatBoxChannelTitle>
                             <AvatarnButton>
-                            {/* {selectChannel &&
-                                (channel ?
-                                    <AvatarGroup max={5} variant="rounded" className={classes.avatarSize} style={{cursor: 'pointer'}} onClick={handleOpenChannelMembers}>
-                                        {channel.map((member, index) => {
-                                                return (
-                                                        <AvatarSmallGroup key={index} alt={emailRemover(member[0]?.uid).toUpperCase()} src="/static/images/avatar/5.jpg" variant="rounded" />
-                                                    )
-                                            })
-                                        }
-                                    </AvatarGroup>
-                                : <LoadingChannelMembers/>)
-                            } */}
+                            {channel &&
+                                channel ?
+                                <AvatarGroup max={5} variant="rounded" className={classes.avatarSize} style={{cursor: 'pointer'}} onClick={handleOpenChannelMembers}>
+                                    {channel.map((member, index) => {
+                                            return (
+                                                    <AvatarSmallGroup key={index} alt={emailRemover(member[0]?.uid).toUpperCase()} src="/static/images/avatar/5.jpg" variant="rounded" />
+                                                )
+                                        })
+                                    }
+                                </AvatarGroup>
+                                : <LoadingChannelMembers/>
+                            }
                             {selectChannel && <Button variant="contained" onClick={handleOpen} >ADD USER</Button> }
                             </AvatarnButton>
                        </ChatBoxAddUserContainer>
