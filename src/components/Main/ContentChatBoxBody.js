@@ -90,7 +90,7 @@ const ContentChatBoxBodyComponent = (props) => {
                             {!matchesMD && <ArrowBackIcon onClick={handleCloseDrawer}/>}
                             <ContentChatBoxChannelTitle>{selectChannel ? selectChannel.name : selectUser.uid}</ContentChatBoxChannelTitle>
                             <AvatarnButton>
-                            {channel &&
+                            {(channel && selectChannel) &&
                                 channel ?
                                 <AvatarGroup max={5} variant="rounded" className={classes.avatarSize} style={{cursor: 'pointer'}} onClick={handleOpenChannelMembers}>
                                     {channel.map((member, index) => {
