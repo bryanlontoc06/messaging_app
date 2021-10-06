@@ -26,7 +26,7 @@ import ContentChatBoxSectionComponent from './ContentChatBoxSectionComponent';
 import ContentChannelSectionComponent from './ContentChannelSectionComponent';
 
 
-import SwipeableDrawer from '@mui/material/SwipeableDrawer';
+import Drawer from '@mui/material/Drawer';
 import ContentChatBoxBodyComponent from './ContentChatBoxBody';
 import {useState} from 'react';
 
@@ -252,7 +252,7 @@ const Index = () => {
             />
 
             {!matchesMD &&
-                    <SwipeableDrawer
+                    <Drawer
                         anchor='right'
                         open={states.right}
                         style={{ width: '100%'}}
@@ -273,7 +273,7 @@ const Index = () => {
                             handleOpenChannelMembers={handleOpenChannelMembers}
                             setOpenChannelMembersModal={setOpenChannelMembersModal}
                         />
-                    </SwipeableDrawer>
+                    </Drawer>
             }
         </Container>
         </>
