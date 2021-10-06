@@ -67,7 +67,7 @@ const Index = (props) => {
                     variant="h2"
                     style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}
                   >
-                    <LogoImg src={channel_logo} />
+                    <LogoImg src={channel_logo} loading='eager'/>
                     <LogoTitle>Avion School</LogoTitle>
                   </Typography>
                 </Box>

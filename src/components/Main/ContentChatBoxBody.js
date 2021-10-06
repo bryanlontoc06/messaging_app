@@ -158,7 +158,7 @@ const ContentChatBoxBodyComponent = (props) => {
                        </ChatsMessageandChatInput>
                        : 
                        <EmptyChatBoxContainer>
-                           <Image src={EmptyChatPic} width="100%" />
+                           <Image src={EmptyChatPic} width="100%" loading='eager'/>
                            <EmptyChatTitle>
                                 Let's Chat!
                             </EmptyChatTitle>

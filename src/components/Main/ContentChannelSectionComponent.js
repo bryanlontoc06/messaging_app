@@ -35,7 +35,7 @@ const ContentChannelSectionComponent = (props) => {
         <ContentChannelSection>
             {!matchesMD &&
                 <LogoContainer>
-                    <Logo src={channel_logo} />
+                    <Logo src={channel_logo} loading='eager'/>
                 </LogoContainer>
             }
             <ContentChannelTitle>Avion School</ContentChannelTitle>
