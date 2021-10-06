@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/messaging_app/static/css/main.93249ff5.chunk.css",
-    "main.js": "/messaging_app/static/js/main.f5dd6ef8.chunk.js",
-    "main.js.map": "/messaging_app/static/js/main.f5dd6ef8.chunk.js.map",
+    "main.js": "/messaging_app/static/js/main.5a397766.chunk.js",
+    "main.js.map": "/messaging_app/static/js/main.5a397766.chunk.js.map",
     "runtime-main.js": "/messaging_app/static/js/runtime-main.58770e31.js",
     "runtime-main.js.map": "/messaging_app/static/js/runtime-main.58770e31.js.map",
     "static/js/2.ad5afb06.chunk.js": "/messaging_app/static/js/2.ad5afb06.chunk.js",
@@ -12,12 +12,13 @@
     "index.html": "/messaging_app/index.html",
     "static/css/main.93249ff5.chunk.css.map": "/messaging_app/static/css/main.93249ff5.chunk.css.map",
     "static/js/2.ad5afb06.chunk.js.LICENSE.txt": "/messaging_app/static/js/2.ad5afb06.chunk.js.LICENSE.txt",
+    "static/media/Group-Chat-pana.fc4b5d17.png": "/messaging_app/static/media/Group-Chat-pana.fc4b5d17.png",
     "static/media/sampleLogo.4d1763d3.png": "/messaging_app/static/media/sampleLogo.4d1763d3.png"
   },
   "entrypoints": [
     "static/js/runtime-main.58770e31.js",
     "static/js/2.ad5afb06.chunk.js",
     "static/css/main.93249ff5.chunk.css",
-    "static/js/main.f5dd6ef8.chunk.js"
+    "static/js/main.5a397766.chunk.js"
   ]
 }
