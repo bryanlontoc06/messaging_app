@@ -33,13 +33,11 @@ import { emailRemover } from '../helpers/helpers';
 import moment from 'moment';
 import ScrollableFeed from 'react-scrollable-feed';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import EmptyChatPic from '../../assets/Group-Chat-pana.png'
 import {useState} from 'react'
 import Modal from '@mui/material/Modal';
 import Tooltip from '@mui/material/Tooltip';
 import Zoom from '@mui/material/Zoom';
-import {LoadingChannelMessage, LoadingChannelMembers} from '../ChannelSkeletonLoading'
-import {retrieveAChannelAPI} from '../api/api'
+import {LoadingChannelMessage, LoadingChannelMembers, LoadingContentChatBoxChannelTitle} from '../ChannelSkeletonLoading'
 
 
 const style = {
@@ -67,15 +65,15 @@ const ContentChatBoxBodyComponent = (props) => {
         chatMessage,
         handleCloseDrawer,
         matchesMD,
-        channel
+        channel,
+        openChannelMembersModal,
+        handleOpenChannelMembers,
+        setOpenChannelMembersModal
     } = props;
 
-    const [openChannelMembersModal, setOpenChannelMembersModal] = useState(false)
 
 
-    const handleOpenChannelMembers = () => {
-        setOpenChannelMembersModal(true)
-    }
+    
     
     const handleClose = () => {
         return (
@@ -88,11 +86,11 @@ const ContentChatBoxBodyComponent = (props) => {
             <ContentChatBoxBody>
                        <ChatBoxAddUserContainer>
                             {!matchesMD && <ArrowBackIcon onClick={handleCloseDrawer}/>}
-                            <ContentChatBoxChannelTitle>{selectChannel ? selectChannel.name : selectUser.uid}</ContentChatBoxChannelTitle>
+                            <ContentChatBoxChannelTitle style={{cursor: 'pointer'}} onClick={() => selectChannel && handleOpenChannelMembers(selectChannel)}>{selectChannel ? (channel ? `${selectChannel.name}(${channel.length})` : <LoadingContentChatBoxChannelTitle/>) : selectUser.uid}</ContentChatBoxChannelTitle>
                             <AvatarnButton>
-                            {(channel && selectChannel) &&
+                            {/* {channel &&
                                 channel ?
-                                <AvatarGroup max={5} variant="rounded" className={classes.avatarSize} style={{cursor: 'pointer'}} onClick={handleOpenChannelMembers}>
+                                <AvatarGroup max={5} variant="rounded" className={classes.avatarSize} onClick={handleOpenChannelMembers}>
                                     {channel.map((member, index) => {
                                             return (
                                                     <AvatarSmallGroup key={index} alt={emailRemover(member[0]?.uid).toUpperCase()} src="/static/images/avatar/5.jpg" variant="rounded" />
@@ -101,12 +99,14 @@ const ContentChatBoxBodyComponent = (props) => {
                                     }
                                 </AvatarGroup>
                                 : <LoadingChannelMembers/>
+                            } */}
+                            {selectChannel && 
+                                    <Button variant="contained" onClick={handleOpen} >ADD USER</Button> 
                             }
-                            {selectChannel && <Button variant="contained" onClick={handleOpen} >ADD USER</Button> }
                             </AvatarnButton>
                        </ChatBoxAddUserContainer>
 
-                       {(selectChannel || selectUser)  ?
+                       
                        <ChatsMessageandChatInput>
                                 <ChatsContainer>
                                     {/* <ScrollableFeed forceScroll='true'> */}
@@ -156,14 +156,7 @@ const ContentChatBoxBodyComponent = (props) => {
                             </form>
                             
                        </ChatsMessageandChatInput>
-                       : 
-                       <EmptyChatBoxContainer>
-                           <Image src={EmptyChatPic} width="100%" loading='eager'/>
-                           <EmptyChatTitle>
-                                Let's Chat!
-                            </EmptyChatTitle>
-                       </EmptyChatBoxContainer>
-                        }
+                       
 
                         {channel && 
                             <Modal
@@ -193,7 +186,7 @@ const ContentChatBoxBodyComponent = (props) => {
                                                                 </Avatar>
                                                             </ContentUserProfileContainer>
                                                             </Tooltip>
-                                                            <User>{emailRemover(user[0].uid).substring(0, 25) + (emailRemover(user[0].uid).length > 25? '...' : '')}</User>
+                                                            <User>{emailRemover(user[0].uid).substring(0, 25) + (emailRemover(user[0].uid).length > 25? '...' : '')} {user[0].uid === loginUser?.data?.data?.uid && `(YOU)`}</User>
                                                         </AddUserUsersContainer>
                                                     )
                                                 })}

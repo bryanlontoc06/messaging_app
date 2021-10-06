@@ -26,7 +26,7 @@ import ContentChatBoxSectionComponent from './ContentChatBoxSectionComponent';
 import ContentChannelSectionComponent from './ContentChannelSectionComponent';
 
 
-import SwipeableDrawer from '@mui/material/SwipeableDrawer';
+import Drawer from '@mui/material/Drawer';
 import ContentChatBoxBodyComponent from './ContentChatBoxBody';
 import {useState} from 'react';
 
@@ -71,7 +71,10 @@ const Index = () => {
         createAChannel,
         channelName,
         matchesMD,
-        channel
+        channel,
+        openChannelMembersModal,
+        handleOpenChannelMembers,
+        setOpenChannelMembersModal
     } = useHooks();
 
     const [states, setStates] = useState({
@@ -144,6 +147,9 @@ const Index = () => {
                     chatMessage={chatMessage}
                     matchesMD={matchesMD}
                     channel={channel}
+                    openChannelMembersModal={openChannelMembersModal}
+                    handleOpenChannelMembers={handleOpenChannelMembers}
+                    setOpenChannelMembersModal={setOpenChannelMembersModal}
                /> 
             }
            </ContentContainer>
@@ -246,7 +252,7 @@ const Index = () => {
             />
 
             {!matchesMD &&
-                    <SwipeableDrawer
+                    <Drawer
                         anchor='right'
                         open={states.right}
                         style={{ width: '100%'}}
@@ -263,8 +269,11 @@ const Index = () => {
                             chatMessage={chatMessage}
                             handleCloseDrawer={handleCloseDrawer}
                             channel={channel}
+                            openChannelMembersModal={openChannelMembersModal}
+                            handleOpenChannelMembers={handleOpenChannelMembers}
+                            setOpenChannelMembersModal={setOpenChannelMembersModal}
                         />
-                    </SwipeableDrawer>
+                    </Drawer>
             }
         </Container>
         </>

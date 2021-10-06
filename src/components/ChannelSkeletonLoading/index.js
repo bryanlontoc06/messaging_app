@@ -8,7 +8,8 @@ import {
     ChatUserTime,
     ChatMessages,
     Channel,
-    AvatarSmallGroup
+    AvatarSmallGroup,
+    ContentChatBoxChannelTitle
 } from './components.js'
 
 export const LoadingChannelMessage = () => {
@@ -70,5 +71,11 @@ export const LoadingChannels = () => {
 export const LoadingChannelMembers = () => {
     return (
         <AvatarSmallGroup></AvatarSmallGroup >
+    )
+}
+
+export const LoadingContentChatBoxChannelTitle = () => {
+    return (
+        <ContentChatBoxChannelTitle></ContentChatBoxChannelTitle>
     )
 }
