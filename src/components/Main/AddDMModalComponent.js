@@ -74,7 +74,7 @@ const AddUserComponent = (props) => {
                             // onChange={getSearchUser}
                             // onChange={(e) => setQuery(e.target.value)}
                             onChange={debounceOnChange}
-                            placeholder="user ID"
+                            placeholder="Search for a user to DM"
                         />
                     </UidInputContainer>
                     <InviteUsersTitle>Note: Type 'all' to load all users</InviteUsersTitle>

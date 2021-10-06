@@ -118,7 +118,7 @@ const Index = (props) => {
                             }, }}
                             inputRef={inputUsers}
                             onChange={debounceOnChange}
-                            placeholder="user ID"
+                            placeholder="Search for a user to invite"
                         />
                     </UidInputContainer>
                     <InviteUsersTitle>Note: Type 'all' to load all users</InviteUsersTitle>
