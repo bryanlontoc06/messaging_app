@@ -38,6 +38,8 @@ import {useState} from 'react'
 import Modal from '@mui/material/Modal';
 import Tooltip from '@mui/material/Tooltip';
 import Zoom from '@mui/material/Zoom';
+import {LoadingChannelMessage, LoadingChannelMembers} from '../ChannelSkeletonLoading'
+import {retrieveAChannelAPI} from '../api/api'
 
 
 const style = {
@@ -83,20 +85,23 @@ const ContentChatBoxBodyComponent = (props) => {
 
 
     return (
-        <ContentChatBoxBody>
+            <ContentChatBoxBody>
                        <ChatBoxAddUserContainer>
                             {!matchesMD && <ArrowBackIcon onClick={handleCloseDrawer}/>}
                             <ContentChatBoxChannelTitle>{selectChannel ? selectChannel.name : selectUser.uid}</ContentChatBoxChannelTitle>
                             <AvatarnButton>
-                            {channel &&
-                                <AvatarGroup max={5} variant="rounded" className={classes.avatarSize} style={{cursor: 'pointer'}} onClick={handleOpenChannelMembers}>
-                                    {channel.map((member, index) => {
-                                        return (
-                                            <AvatarSmallGroup key={index} alt={emailRemover(member[0].uid).toUpperCase()} src="/static/images/avatar/5.jpg" variant="rounded" />
-                                        )
-                                    })}
-                                </AvatarGroup>
-                            }
+                            {/* {selectChannel &&
+                                (channel ?
+                                    <AvatarGroup max={5} variant="rounded" className={classes.avatarSize} style={{cursor: 'pointer'}} onClick={handleOpenChannelMembers}>
+                                        {channel.map((member, index) => {
+                                                return (
+                                                        <AvatarSmallGroup key={index} alt={emailRemover(member[0]?.uid).toUpperCase()} src="/static/images/avatar/5.jpg" variant="rounded" />
+                                                    )
+                                            })
+                                        }
+                                    </AvatarGroup>
+                                : <LoadingChannelMembers/>)
+                            } */}
                             {selectChannel && <Button variant="contained" onClick={handleOpen} >ADD USER</Button> }
                             </AvatarnButton>
                        </ChatBoxAddUserContainer>
@@ -105,7 +110,8 @@ const ContentChatBoxBodyComponent = (props) => {
                        <ChatsMessageandChatInput>
                                 <ChatsContainer>
                                     {/* <ScrollableFeed forceScroll='true'> */}
-                                        {allMessages.data?.data.map((data, index)=> {
+                                    {allMessages.data?.data ?
+                                        allMessages.data?.data.map((data, index)=> {
                                             return (
                                             <ChatUserProfileComponent 
                                                 key={index}
@@ -117,7 +123,7 @@ const ContentChatBoxBodyComponent = (props) => {
                                                 loginUser={loginUser}
                                                 data={data}
                                             />)
-                                        })}
+                                        }): <LoadingChannelMessage />}
                                     {/* </ScrollableFeed> */}
                                 </ChatsContainer>
 
@@ -178,6 +184,7 @@ const ContentChatBoxBodyComponent = (props) => {
                                         <UsersContainer>
                                                 {channel.map((user, index) => {
                                                     return (
+                                                        (user !== undefined) &&
                                                         <AddUserUsersContainer key={index}>
                                                             <Tooltip title={user[0].uid} arrow TransitionComponent={Zoom}>
                                                             <ContentUserProfileContainer>

@@ -15,6 +15,7 @@ import UserChatBoxComponent from './UserChatBoxComponent';
 import channel_logo from '../../assets/sampleLogo.png'
 import { emailRemover } from '../helpers/helpers';
 import React from 'react';
+import { LoadingChannels } from '../ChannelSkeletonLoading';
 
 
 const ContentChannelSectionComponent = (props) => {
@@ -50,7 +51,7 @@ const ContentChannelSectionComponent = (props) => {
                 <ChannelsAndMessagesContainer>
                     <ChannelsTitleHeader>Channels <AddIcon onClick={handleOpenAddChannel}/></ChannelsTitleHeader>
                     <ChannelsContainer>
-                        {channels &&
+                        {channels ?
                             channels.map((data) => {
                                 return (<Channel key={data.id} active={selectChannel.id === data.id} 
                                     onClick={() => {
@@ -59,6 +60,8 @@ const ContentChannelSectionComponent = (props) => {
                                         ) 
                                     }}>{data.name}</Channel>)
                                 })
+                        : 
+                            <LoadingChannels />
                         }
                     </ChannelsContainer>
                     <ChannelsTitleHeader>Direct Messages <AddIcon onClick={handleOpenDM}/></ChannelsTitleHeader>

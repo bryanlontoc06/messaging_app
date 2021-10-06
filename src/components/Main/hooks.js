@@ -19,7 +19,6 @@ let int3;
 let int4;
 
 
-
 const useHooks = () => {
     const {isLogin, setIsLogin, loginUser, setLoginUser} = useContext(AppContext)
     const addUserEmail = useRef('')
@@ -120,10 +119,9 @@ const useHooks = () => {
         clearTimeout(int1)
         clearTimeout(int2)
         setSelectUser('')
+        retrieveAChannelAPI(data, loginUser, isLogin, setChannel, users)
         setSelectChannel(data)
         retrieveMessagesinChannel(data)
-        retrieveAllUsersAPI(loginUser, setIsLoading, setUsers)
-        retrieveAChannelAPI(data, loginUser, isLogin, setChannel, users)
         setDuplicateForChannel(!duplicateForChannel)
         if(duplicateForChannel) {
             int3 = setInterval(() => {
@@ -180,17 +178,17 @@ const useHooks = () => {
     
 
     useEffect(() => {
-        setSelectChannel('')
-        setSelectUser('')
-        axios.all([
+        // setSelectChannel('')
+        // setSelectUser('')
+        // axios.all([
             // Retrieve All Channels where user was invited
-            retrieveAllChannelsAPI(loginUser, isLogin, setChannels),
+            retrieveAllChannelsAPI(loginUser, isLogin, setChannels)
             retrieveAllUsersAPI(loginUser, setIsLoading, setUsers)
-        ])
+        // ])
         
-        if(channels){
-            setSelectChannel(channels[0])
-        }
+        // if(channels){
+        //     setSelectChannel(channels[0])
+        // }
     }, [])
 
 

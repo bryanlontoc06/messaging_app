@@ -159,7 +159,7 @@ export const retrieveAllChannelsAPI = async(loginUser, isLogin, setChannels) => 
 
 // Retrieve a Channel
 export const retrieveAChannelAPI = async(data, loginUser, isLogin, setChannel, users) => {
-    axios({
+    await axios({
         url: `${url}/channels/${data.id}`,
         data: {},
         headers: {
