@@ -88,7 +88,7 @@ const ContentChatBoxBodyComponent = (props) => {
                             {!matchesMD && <ArrowBackIcon onClick={handleCloseDrawer}/>}
                             <ContentChatBoxChannelTitle style={{cursor: 'pointer'}} onClick={() => selectChannel && handleOpenChannelMembers(selectChannel)}>{selectChannel ? (channel ? `${selectChannel.name}(${channel.length})` : <LoadingContentChatBoxChannelTitle/>) : selectUser.uid}</ContentChatBoxChannelTitle>
                             <AvatarnButton>
-                            {/* {channel &&
+                            {channel &&
                                 channel ?
                                 <AvatarGroup max={5} variant="rounded" className={classes.avatarSize} onClick={handleOpenChannelMembers}>
                                     {channel.map((member, index) => {
@@ -99,7 +99,7 @@ const ContentChatBoxBodyComponent = (props) => {
                                     }
                                 </AvatarGroup>
                                 : <LoadingChannelMembers/>
-                            } */}
+                            }
                             {selectChannel && 
                                     <Button variant="contained" onClick={handleOpen} >ADD USER</Button> 
                             }

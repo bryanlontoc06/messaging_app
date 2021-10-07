@@ -179,17 +179,12 @@ const useHooks = () => {
     
 
     useEffect(() => {
-        // setSelectChannel('')
-        // setSelectUser('')
-        // axios.all([
-            // Retrieve All Channels where user was invited
-            retrieveAllChannelsAPI(loginUser, isLogin, setChannels)
-            retrieveAllUsersAPI(loginUser, setIsLoading, setUsers)
-        // ])
-        
-        // if(channels){
-        //     setSelectChannel(channels[0])
-        // }
+        if(loginUser) {
+            axios.all([
+                retrieveAllChannelsAPI(loginUser, isLogin, setChannels),
+                retrieveAllUsersAPI(loginUser, setIsLoading, setUsers)
+            ])
+        }
     }, [])
 
 

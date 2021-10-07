@@ -107,6 +107,7 @@ const Index = () => {
                     matchesMD={matchesMD}
                     handleClickPopOver={handleClickPopOver}
                     loginUser={loginUser}
+                    users={users}
                />
 
             {!matchesMD &&

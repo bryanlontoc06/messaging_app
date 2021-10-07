@@ -27,7 +27,8 @@ const ContentChannelSectionComponent = (props) => {
         handleOpenDM,
         matchesMD,
         handleClickPopOver,
-        loginUser
+        loginUser,
+        users
     } = props;
 
 
@@ -51,7 +52,8 @@ const ContentChannelSectionComponent = (props) => {
                 <ChannelsAndMessagesContainer>
                     <ChannelsTitleHeader>Channels <AddIcon onClick={handleOpenAddChannel}/></ChannelsTitleHeader>
                     <ChannelsContainer>
-                        {channels ?
+                        {users &&
+                            channels ?
                             channels.map((data) => {
                                 return (<Channel key={data.id} active={selectChannel.id === data.id} 
                                     onClick={() => {
@@ -60,7 +62,7 @@ const ContentChannelSectionComponent = (props) => {
                                         ) 
                                     }}>{data.name}</Channel>)
                                 })
-                        : 
+                            : 
                             <LoadingChannels />
                         }
                     </ChannelsContainer>
