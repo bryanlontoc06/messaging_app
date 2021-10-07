@@ -28,6 +28,7 @@ export const ChatMessages = styled(MaterialSkeleton)     `
 export const ChatUsernTime = styled.div `
     display: flex;
     flex-direction: column;
+    align-items: ${props => props.right ? 'flex-end' : ''};
 `
 export const ChatUserName = styled(MaterialSkeleton) `
     cursor: pointer;
@@ -47,7 +48,9 @@ export const ChatsUserProfile = styled.div `
 `
 export const ContentUserProfileContainer = styled(MaterialSkeleton) `
     cursor: pointer;
-    border-radius: 100% !important;
+    /* border-radius: 100% !important; */
+    width: 4rem !important;
+    height: 4rem !important;
     margin-left: auto;
     margin-right: 0.6875rem;
     @media (min-width: 768px) {
@@ -61,6 +64,7 @@ export const AvatarSmallGroup = styled(MaterialSkeleton) `
     width: 75px !important;
     height: 34px !important;
     font-size: 0.8rem !important;
+    margin-right: 0.5rem !important;
 `
 export const ContentChatBoxChannelTitle = styled(MaterialSkeleton) `
     font-weight: bold;

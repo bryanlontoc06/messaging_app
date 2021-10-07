@@ -53,8 +53,6 @@ const Index = (props) => {
     const [usersToAdd, setUsersToAdd] = useState([])
     const [openPreAddedUsersmodal, setOpenPreAddedUsersmodal] = useState(false)
 
-    
-
     const addUsersToChannel = (user) => {
         setUsersToAdd([...usersToAdd, user])
     }
@@ -73,9 +71,6 @@ const Index = (props) => {
         setUsersToAdd([...usersToAdd])
     }
 
-
-      
-
     return (
         <>
             <Modal
@@ -86,74 +81,73 @@ const Index = (props) => {
                 aria-describedby="keep-mounted-modal-description"
             >
                 <Box sx={style}>
-                <ModalTitle>
-                    <Typography id="keep-mounted-modal-title" variant="h6" component="h2">
-                        Create a Channel
-                    </Typography>
-                        <CloseIcon onClick={handleCloseChannel}/>
-                </ModalTitle>
-                <Typography id="keep-mounted-modal-description" sx={{ mt: 2 }}>
-                    <UidInputContainer>
-                        <TextField 
-                            id="standard-basic"
-                            placeholder="e.g Work Channel" 
-                            variant="standard" 
-                            InputProps={{ 
-                                disableUnderline: true, 
-                                classes: {
-                                input: classes.resize,
-                            }, }}
-                            inputRef={channelName}
-                        />
-                    </UidInputContainer>
-                    <InviteUsersTitle>Invite users to the new channel</InviteUsersTitle>
-                    <UidInputContainer>
-                        <TextField 
-                            id="standard-basic"
-                            variant="standard" 
-                            InputProps={{ 
-                                disableUnderline: true, 
-                                classes: {
-                                input: classes.resize,
-                            }, }}
-                            inputRef={inputUsers}
-                            onChange={debounceOnChange}
-                            placeholder="Search for a user to invite"
-                        />
-                    </UidInputContainer>
-                    <InviteUsersTitle>Note: Type 'all' to load all users</InviteUsersTitle>
-                    <AvatarGroup max={5} variant="rounded" className={classes.avatarSize} style={{cursor: 'pointer'}} onClick={handleOpenPreAddedUsers}>
-                        {usersToAdd.map((user, index) => {
-                            return (
-                                <AvatarSmallGroup key={index} alt={emailRemover(user.uid).toUpperCase()} src="/static/images/avatar/1.jpg" variant="rounded" />
-                            )
-                        })}
-                    </AvatarGroup>
-                    <UsersContainer>
-                        {filteredItems === null ? '' :
-                            filteredItems.length > 0 ?
-                                filteredItems.map((user, index) => {
+                        <ModalTitle>
+                            <Typography id="keep-mounted-modal-title" variant="h6" component="h2">
+                                Create a Channel
+                            </Typography>
+                                <CloseIcon onClick={handleCloseChannel}/>
+                        </ModalTitle>
+                        <Typography id="keep-mounted-modal-description" sx={{ mt: 2 }}>
+                            <UidInputContainer>
+                                <TextField 
+                                    id="standard-basic"
+                                    placeholder="e.g Work Channel" 
+                                    variant="standard" 
+                                    InputProps={{ 
+                                        disableUnderline: true, 
+                                        classes: {
+                                        input: classes.resize,
+                                    }, }}
+                                    inputRef={channelName}
+                                />
+                            </UidInputContainer>
+                            <InviteUsersTitle>Invite users to the new channel</InviteUsersTitle>
+                            <UidInputContainer>
+                                <TextField 
+                                    id="standard-basic"
+                                    variant="standard" 
+                                    InputProps={{ 
+                                        disableUnderline: true, 
+                                        classes: {
+                                        input: classes.resize,
+                                    }, }}
+                                    inputRef={inputUsers}
+                                    onChange={debounceOnChange}
+                                    placeholder="Search for a user to invite"
+                                />
+                            </UidInputContainer>
+                            <InviteUsersTitle>Note: Type 'all' to load all users</InviteUsersTitle>
+                            <AvatarGroup max={5} variant="rounded" className={classes.avatarSize} style={{cursor: 'pointer'}} onClick={handleOpenPreAddedUsers}>
+                                {usersToAdd.map((user, index) => {
                                     return (
-                                    <AddUserUsersContainer key={index} onClick={() => addUsersToChannel(user)}>
-                                        <Tooltip title={user.uid} arrow TransitionComponent={Zoom}>
-                                            <ContentUserProfileContainer>
-                                                <Avatar sx={{ bgcolor: 'green' }} variant="rounded" src="#">
-                                                    {emailRemover(user.uid).charAt(0).toUpperCase()}
-                                                </Avatar>
-                                            </ContentUserProfileContainer>
-                                        </Tooltip>
-                                        <User>{emailRemover(user.uid).substring(0, 25) + (emailRemover(user.uid).length > 25? '...' : '')}{matchesMD && <ButtonAddUser><AddIcon /></ButtonAddUser>}</User>
-                                    </AddUserUsersContainer>
-                                )})
-                                :
-                                <h1 style={{textAlign: 'center'}}>No user available</h1>
-                        }
-                    </UsersContainer>
-                    <ButtonAddChannel variant="contained" startIcon={<AddIcon />} onClick={() => createAChannel(usersToAdd)}>Add Channel</ButtonAddChannel>
-                </Typography>
+                                        <AvatarSmallGroup key={index} alt={emailRemover(user.uid).toUpperCase()} src="/static/images/avatar/1.jpg" variant="rounded" />
+                                    )
+                                })}
+                            </AvatarGroup>
+                            <UsersContainer>
+                                {filteredItems === null ? '' :
+                                    filteredItems.length > 0 ?
+                                        filteredItems.map((user, index) => {
+                                            return (
+                                            <AddUserUsersContainer key={index} onClick={() => addUsersToChannel(user)}>
+                                                <Tooltip title={user.uid} arrow TransitionComponent={Zoom}>
+                                                    <ContentUserProfileContainer>
+                                                        <Avatar sx={{ bgcolor: 'green' }} variant="rounded" src="#">
+                                                            {emailRemover(user.uid).charAt(0).toUpperCase()}
+                                                        </Avatar>
+                                                    </ContentUserProfileContainer>
+                                                </Tooltip>
+                                                <User>{emailRemover(user.uid).substring(0, 25) + (emailRemover(user.uid).length > 25? '...' : '')}{matchesMD && <ButtonAddUser><AddIcon /></ButtonAddUser>}</User>
+                                            </AddUserUsersContainer>
+                                        )})
+                                        :
+                                        <h1 style={{textAlign: 'center'}}>No user available</h1>
+                                }
+                            </UsersContainer>
+                            <ButtonAddChannel variant="contained" startIcon={<AddIcon />} onClick={() => createAChannel(usersToAdd)}>Add Channel</ButtonAddChannel>
+                        </Typography>
                 </Box>
             </Modal> 
-
 
             <Modal
                 keepMounted

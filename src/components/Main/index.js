@@ -13,10 +13,7 @@ import {
     ChannelsContainer
 } from './components'
 import channel_logo from '../../assets/sampleLogo.png'
-import Popover from '@mui/material/Popover';
 import useHooks from './hooks'
-import Backdrop from '@mui/material/Backdrop';
-import CircularProgress from '@mui/material/CircularProgress';
 import AddChannelModalComponent from './NewChannelComponent'
 import {emailRemover} from '../helpers/helpers'
 import AddUserModalComponent from './AddUserComponent'
@@ -24,13 +21,13 @@ import SnackbarComponent from '../Snackbars/index'
 import AddDMModalComponent from './AddDMModalComponent'
 import ContentChatBoxSectionComponent from './ContentChatBoxSectionComponent';
 import ContentChannelSectionComponent from './ContentChannelSectionComponent';
-
-
 import Drawer from '@mui/material/Drawer';
 import ContentChatBoxBodyComponent from './ContentChatBoxBody';
 import {useState} from 'react';
 import DirectMessagesContentComponent from './DirectMessagesContentComponent'
 import {LoadingDMSearchBox} from '../ChannelSkeletonLoading'
+import BackdropComponent from '../Backdrop'
+import PopoverComponent from '../ProfilePopover'
 
 const Index = () => {
     const classes = useStyles();
@@ -75,29 +72,20 @@ const Index = () => {
         channel,
         openChannelMembersModal,
         handleOpenChannelMembers,
-        setOpenChannelMembersModal
+        setOpenChannelMembersModal,
+        toggleDrawer,
+        handleCloseDrawer
     } = useHooks();
-
-    const [states, setStates] = useState({
-        right: false,
-      });
-    
-      const toggleDrawer = () => {
-        setStates({right: true})
-      };
-
-      const handleCloseDrawer = () => {
-          setStates({right: false})
-      }
-
 
     return (
         <> 
         <Container>
+            {/* Desktop view Logo */}
             {matchesMD &&
-           <LogoContainer>
-                <Logo src={channel_logo} />
-           </LogoContainer>}
+            <LogoContainer>
+                    <Logo src={channel_logo} />
+            </LogoContainer>}
+
            <ContentContainer>
                <ContentChannelSectionComponent 
                     handleOpenAddChannel={handleOpenAddChannel}
@@ -116,84 +104,78 @@ const Index = () => {
                     toggleDrawer={toggleDrawer}
                />
 
-            {!matchesMD &&
-                <ChannelsAndMessagesContainer>
-                    <ChannelsTitleHeader>Channels <AddIcon onClick={handleOpenAddChannel}/></ChannelsTitleHeader>
-                    <ChannelsContainer>
-                        {channels &&
-                            channels.map((data) => {
-                                return (<Channel key={data.id} active={selectChannel.id === data.id} 
-                                    onClick={() => {
-                                        return (
-                                            intervalRetrieveMessagesinChannel(data),
-                                            toggleDrawer()
-                                        )
-                                    }}>{data.name}</Channel>)
-                                })
-                        }
-                    </ChannelsContainer>
-                    <ChannelsTitleHeader>Direct Messages <AddIcon onClick={handleOpenDM}/></ChannelsTitleHeader>
-                    {users ?
-                    <DirectMessagesContentComponent  
-                        addUserEmail={addUserEmail}
-                        debounceOnChange={debounceOnChange}
-                        filteredItems={filteredItems}
-                        intervalRetrieveMessagesinUser={intervalRetrieveMessagesinUser}
-                        toggleDrawer={toggleDrawer}
-                        classes={classes}
-                        matchesMD={matchesMD}
-                    />: <LoadingDMSearchBox />}
-                </ChannelsAndMessagesContainer>
-            }
+                {/* Mobile view Channels and DMs */}
+                {!matchesMD &&
+                    <ChannelsAndMessagesContainer>
+                        <ChannelsTitleHeader>Channels <AddIcon onClick={handleOpenAddChannel}/></ChannelsTitleHeader>
+                        <ChannelsContainer>
+                            {channels &&
+                                channels.map((data) => {
+                                    return (<Channel key={data.id} active={selectChannel.id === data.id} 
+                                        onClick={() => {
+                                            return (
+                                                intervalRetrieveMessagesinChannel(data),
+                                                toggleDrawer()
+                                            )
+                                        }}>{data.name}</Channel>)
+                                    })
+                            }
+                        </ChannelsContainer>
+                        <ChannelsTitleHeader>Direct Messages <AddIcon onClick={handleOpenDM}/></ChannelsTitleHeader>
+                        {users ?
+                        <DirectMessagesContentComponent  
+                            addUserEmail={addUserEmail}
+                            debounceOnChange={debounceOnChange}
+                            filteredItems={filteredItems}
+                            intervalRetrieveMessagesinUser={intervalRetrieveMessagesinUser}
+                            toggleDrawer={toggleDrawer}
+                            classes={classes}
+                            matchesMD={matchesMD}
+                        />: <LoadingDMSearchBox />}
+                    </ChannelsAndMessagesContainer>
+                }
 
-            {matchesMD &&
-               <ContentChatBoxSectionComponent 
-                    loginUser={loginUser}
-                    handleClickPopOver={handleClickPopOver}
-                    selectChannel={selectChannel}
-                    selectUser={selectUser}
-                    allMessages={allMessages}
-                    handleOpen={handleOpen}
-                    createAMessage={createAMessage}
-                    classes={classes}
-                    chatMessage={chatMessage}
-                    matchesMD={matchesMD}
-                    channel={channel}
-                    openChannelMembersModal={openChannelMembersModal}
-                    handleOpenChannelMembers={handleOpenChannelMembers}
-                    setOpenChannelMembersModal={setOpenChannelMembersModal}
-               /> 
-            }
+                {/* Desktop View Chat Box Section*/}
+                {matchesMD &&
+                    <ContentChatBoxSectionComponent 
+                            loginUser={loginUser}
+                            handleClickPopOver={handleClickPopOver}
+                            selectChannel={selectChannel}
+                            selectUser={selectUser}
+                            allMessages={allMessages}
+                            handleOpen={handleOpen}
+                            createAMessage={createAMessage}
+                            classes={classes}
+                            chatMessage={chatMessage}
+                            matchesMD={matchesMD}
+                            channel={channel}
+                            openChannelMembersModal={openChannelMembersModal}
+                            handleOpenChannelMembers={handleOpenChannelMembers}
+                            setOpenChannelMembersModal={setOpenChannelMembersModal}
+                    /> 
+                }
            </ContentContainer>
 
             {/* Modal for Add User  */}
             {users.data?.data  &&
-            <AddUserModalComponent
-                open={open}
-                handleClose={handleClose}
-                style={style}
-                classes={classes}
-                userID={userID}
-                emailRemover={emailRemover}
-                handleAddUser={handleAddUser}
-                selectChannel={selectChannel}
-                loginUser={loginUser}
-                debounceOnChange={debounceOnChange}
-                filteredItems={filteredItems}
-                query={query}
-                matchesMD={matchesMD}
-            />
+                <AddUserModalComponent
+                    open={open}
+                    handleClose={handleClose}
+                    style={style}
+                    classes={classes}
+                    userID={userID}
+                    emailRemover={emailRemover}
+                    handleAddUser={handleAddUser}
+                    selectChannel={selectChannel}
+                    loginUser={loginUser}
+                    debounceOnChange={debounceOnChange}
+                    filteredItems={filteredItems}
+                    query={query}
+                    matchesMD={matchesMD}
+                />
             }
-            {isLoading  &&
-                <Backdrop
-                    sx={{ color: '#fff' ,zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                    open={true}
-                    onClick={handleClose}
-                >
-                    <CircularProgress color="inherit" />
-                </Backdrop>
-            }
-
+            
+            {/* Modal for Add DM */}
             {users.data?.data  &&
                 <AddDMModalComponent
                     open={openDM}
@@ -201,42 +183,19 @@ const Index = () => {
                     style={style}
                     classes={classes}
                     addUserEmail={addUserEmail}
-                    searchUser={searchUserDM}
-                    // getSearchUser={getSearchUserDM}
-                    users={searchUserDM.length < 1 ? users.data?.data : searchResultsDM}
                     emailRemover={emailRemover}
+                    searchUser={searchUserDM}
                     selectChannel={selectChannel}
                     loginUser={loginUser}
-                    intervalRetrieveMessagesinUser={intervalRetrieveMessagesinUser}
                     debounceOnChange={debounceOnChange}
                     filteredItems={filteredItems}
+                    users={searchUserDM.length < 1 ? users.data?.data : searchResultsDM}
+                    intervalRetrieveMessagesinUser={intervalRetrieveMessagesinUser}
                     matchesMD={matchesMD}
                     toggleDrawer={toggleDrawer}
                 />
             } 
             
-            {/* For Logout */}
-            <div>
-                <Popover
-                    id={idPopOver}
-                    open={openPopOver}
-                    anchorEl={anchorEl}
-                    onClose={handleClosePopOver}
-                    anchorOrigin={{
-                        vertical: 'center',
-                        horizontal: 'left',
-                    }}
-                    transformOrigin={{
-                        vertical: 'top',
-                        horizontal: 'right',
-                    }}
-                >
-                    <Typography sx={{ p: 2 }} >ID No: {loginUser.data.data?.id}</Typography>
-                    <Typography sx={{ p: 2 }} >User ID: {emailRemover(loginUser.data.data?.uid)}</Typography>
-                    <Typography sx={{ p: 2 }} style={{cursor: 'pointer'}} onClick={() => handleLogout()}>Logout</Typography>
-                </Popover>
-            </div>
-
             {/* Modal for Add Channel */}
             {users.data?.data && 
                 <AddChannelModalComponent
@@ -245,14 +204,44 @@ const Index = () => {
                     classes={classes}
                     createAChannel={createAChannel}
                     channelName={channelName}
-                    // inputUsers={inputUsers}
                     usersList={users}
                     loginUser={loginUser}
-                    intervalRetrieveMessagesinUser={intervalRetrieveMessagesinUser}
                     debounceOnChange={debounceOnChange}
                     filteredItems={filteredItems}
+                    intervalRetrieveMessagesinUser={intervalRetrieveMessagesinUser}
                     matchesMD={matchesMD}
                 />
+            }
+
+            {/* For Logout */}
+            <PopoverComponent idPopOver={idPopOver} openPopOver={openPopOver} anchorEl={anchorEl} handleClosePopOver={handleClosePopOver} loginUser={loginUser} handleLogout={handleLogout}/>
+
+            {/* Mobile View Drawer for chat box body */}
+            {!matchesMD &&
+                <Drawer
+                    anchor='right'
+                    open={state.right}
+                    style={{ width: '100%'}}
+                    classes={{ paper: classes.paper }}
+                >
+                    <ContentChatBoxBodyComponent 
+                        selectChannel={selectChannel}
+                        selectUser={selectUser}
+                        handleOpen={handleOpen}
+                        allMessages={allMessages}
+                        loginUser={loginUser}
+                        createAMessage={createAMessage}
+                        classes={classes}
+                        chatMessage={chatMessage}
+                        handleCloseDrawer={handleCloseDrawer}
+                        channel={channel}
+                        openChannelMembersModal={openChannelMembersModal}
+                        handleOpenChannelMembers={handleOpenChannelMembers}
+                        setOpenChannelMembersModal={setOpenChannelMembersModal}
+                        idPopOver={idPopOver}
+                        anchorEl={anchorEl}
+                    />
+                </Drawer>
             }
 
             {/* Snackbar */}
@@ -263,29 +252,9 @@ const Index = () => {
                 status={state.warning ? `warning` : `success`}
             />
 
-            {!matchesMD &&
-                    <Drawer
-                        anchor='right'
-                        open={states.right}
-                        style={{ width: '100%'}}
-                        classes={{ paper: classes.paper }}
-                    >
-                        <ContentChatBoxBodyComponent 
-                            selectChannel={selectChannel}
-                            selectUser={selectUser}
-                            handleOpen={handleOpen}
-                            allMessages={allMessages}
-                            loginUser={loginUser}
-                            createAMessage={createAMessage}
-                            classes={classes}
-                            chatMessage={chatMessage}
-                            handleCloseDrawer={handleCloseDrawer}
-                            channel={channel}
-                            openChannelMembersModal={openChannelMembersModal}
-                            handleOpenChannelMembers={handleOpenChannelMembers}
-                            setOpenChannelMembersModal={setOpenChannelMembersModal}
-                        />
-                    </Drawer>
+            {/* Component for Loading State */}
+            {isLoading  &&
+                <BackdropComponent handleClose={handleClose}/>
             }
         </Container>
         </>

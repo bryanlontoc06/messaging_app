@@ -3,7 +3,6 @@ import {
     TextField, 
     UsersContainer, 
     User,
-    AddIconAddUser, 
     ContentUserProfileContainer,
     Avatar,
     AddUserUsersContainer,
@@ -18,10 +17,6 @@ import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
 import Zoom from '@mui/material/Zoom';
 
-
-
-
-
 const AddUserComponent = (props) => {
     const {
         open,
@@ -29,15 +24,10 @@ const AddUserComponent = (props) => {
         style,
         classes,
         userID,
-        searchUser,
-        getSearchUser,
-        users,
         emailRemover,
         handleAddUser,
-        handleDebounceAddUser,
         filteredItems,
         debounceOnChange,
-        query,
         matchesMD
     } = props;
 
@@ -59,46 +49,21 @@ const AddUserComponent = (props) => {
                         <CloseIcon onClick={handleClose}/>
                 </ModalTitle>
                 <Typography id="keep-mounted-modal-description" sx={{ mt: 2 }}>
-                    {/* <form onSubmit={(e) => {
-                        // e.preventDefault();
-                        // handleAddUser(userID.current.value)
-                        // userID.current.value = ''
-                    }}> */}
-                        <UidInputContainer>
-                            <TextField 
-                                id="standard-basic"
-                                variant="standard" 
-                                type='text'
-                                InputProps={{ 
-                                    disableUnderline: true, 
-                                    classes: {
-                                    input: classes.resize,
-                                }, }}
-                                inputRef={userID}
-                                // value={searchUser}
-                                // onChange={getSearchUser}
-                                onChange={debounceOnChange}
-                                placeholder="Search for a user to add"
-                            />
-                        </UidInputContainer>
-                    {/* </form> */}
-                    {/* <UsersContainer>
-                        {users.length > 1 ?
-                            users.map((user, index) => {
-                                return (
-                                <AddUserUsersContainer key={index}>
-                                    <ContentUserProfileContainer>
-                                        <Avatar sx={{ bgcolor: 'green' }} variant="rounded" src="#">
-                                            {emailRemover(user.uid).charAt(0).toUpperCase()}
-                                        </Avatar>
-                                    </ContentUserProfileContainer>
-                                    <User>{emailRemover(user.uid).substring(0, 25) + (emailRemover(user.uid).length > 25? '...' : '')}<ButtonAddUser onClick={() => handleAddUser(user.id)}>Add</ButtonAddUser></User>
-                                </AddUserUsersContainer>
-                            )})
-                            :
-                            <h1 style={{textAlign: 'center'}}>No user available</h1>
-                        }
-                    </UsersContainer> */}
+                    <UidInputContainer>
+                        <TextField 
+                            id="standard-basic"
+                            variant="standard" 
+                            type='text'
+                            InputProps={{ 
+                                disableUnderline: true, 
+                                classes: {
+                                input: classes.resize,
+                            }, }}
+                            inputRef={userID}
+                            onChange={debounceOnChange}
+                            placeholder="Search for a user to add"
+                        />
+                    </UidInputContainer>
                     <InviteUsersTitle>Note: Type 'all' to load all users</InviteUsersTitle>
                     <UsersContainer>
                         {filteredItems === null ? '' :

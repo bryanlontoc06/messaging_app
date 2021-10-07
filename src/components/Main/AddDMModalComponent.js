@@ -30,13 +30,8 @@ const AddUserComponent = (props) => {
         style,
         classes,
         addUserEmail,
-        searchUser,
-        getSearchUser,
-        users,
         emailRemover,
         intervalRetrieveMessagesinUser,
-        debounceDMSearch,
-        setQuery,
         filteredItems,
         debounceOnChange,
         matchesMD,
@@ -70,9 +65,6 @@ const AddUserComponent = (props) => {
                                 input: classes.resize,
                             }, }}
                             inputRef={addUserEmail}
-                            // value={searchUser}
-                            // onChange={getSearchUser}
-                            // onChange={(e) => setQuery(e.target.value)}
                             onChange={debounceOnChange}
                             placeholder="Search for a user to DM"
                         />

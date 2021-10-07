@@ -13,48 +13,27 @@ import {
     UidInputContainer,
 } from './components.js'
 
-export const LoadingChannelMessage = () => {
+export const LoadingChannelMessage = (props) => {
+    const {allMessages, loginUser} = props;
     return (
         <>
-            <ChatsUserProfile>
-                <ContentUserProfileContainer>
-                    <Avatar>
-                    </Avatar>
-                </ContentUserProfileContainer>
-                <ChatMessageContainer>
-                    <ChatUsernTime>
-                        <ChatUserName></ChatUserName>
-                        <ChatUserTime></ChatUserTime>
-                    </ChatUsernTime>
-                    <ChatMessages></ChatMessages>
-                </ChatMessageContainer>
-            </ChatsUserProfile>
-            <ChatsUserProfile>
-                <ContentUserProfileContainer>
-                    <Avatar>
-                    </Avatar>
-                </ContentUserProfileContainer>
-                <ChatMessageContainer>
-                    <ChatUsernTime>
-                        <ChatUserName></ChatUserName>
-                        <ChatUserTime></ChatUserTime>
-                    </ChatUsernTime>
-                    <ChatMessages></ChatMessages>
-                </ChatMessageContainer>
-            </ChatsUserProfile>
-            <ChatsUserProfile>
-                <ContentUserProfileContainer>
-                    <Avatar>
-                    </Avatar>
-                </ContentUserProfileContainer>
-                <ChatMessageContainer>
-                    <ChatUsernTime>
-                        <ChatUserName></ChatUserName>
-                        <ChatUserTime></ChatUserTime>
-                    </ChatUsernTime>
-                    <ChatMessages></ChatMessages>
-                </ChatMessageContainer>
-            </ChatsUserProfile>
+            {allMessages?.data?.data.slice(0, 4).map((data, index) => {
+                return (
+                    <ChatsUserProfile right={loginUser.data.data?.uid === data.sender.uid}>
+                        <ContentUserProfileContainer>
+                            <Avatar>
+                            </Avatar>
+                        </ContentUserProfileContainer>
+                        <ChatMessageContainer right={loginUser.data.data?.uid === data.sender.uid}>
+                            <ChatUsernTime right={loginUser.data.data?.uid === data.sender.uid}>
+                                <ChatUserName></ChatUserName>
+                                <ChatUserTime></ChatUserTime>
+                            </ChatUsernTime>
+                            <ChatMessages></ChatMessages>
+                        </ChatMessageContainer>
+                    </ChatsUserProfile>
+                )                
+            })}
         </>
     )
 }
@@ -71,7 +50,7 @@ export const LoadingChannels = () => {
 
 export const LoadingChannelMembers = () => {
     return (
-        <AvatarSmallGroup></AvatarSmallGroup >
+        <AvatarSmallGroup></AvatarSmallGroup>
     )
 }
 

@@ -1,4 +1,4 @@
-import {UidInputContainer, TextField, UsersContainerDM, AddUserUsersContainer, ContentUserProfileContainer, Avatar, User, ButtonAddUser} from './components'
+import {UidInputContainer, TextField, UsersContainerDM, AddUserUsersContainer, ContentUserProfileContainer, Avatar, User} from './components'
 import Tooltip from '@mui/material/Tooltip';
 import Zoom from '@mui/material/Zoom';
 import { emailRemover } from '../helpers/helpers';
@@ -23,9 +23,6 @@ const DirectMessagesContentComponent = (props) => {
                         input: classes.resize,
                     }, }}
                     inputRef={addUserEmail}
-                    // value={searchUser}
-                    // onChange={getSearchUser}
-                    // onChange={(e) => setQuery(e.target.value)}
                     onChange={debounceOnChange}
                     placeholder="Search for a user to DM"
                 />
@@ -43,7 +40,7 @@ const DirectMessagesContentComponent = (props) => {
                                             </Avatar>
                                         </ContentUserProfileContainer>
                                     </Tooltip>
-                                    <User>{emailRemover(user.uid).substring(0, 20 ) + (emailRemover(user.uid).length > 20? '...' : '')}{/*{matchesMD && <ButtonAddUser>message</ButtonAddUser>}*/}</User>
+                                    <User>{emailRemover(user.uid).substring(0, 20 ) + (emailRemover(user.uid).length > 20? '...' : '')}</User>
                                 </AddUserUsersContainer>
                     )})
                     :

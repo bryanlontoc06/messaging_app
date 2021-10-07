@@ -12,14 +12,12 @@ import { fadeIn } from 'react-animations';
 import MaterialBox from '@mui/material/Box';
 import MaterialCloseIcon from '@mui/icons-material/Close';
 
-
 const fadeInAnimation = keyframes`${fadeIn}`;
-
-
 export const useStyles = makeStyles((theme) => ({
     avatarSize: {
-        '& .MuiAvatar-root.MuiAvatar-rounded.MuiAvatar-colorDefault.MuiAvatarGroup-avatar.css-16fxgir-MuiAvatar-root-MuiAvatarGroup-avatar': {
-            width: '24px !important',
+        // '& .MuiAvatar-root.MuiAvatar-rounded.MuiAvatar-colorDefault.MuiAvatarGroup-avatar.css-16fxgir-MuiAvatar-root-MuiAvatarGroup-avatar': {
+            '& .MuiAvatar-root.MuiAvatar-rounded.MuiAvatar-colorDefault.MuiAvatarGroup-avatar.css-16fxgir-MuiAvatar-root-MuiAvatarGroup-avatar': {   
+            width: '32px !important',
             height: '24px !important',
             fontSize: '0.75rem !important',
             background: 'unset !important',

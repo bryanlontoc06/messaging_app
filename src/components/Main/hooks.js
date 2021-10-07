@@ -12,12 +12,10 @@ import {retrieveAllUsersAPI,
     retrieveAllMessagesinaChannelAPI, 
     retrieveAllMessageswithaUserAPI,
     createAMessageAPI } from '../api/api'
-
 let int1;
 let int2;
 let int3;
 let int4;
-
 
 const useHooks = () => {
     const {isLogin, setIsLogin, loginUser, setLoginUser} = useContext(AppContext)
@@ -35,6 +33,7 @@ const useHooks = () => {
         open: false,
         message: '',
         warning: false,
+        right: false,
     })
     const [duplicateForChannel, setDuplicateForChannel] = useState(false);
     const [duplicateForUser, setDuplicateForUser] = useState(false);
@@ -48,6 +47,13 @@ const useHooks = () => {
     const [channel, setChannel] = useState()
     const matchesMD = useMediaQuery('(min-width: 768px)');
     const [openChannelMembersModal, setOpenChannelMembersModal] = useState(false)
+    const toggleDrawer = () => {
+    setState({right: true})
+    };
+
+    const handleCloseDrawer = () => {
+        setState({right: false})
+    }
 
 
     // Retrieve All Users
@@ -82,7 +88,6 @@ const useHooks = () => {
         )
     };
     
-
     // Pop Over
     const handleClickPopOver = (event) => {
         setAnchorEl(event.currentTarget);
@@ -92,8 +97,6 @@ const useHooks = () => {
     };
     const openPopOver = Boolean(anchorEl);
     const idPopOver = open ? 'simple-popover' : undefined;
-    // Pop Over
-
 
     // Add Channel Modal
     const handleOpenAddChannel = async() => {
@@ -105,8 +108,6 @@ const useHooks = () => {
             retrieveAllUsersAPI(loginUser, setIsLoading, setUsers)
         }
     };
-    // Add Channel Modal
-
 
     // Retrieve all messages in a Channel
     const retrieveMessagesinChannel = async(data) => {
@@ -164,7 +165,6 @@ const useHooks = () => {
         }
     }
     
-
     // Create a Message in a channel || user
     const createAMessage = async() => {
         createAMessageAPI(selectChannel, selectUser, chatMessage, loginUser, setSelectChannel, retrieveMessagesinChannel, setSelectUser, retrieveMessagesinUser)
@@ -177,7 +177,6 @@ const useHooks = () => {
     }
 
     
-
     useEffect(() => {
         if(loginUser) {
             axios.all([
@@ -266,7 +265,9 @@ const useHooks = () => {
         channel,
         openChannelMembersModal,
         handleOpenChannelMembers,
-        setOpenChannelMembersModal
+        setOpenChannelMembersModal,
+        toggleDrawer,
+        handleCloseDrawer
     }
 }
 
