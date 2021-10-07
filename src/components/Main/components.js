@@ -138,6 +138,7 @@ export const ChannelsTitleHeader = styled.div `
     align-items: center;
     justify-content: space-between;
     margin-top: 2.125rem; 
+    margin-bottom: 1rem;
 `
 export const AddIcon = styled(MaterialAddIcon) `
     font-weight: bold;
@@ -182,7 +183,7 @@ export const Channel = styled.div `
     align-items: center;
     gap: 5px;
     padding: 0.6875rem 0rem 0.6875rem 1.9375rem;
-    margin-top: 0.8125rem;
+    margin-bottom: 0.8125rem;
     background: ${props => props.active ? '#fff' : '' };
     border-radius: 7px;
     border-left: ${props => props.active ? '5px solid #9b59b6' : "" };
