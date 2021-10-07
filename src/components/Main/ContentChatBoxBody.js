@@ -37,7 +37,6 @@ import IconButton from '@mui/material/IconButton'
 import {LoadingChannelMessage, LoadingChannelMembers, LoadingContentChatBoxChannelTitle} from '../ChannelSkeletonLoading'
 import PopoverComponent from '../ProfilePopover'
 import {useState} from 'react'
-import { stubFalse } from 'lodash';
 
 const style = {
     position: 'absolute',

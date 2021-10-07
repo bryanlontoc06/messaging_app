@@ -160,7 +160,7 @@ export const retrieveAllChannelsAPI = async(loginUser, isLogin, setChannels) => 
 // Retrieve a Channel
 export const retrieveAChannelAPI = async(data, loginUser, isLogin, setChannel, users) => {
     await axios({
-        url: `${url}/channels/${data.id}`,
+        url: `${url}/channels/${data?.id}`,
         data: {},
         headers: {
             'access-token': loginUser.headers?.['access-token'],

@@ -49,6 +49,7 @@ const ContentChannelSectionComponent = (props) => {
 
     return (
         <ContentChannelSection>
+            {/* Mobile view for user Profile */}
             {!matchesMD &&
                 <LogoContainer>
                     <Logo src={channel_logo} loading='eager'/>
@@ -63,6 +64,10 @@ const ContentChannelSectionComponent = (props) => {
                 </Avatar>
             </ContentUserProfileContainer>
             }
+            {/* *************************************** */}
+
+
+            {/* Desktop View for Channels and DMs */}
             {matchesMD &&
                 <ChannelsAndMessagesContainer>
                     <ChannelsTitleHeader>Channels <AddIcon onClick={handleOpenAddChannel}/></ChannelsTitleHeader>
@@ -70,12 +75,12 @@ const ContentChannelSectionComponent = (props) => {
                         {users &&
                             channels ?
                             channels.map((data) => {
-                                return (<Channel key={data.id} active={selectChannel.id === data.id} 
+                                return (<Channel key={data?.id} active={selectChannel?.id === data?.id} 
                                     onClick={() => {
                                         return (
                                             intervalRetrieveMessagesinChannel(data)
                                         ) 
-                                    }}>{data.name}</Channel>)
+                                    }}>{data?.name}</Channel>)
                                 })
                             : 
                             <LoadingChannels />

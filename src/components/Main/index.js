@@ -23,11 +23,11 @@ import ContentChatBoxSectionComponent from './ContentChatBoxSectionComponent';
 import ContentChannelSectionComponent from './ContentChannelSectionComponent';
 import Drawer from '@mui/material/Drawer';
 import ContentChatBoxBodyComponent from './ContentChatBoxBody';
-import {useState} from 'react';
 import DirectMessagesContentComponent from './DirectMessagesContentComponent'
 import {LoadingDMSearchBox} from '../ChannelSkeletonLoading'
 import BackdropComponent from '../Backdrop'
 import PopoverComponent from '../ProfilePopover'
+import { LoadingChannels } from '../ChannelSkeletonLoading';
 
 const Index = () => {
     const classes = useStyles();
@@ -109,16 +109,19 @@ const Index = () => {
                     <ChannelsAndMessagesContainer>
                         <ChannelsTitleHeader>Channels <AddIcon onClick={handleOpenAddChannel}/></ChannelsTitleHeader>
                         <ChannelsContainer>
-                            {channels &&
+                            {users &&
+                                channels ?
                                 channels.map((data) => {
-                                    return (<Channel key={data.id} active={selectChannel.id === data.id} 
+                                    return (<Channel key={data?.id} active={selectChannel?.id === data?.id} 
                                         onClick={() => {
                                             return (
                                                 intervalRetrieveMessagesinChannel(data),
                                                 toggleDrawer()
-                                            )
-                                        }}>{data.name}</Channel>)
+                                            ) 
+                                        }}>{data?.name}</Channel>)
                                     })
+                                : 
+                                <LoadingChannels />
                             }
                         </ChannelsContainer>
                         <ChannelsTitleHeader>Direct Messages <AddIcon onClick={handleOpenDM}/></ChannelsTitleHeader>
