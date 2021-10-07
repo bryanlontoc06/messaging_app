@@ -78,7 +78,7 @@ const AddUserComponent = (props) => {
                                 // value={searchUser}
                                 // onChange={getSearchUser}
                                 onChange={debounceOnChange}
-                                placeholder="user ID"
+                                placeholder="Search for a user to add"
                             />
                         </UidInputContainer>
                     {/* </form> */}

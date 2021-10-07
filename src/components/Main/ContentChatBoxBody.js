@@ -33,7 +33,7 @@ import { emailRemover } from '../helpers/helpers';
 import moment from 'moment';
 import ScrollableFeed from 'react-scrollable-feed';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import {useState} from 'react'
+import {useState, useRef, useEffect} from 'react'
 import Modal from '@mui/material/Modal';
 import Tooltip from '@mui/material/Tooltip';
 import Zoom from '@mui/material/Zoom';
@@ -71,9 +71,16 @@ const ContentChatBoxBodyComponent = (props) => {
         setOpenChannelMembersModal
     } = props;
 
+    const messagesEndRef = useRef(null);
 
-
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView();
+    }
     
+    useEffect(() => {
+        scrollToBottom();
+    }, [allMessages]);
+
     
     const handleClose = () => {
         return (
@@ -125,6 +132,7 @@ const ContentChatBoxBodyComponent = (props) => {
                                             />)
                                         }): <LoadingChannelMessage />}
                                     {/* </ScrollableFeed> */}
+                                    <div ref={messagesEndRef} />
                                 </ChatsContainer>
 
                             <form onSubmit={(e) => 
