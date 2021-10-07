@@ -9,7 +9,8 @@ import {
     ChatMessages,
     Channel,
     AvatarSmallGroup,
-    ContentChatBoxChannelTitle
+    ContentChatBoxChannelTitle,
+    UidInputContainer,
 } from './components.js'
 
 export const LoadingChannelMessage = () => {
@@ -79,3 +80,11 @@ export const LoadingContentChatBoxChannelTitle = () => {
         <ContentChatBoxChannelTitle></ContentChatBoxChannelTitle>
     )
 }
+
+export const LoadingDMSearchBox = () => {
+    return (
+        <UidInputContainer>
+        </UidInputContainer>
+    )
+}
+

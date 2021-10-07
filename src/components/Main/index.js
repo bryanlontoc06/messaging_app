@@ -29,7 +29,8 @@ import ContentChannelSectionComponent from './ContentChannelSectionComponent';
 import Drawer from '@mui/material/Drawer';
 import ContentChatBoxBodyComponent from './ContentChatBoxBody';
 import {useState} from 'react';
-
+import DirectMessagesContentComponent from './DirectMessagesContentComponent'
+import {LoadingDMSearchBox} from '../ChannelSkeletonLoading'
 
 const Index = () => {
     const classes = useStyles();
@@ -108,6 +109,11 @@ const Index = () => {
                     handleClickPopOver={handleClickPopOver}
                     loginUser={loginUser}
                     users={users}
+                    addUserEmail={addUserEmail}
+                    debounceOnChange={debounceOnChange}
+                    filteredItems={filteredItems}
+                    intervalRetrieveMessagesinUser={intervalRetrieveMessagesinUser}
+                    toggleDrawer={toggleDrawer}
                />
 
             {!matchesMD &&
@@ -127,11 +133,16 @@ const Index = () => {
                         }
                     </ChannelsContainer>
                     <ChannelsTitleHeader>Direct Messages <AddIcon onClick={handleOpenDM}/></ChannelsTitleHeader>
-                    {/* <ChannelsContainer>
-                        <UserChatBoxComponent initial={`M`} imgSrc={``} name={`Mike Camino`}/>
-                        <UserChatBoxComponent initial={`M`} imgSrc={``} name={`Mike Camino`}/>
-                        <UserChatBoxComponent initial={`M`} imgSrc={``} name={`Mike Camino`}/>
-                    </ChannelsContainer> */}
+                    {users ?
+                    <DirectMessagesContentComponent  
+                        addUserEmail={addUserEmail}
+                        debounceOnChange={debounceOnChange}
+                        filteredItems={filteredItems}
+                        intervalRetrieveMessagesinUser={intervalRetrieveMessagesinUser}
+                        toggleDrawer={toggleDrawer}
+                        classes={classes}
+                        matchesMD={matchesMD}
+                    />: <LoadingDMSearchBox />}
                 </ChannelsAndMessagesContainer>
             }
 

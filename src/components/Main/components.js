@@ -145,7 +145,7 @@ export const AddIcon = styled(MaterialAddIcon) `
     cursor: pointer;
 `
 export const ChannelsContainer = styled.div `
-    height: calc(100vh - 25rem);
+    height: calc(100vh - 32rem);
     overflow-y: auto;
     
     /* &:hover {
@@ -266,8 +266,12 @@ export const AvatarnButton = styled.div `
     gap: 1.75rem;
     align-items: center;
     margin-left: auto;
+    flex-direction: column-reverse;
+    gap: 0.1rem;
     @media (min-width: 768px) {
         margin-left: unset;
+        flex-direction: unset;
+        gap: unset;
     }
 `
 export const ChatInput = styled.div `
@@ -399,6 +403,12 @@ export const UsersContainer = styled.div `
 
     @media (min-width: 768px) {
         height: calc(100vh - 24rem);
+    }
+`
+export const UsersContainerDM = styled(UsersContainer) `
+    height: calc(100vh - 35rem);
+    @media (min-width: 768px) {
+        height: calc(100vh - 35rem);
     }
 `
 export const User = styled.span `

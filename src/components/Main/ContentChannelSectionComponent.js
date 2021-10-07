@@ -9,7 +9,15 @@ import {
     LogoContainer,
     Logo,
     ContentUserProfileContainer,
-    Avatar
+    Avatar,
+    UidInputContainer,
+    TextField,
+    useStyles,
+    UsersContainer,
+    AddUserUsersContainer,
+    User,
+    ButtonAddUser,
+    UsersContainerDM
 } from './components'
 import UserChatBoxComponent from './UserChatBoxComponent';
 import channel_logo from '../../assets/sampleLogo.png'
@@ -17,6 +25,8 @@ import { emailRemover } from '../helpers/helpers';
 import React from 'react';
 import { LoadingChannels } from '../ChannelSkeletonLoading';
 
+import DirectMessagesContentComponent from './DirectMessagesContentComponent'
+import {LoadingDMSearchBox} from '../ChannelSkeletonLoading'
 
 const ContentChannelSectionComponent = (props) => {
     const {
@@ -28,9 +38,14 @@ const ContentChannelSectionComponent = (props) => {
         matchesMD,
         handleClickPopOver,
         loginUser,
-        users
+        users,
+        addUserEmail,
+        debounceOnChange,
+        filteredItems,
+        intervalRetrieveMessagesinUser,
+        toggleDrawer
     } = props;
-
+    const classes = useStyles();
 
     return (
         <ContentChannelSection>
@@ -66,12 +81,16 @@ const ContentChannelSectionComponent = (props) => {
                             <LoadingChannels />
                         }
                     </ChannelsContainer>
-                    <ChannelsTitleHeader>Direct Messages <AddIcon onClick={handleOpenDM}/></ChannelsTitleHeader>
-                    {/* <ChannelsContainer>
-                        <UserChatBoxComponent initial={`M`} imgSrc={``} name={`Mike Camino`}/>
-                        <UserChatBoxComponent initial={`M`} imgSrc={``} name={`Mike Camino`}/>
-                        <UserChatBoxComponent initial={`M`} imgSrc={``} name={`Mike Camino`}/>
-                    </ChannelsContainer> */}
+                    <ChannelsTitleHeader>Direct Messages {/*<AddIcon onClick={handleOpenDM}/> */}</ChannelsTitleHeader>
+                    {users ? <DirectMessagesContentComponent  
+                        addUserEmail={addUserEmail}
+                        debounceOnChange={debounceOnChange}
+                        filteredItems={filteredItems}
+                        intervalRetrieveMessagesinUser={intervalRetrieveMessagesinUser}
+                        toggleDrawer={toggleDrawer}
+                        classes={classes}
+                        matchesMD={matchesMD}
+                    />: <LoadingDMSearchBox />}
                 </ChannelsAndMessagesContainer>
             }
         </ContentChannelSection>

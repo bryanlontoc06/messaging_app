@@ -70,3 +70,8 @@ export const ContentChatBoxChannelTitle = styled(MaterialSkeleton) `
     width: 8rem !important;
     height: 2rem !important;
 `
+export const UidInputContainer = styled(MaterialSkeleton) `
+    padding: 0.5rem 0.75rem;
+    height: 3rem !important;
+    margin-bottom: 1rem !important;
+`
