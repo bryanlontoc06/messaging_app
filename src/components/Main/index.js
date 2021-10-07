@@ -124,7 +124,7 @@ const Index = () => {
                                 <LoadingChannels />
                             }
                         </ChannelsContainer>
-                        <ChannelsTitleHeader>Direct Messages <AddIcon onClick={handleOpenDM}/></ChannelsTitleHeader>
+                        <ChannelsTitleHeader>Direct Messages {/*<AddIcon onClick={handleOpenDM}/>*/}</ChannelsTitleHeader>
                         {users ?
                         <DirectMessagesContentComponent  
                             addUserEmail={addUserEmail}
