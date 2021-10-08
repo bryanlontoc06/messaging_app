@@ -70,13 +70,7 @@ const ContentChatBoxBodyComponent = (props) => {
         idPopOver,
         anchorEl
     } = props;
-    const messagesEndRef = useRef(null);
-    const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView();
-    }
-    useEffect(() => {
-        scrollToBottom();
-    }, [allMessages]);
+    
     const handleClose = () => {
         return (
             setOpenChannelMembersModal(false)
