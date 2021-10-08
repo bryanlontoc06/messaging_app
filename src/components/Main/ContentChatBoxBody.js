@@ -120,27 +120,27 @@ const ContentChatBoxBodyComponent = (props) => {
                                     <Button variant="contained" onClick={handleOpen} >ADD USER</Button> 
                             } 
                             </AvatarnButton>
-                        : <IconButton style={{marginLeft: 'auto'}}><MoreVertIcon onClick={handleOpenPopOverMembers}/></IconButton> }
+                        : selectChannel && <IconButton style={{marginLeft: 'auto'}}><MoreVertIcon onClick={handleOpenPopOverMembers}/></IconButton> }
                 </ChatBoxAddUserContainer>
 
                 <ChatsMessageandChatInput>
                             <ChatsContainer>
                                 {/* <ScrollableFeed forceScroll='true'> */}
-                                {channel ?
-                                    allMessages.data?.data.map((data, index)=> {
-                                        return (
-                                        <ChatUserProfileComponent 
-                                            key={index}
-                                            imgSrc={''} 
-                                            initial={emailRemover(data.sender.uid).charAt(0).toUpperCase()}
-                                            chatUserName={emailRemover(data.sender.uid)}
-                                            chatUserTime={moment(data.created_at).fromNow()}
-                                            chatMessage={data.body}
-                                            loginUser={loginUser}
-                                            data={data}
-                                        />)
-                                    })
-                                    : <LoadingChannelMessage allMessages={allMessages} loginUser={loginUser}/>
+                                {allMessages ?
+                                        allMessages.data?.data.map((data, index)=> {
+                                            return (
+                                            <ChatUserProfileComponent 
+                                                key={index}
+                                                imgSrc={''} 
+                                                initial={emailRemover(data.sender.uid).charAt(0).toUpperCase()}
+                                                chatUserName={emailRemover(data.sender.uid)}
+                                                chatUserTime={moment(data.created_at).fromNow()}
+                                                chatMessage={data.body}
+                                                loginUser={loginUser}
+                                                data={data}
+                                            />)
+                                        })
+                                        : <LoadingChannelMessage allMessages={allMessages} loginUser={loginUser}/>
                                 }
                                 {/* </ScrollableFeed> */}
                                 <div ref={messagesEndRef} />

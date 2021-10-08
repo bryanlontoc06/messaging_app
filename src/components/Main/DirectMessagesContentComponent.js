@@ -9,7 +9,8 @@ const DirectMessagesContentComponent = (props) => {
         debounceOnChange,
         filteredItems,
         intervalRetrieveMessagesinUser,
-        classes
+        classes,
+        toggleDrawer
     } = props;
     return (
         <>
@@ -32,7 +33,7 @@ const DirectMessagesContentComponent = (props) => {
                 filteredItems.length > 0 ?
                     filteredItems.map((user, index) => {
                         return (
-                                <AddUserUsersContainer key={index} onClick={() => {return (intervalRetrieveMessagesinUser(user))}}>
+                                <AddUserUsersContainer key={index} onClick={() => {return (intervalRetrieveMessagesinUser(user), toggleDrawer())}}>
                                     <Tooltip title={user.uid} arrow TransitionComponent={Zoom}>
                                         <ContentUserProfileContainer>
                                             <Avatar sx={{ bgcolor: 'green' }} variant="rounded" src="#">

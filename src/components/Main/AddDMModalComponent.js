@@ -69,7 +69,7 @@ const AddUserComponent = (props) => {
                             placeholder="Search for a user to DM"
                         />
                     </UidInputContainer>
-                    <InviteUsersTitle>Note: Type 'all' to load all users</InviteUsersTitle>
+                    {/* <InviteUsersTitle>Note: Type 'all' to load all users</InviteUsersTitle> */}
                     <UsersContainer>
                         {filteredItems === null ? '' :
                         filteredItems.length > 0 ?

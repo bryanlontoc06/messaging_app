@@ -116,7 +116,7 @@ const Index = (props) => {
                                     placeholder="Search for a user to invite"
                                 />
                             </UidInputContainer>
-                            <InviteUsersTitle>Note: Type 'all' to load all users</InviteUsersTitle>
+                            {/* <InviteUsersTitle>Note: Type 'all' to load all users</InviteUsersTitle> */}
                             <AvatarGroup max={5} variant="rounded" className={classes.avatarSize} style={{cursor: 'pointer'}} onClick={handleOpenPreAddedUsers}>
                                 {usersToAdd.map((user, index) => {
                                     return (
