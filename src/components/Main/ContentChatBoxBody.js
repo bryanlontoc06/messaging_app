@@ -70,7 +70,14 @@ const ContentChatBoxBodyComponent = (props) => {
         idPopOver,
         anchorEl
     } = props;
-    
+    const messagesEndRef = useRef(null);
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView();
+    }
+    console.log(allMessages);
+    // useEffect(() => {
+    //     scrollToBottom();
+    // }, [allMessages]);
     const handleClose = () => {
         return (
             setOpenChannelMembersModal(false)
@@ -137,7 +144,6 @@ const ContentChatBoxBodyComponent = (props) => {
                                         : <LoadingChannelMessage allMessages={allMessages} loginUser={loginUser}/>
                                 }
                                 {/* </ScrollableFeed> */}
-                                <div ref={messagesEndRef} />
                             </ChatsContainer>
 
                         <form onSubmit={(e) => 
