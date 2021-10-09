@@ -29,7 +29,7 @@ const DirectMessagesContentComponent = (props) => {
                 />
             </UidInputContainer>
             <UsersContainerDM>
-                {filteredItems === null ? '' :
+                {/* {filteredItems === null ? '' :
                 filteredItems.length > 0 ?
                     filteredItems.map((user, index) => {
                         return (
@@ -46,7 +46,7 @@ const DirectMessagesContentComponent = (props) => {
                     )})
                     :
                     <h1 style={{textAlign: 'center'}}>No user available</h1>
-                }
+                } */}
             </UsersContainerDM>
         </>
     )
