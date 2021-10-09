@@ -74,7 +74,9 @@ const Index = () => {
         handleOpenChannelMembers,
         setOpenChannelMembersModal,
         toggleDrawer,
-        handleCloseDrawer
+        handleCloseDrawer,
+        filteredItemsAddUsers,
+        debounceOnChangeAddUsers
     } = useHooks();
 
     return (
@@ -102,6 +104,9 @@ const Index = () => {
                     filteredItems={filteredItems}
                     intervalRetrieveMessagesinUser={intervalRetrieveMessagesinUser}
                     toggleDrawer={toggleDrawer}
+                    open={open}
+                    filteredItemsAddUsers={filteredItemsAddUsers}
+                    debounceOnChangeAddUsers={debounceOnChangeAddUsers}
                />
 
                 {/* Mobile view Channels and DMs */}
@@ -128,12 +133,13 @@ const Index = () => {
                         {users ?
                         <DirectMessagesContentComponent  
                             addUserEmail={addUserEmail}
-                            debounceOnChange={debounceOnChange}
+                            debounceOnChangeAddUsers={debounceOnChangeAddUsers}
                             filteredItems={filteredItems}
                             intervalRetrieveMessagesinUser={intervalRetrieveMessagesinUser}
                             toggleDrawer={toggleDrawer}
                             classes={classes}
                             matchesMD={matchesMD}
+                            open={open}
                         />: <LoadingDMSearchBox />}
                     </ChannelsAndMessagesContainer>
                 }

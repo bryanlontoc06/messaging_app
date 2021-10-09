@@ -101,7 +101,7 @@ const Index = (props) => {
                                     inputRef={channelName}
                                 />
                             </UidInputContainer>
-                            <InviteUsersTitle>Invite users to the new channel</InviteUsersTitle>
+                            {/* <InviteUsersTitle>Invite users to the new channel</InviteUsersTitle>
                             <UidInputContainer>
                                 <TextField 
                                     id="standard-basic"
@@ -115,9 +115,9 @@ const Index = (props) => {
                                     onChange={debounceOnChange}
                                     placeholder="Search for a user to invite"
                                 />
-                            </UidInputContainer>
+                            </UidInputContainer> */}
                             {/* <InviteUsersTitle>Note: Type 'all' to load all users</InviteUsersTitle> */}
-                            <AvatarGroup max={5} variant="rounded" className={classes.avatarSize} style={{cursor: 'pointer'}} onClick={handleOpenPreAddedUsers}>
+                            {/* <AvatarGroup max={5} variant="rounded" className={classes.avatarSize} style={{cursor: 'pointer'}} onClick={handleOpenPreAddedUsers}>
                                 {usersToAdd.map((user, index) => {
                                     return (
                                         <AvatarSmallGroup key={index} alt={emailRemover(user.uid).toUpperCase()} src="/static/images/avatar/1.jpg" variant="rounded" />
@@ -143,7 +143,7 @@ const Index = (props) => {
                                         :
                                         <h1 style={{textAlign: 'center'}}>No user available</h1>
                                 }
-                            </UsersContainer>
+                            </UsersContainer> */}
                             <ButtonAddChannel variant="contained" startIcon={<AddIcon />} onClick={() => createAChannel(usersToAdd)}>Add Channel</ButtonAddChannel>
                         </Typography>
                 </Box>

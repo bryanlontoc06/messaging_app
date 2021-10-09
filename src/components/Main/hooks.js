@@ -38,6 +38,7 @@ const useHooks = () => {
     const [duplicateForChannel, setDuplicateForChannel] = useState(false);
     const [duplicateForUser, setDuplicateForUser] = useState(false);
     const [query, setQuery] = useState('')
+    const [queryAddUsers, setQueryAddUsers] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const [open, setOpen] = useState(false);
     const [openDM, setOpenDM] = useState(false)
@@ -70,7 +71,7 @@ const useHooks = () => {
     const handleAddUser = async(data) => {
         setIsLoading(true)
         setOpen(false)
-        inviteUserToChannelAPI(selectChannel, data, loginUser, state, setState, setIsLoading, setOpen, setChannel)
+        inviteUserToChannelAPI(selectChannel, data, loginUser, state, setState, setIsLoading, setOpen, setChannel, users, isLogin)
     }
     const handleCloseAddUserModal = (event, reason) => {
         if (reason === 'clickaway') {
@@ -126,14 +127,14 @@ const useHooks = () => {
         retrieveMessagesinChannel(data)
         setDuplicateForChannel(!duplicateForChannel)
         if(duplicateForChannel) {
-            int3 = setInterval(() => {
+            // int3 = setInterval(() => {
                 retrieveMessagesinChannel(data)
-            }, 1500);
+            // }, 1500);
             clearTimeout(int4)
         } else {
-            int4 = setInterval(() => {
+            // int4 = setInterval(() => {
                 retrieveMessagesinChannel(data)
-            }, 1500);
+            // }, 1500);
             clearTimeout(int3)
         }
     }
@@ -153,14 +154,14 @@ const useHooks = () => {
         retrieveMessagesinUser(data)
         setDuplicateForUser(!duplicateForUser)
         if(duplicateForUser) {
-            int1 = setInterval(() => {   
+            // int1 = setInterval(() => {   
                 retrieveMessagesinUser(data)
-            }, 1500);    
+            // }, 1500);    
             clearTimeout(int2)
         } else {
-            int2 = setInterval(() => {   
+            // int2 = setInterval(() => {   
                 retrieveMessagesinUser(data)
-            }, 1500);    
+            // }, 1500);    
             clearTimeout(int1)
         }
     }
@@ -172,9 +173,11 @@ const useHooks = () => {
     }
 
     // Create a Channel
-    const createAChannel = async(data) => {
-        createAChannelAPI(data, channelName, loginUser, state, setState, setIsLoading, setOpen, isLogin, setChannels, setOpenAddChannel) 
+    const createAChannel = async(data) => { 
+        setIsLoading(false)
+        createAChannelAPI(data, channelName, state, setState, setIsLoading, setOpen, setChannels, setOpenAddChannel, selectChannel, loginUser, isLogin, setChannel, users) 
     }
+
 
     
     useEffect(() => {
@@ -204,7 +207,6 @@ const useHooks = () => {
         }
         return users.data?.data.filter((user) => user.uid.includes(query))
     }
-
     const handleOpenDM = () => {
         setOpenDM(true)
         if(users.data?.data){
@@ -217,6 +219,20 @@ const useHooks = () => {
     const filteredItems = getFilteredItems(query, users)
     const updateQuery = (e) => setQuery(e?.target?.value);
     const debounceOnChange = debounce(updateQuery, 500)
+
+
+    const getFilteredItemsAddUsers = (query, users) => {
+        if(!query) {
+            return null;
+        }
+        else if (query.toLowerCase() === 'all') {
+            return users?.data?.data;
+        }
+        return users.data?.data.filter((user) => user.uid.includes(query))
+    }
+    const filteredItemsAddUsers = getFilteredItemsAddUsers(queryAddUsers, users)
+    const updateQueryAddUsers = (e) => setQueryAddUsers(e?.target?.value);
+    const debounceOnChangeAddUsers = debounce(updateQueryAddUsers, 500)
 
 
     const handleOpenChannelMembers = (data) => {
@@ -267,7 +283,9 @@ const useHooks = () => {
         handleOpenChannelMembers,
         setOpenChannelMembersModal,
         toggleDrawer,
-        handleCloseDrawer
+        handleCloseDrawer,
+        filteredItemsAddUsers,
+        debounceOnChangeAddUsers
     }
 }
 

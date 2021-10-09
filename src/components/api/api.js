@@ -245,7 +245,7 @@ export const inviteUserToChannelAPI = async(selectChannel, data, loginUser, stat
 }
 
 // Create a Channel
-export const createAChannelAPI = async(data, channelName, loginUser, state, setState, setIsLoading, setOpen, isLogin, setChannels, setOpenAddChannel) => {
+export const createAChannelAPI = async(data, channelName, state, setState, setIsLoading, setOpen, setChannels, setOpenAddChannel, selectChannel, loginUser, isLogin, setChannel, users) => {
     await axios({
         url: `${url}/channels`,
         data: {
@@ -270,6 +270,12 @@ export const createAChannelAPI = async(data, channelName, loginUser, state, setS
                 })
                 setIsLoading(false)
                 setOpen(false)
+                // console.log({selectChannel})
+                // console.log({loginUser})
+                // console.log({isLogin})
+                // console.log({setChannel})
+                // console.log({users})
+                retrieveAChannelAPI(selectChannel, loginUser, isLogin, setChannel, users)
                 retrieveAllChannelsAPI(loginUser, isLogin, setChannels)
                 setOpenAddChannel(false)
                 channelName.current.value = '';

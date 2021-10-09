@@ -43,7 +43,10 @@ const ContentChannelSectionComponent = (props) => {
         debounceOnChange,
         filteredItems,
         intervalRetrieveMessagesinUser,
-        toggleDrawer
+        toggleDrawer,
+        open,
+        filteredItemsAddUsers,
+        debounceOnChangeAddUsers
     } = props;
     const classes = useStyles();
 
@@ -90,12 +93,13 @@ const ContentChannelSectionComponent = (props) => {
                     <ChannelsTitleHeader>Direct Messages {/*<AddIcon onClick={handleOpenDM}/> */}</ChannelsTitleHeader>
                     {users ? <DirectMessagesContentComponent  
                         addUserEmail={addUserEmail}
-                        debounceOnChange={debounceOnChange}
-                        filteredItems={filteredItems}
+                        filteredItemsAddUsers={filteredItemsAddUsers}
+                        debounceOnChangeAddUsers={debounceOnChangeAddUsers}
                         intervalRetrieveMessagesinUser={intervalRetrieveMessagesinUser}
                         toggleDrawer={toggleDrawer}
                         classes={classes}
                         matchesMD={matchesMD}
+                        open={open}
                     />: <LoadingDMSearchBox />}
                 </ChannelsAndMessagesContainer>
             }

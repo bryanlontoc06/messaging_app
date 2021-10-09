@@ -74,7 +74,6 @@ const ContentChatBoxBodyComponent = (props) => {
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView();
     }
-    console.log(allMessages);
     // useEffect(() => {
     //     scrollToBottom();
     // }, [allMessages]);
