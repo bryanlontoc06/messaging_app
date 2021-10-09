@@ -10,7 +10,10 @@ const DirectMessagesContentComponent = (props) => {
         filteredItems,
         intervalRetrieveMessagesinUser,
         classes,
-        toggleDrawer
+        toggleDrawer,
+        open,
+        filteredItemsAddUsers,
+        debounceOnChangeAddUsers
     } = props;
     return (
         <>
@@ -24,14 +27,15 @@ const DirectMessagesContentComponent = (props) => {
                         input: classes.resize,
                     }, }}
                     inputRef={addUserEmail}
-                    onChange={debounceOnChange}
+                    onChange={debounceOnChangeAddUsers}
                     placeholder="Search for a user to DM"
                 />
             </UidInputContainer>
             <UsersContainerDM>
-                {/* {filteredItems === null ? '' :
-                filteredItems.length > 0 ?
-                    filteredItems.map((user, index) => {
+                {!open && 
+                (filteredItemsAddUsers === null ? '' :
+                filteredItemsAddUsers.length > 0 ?
+                filteredItemsAddUsers.map((user, index) => {
                         return (
                                 <AddUserUsersContainer key={index} onClick={() => {return (intervalRetrieveMessagesinUser(user), toggleDrawer())}}>
                                     <Tooltip title={user.uid} arrow TransitionComponent={Zoom}>
@@ -45,8 +49,8 @@ const DirectMessagesContentComponent = (props) => {
                                 </AddUserUsersContainer>
                     )})
                     :
-                    <h1 style={{textAlign: 'center'}}>No user available</h1>
-                } */}
+                    <h1 style={{textAlign: 'center'}}>No user available</h1>)
+                }
             </UsersContainerDM>
         </>
     )

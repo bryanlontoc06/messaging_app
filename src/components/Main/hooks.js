@@ -38,6 +38,7 @@ const useHooks = () => {
     const [duplicateForChannel, setDuplicateForChannel] = useState(false);
     const [duplicateForUser, setDuplicateForUser] = useState(false);
     const [query, setQuery] = useState('')
+    const [queryAddUsers, setQueryAddUsers] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const [open, setOpen] = useState(false);
     const [openDM, setOpenDM] = useState(false)
@@ -206,7 +207,6 @@ const useHooks = () => {
         }
         return users.data?.data.filter((user) => user.uid.includes(query))
     }
-
     const handleOpenDM = () => {
         setOpenDM(true)
         if(users.data?.data){
@@ -219,6 +219,20 @@ const useHooks = () => {
     const filteredItems = getFilteredItems(query, users)
     const updateQuery = (e) => setQuery(e?.target?.value);
     const debounceOnChange = debounce(updateQuery, 500)
+
+
+    const getFilteredItemsAddUsers = (query, users) => {
+        if(!query) {
+            return null;
+        }
+        else if (query.toLowerCase() === 'all') {
+            return users?.data?.data;
+        }
+        return users.data?.data.filter((user) => user.uid.includes(query))
+    }
+    const filteredItemsAddUsers = getFilteredItemsAddUsers(queryAddUsers, users)
+    const updateQueryAddUsers = (e) => setQueryAddUsers(e?.target?.value);
+    const debounceOnChangeAddUsers = debounce(updateQueryAddUsers, 500)
 
 
     const handleOpenChannelMembers = (data) => {
@@ -269,7 +283,9 @@ const useHooks = () => {
         handleOpenChannelMembers,
         setOpenChannelMembersModal,
         toggleDrawer,
-        handleCloseDrawer
+        handleCloseDrawer,
+        filteredItemsAddUsers,
+        debounceOnChangeAddUsers
     }
 }
 
