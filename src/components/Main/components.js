@@ -469,7 +469,7 @@ export const ButtonAddChannel = styled(Button) `
 `
 export const Box = styled(MaterialBox) `
     width: 17rem !important;
-    height: calc(100vh - 7rem);
+    /* height: calc(100vh - 7rem); */
     @media (min-width: 768px) {
         width: 25rem !important;
         height: unset;

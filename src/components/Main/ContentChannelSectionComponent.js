@@ -75,8 +75,9 @@ const ContentChannelSectionComponent = (props) => {
                 <ChannelsAndMessagesContainer>
                     <ChannelsTitleHeader>Channels <AddIcon onClick={handleOpenAddChannel}/></ChannelsTitleHeader>
                     <ChannelsContainer>
-                        {(users && channels) ?
-                            (channels ?
+                        {
+                        // (users && channels) ?
+                            channels &&
                                 channels.map((data) => {
                                     return (<Channel key={data?.id} active={selectChannel?.id === data?.id} 
                                         onClick={() => {
@@ -85,9 +86,9 @@ const ContentChannelSectionComponent = (props) => {
                                             ) 
                                         }}>{data?.name}</Channel>)
                                     })
-                                : 
-                                <LoadingChannels />)
-                            : ''
+                            //     : 
+                            //     <LoadingChannels />)
+                            // : ''
                         }
                     </ChannelsContainer>
                     <ChannelsTitleHeader>Direct Messages {/*<AddIcon onClick={handleOpenDM}/> */}</ChannelsTitleHeader>

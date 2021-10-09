@@ -114,8 +114,9 @@ const Index = () => {
                     <ChannelsAndMessagesContainer>
                         <ChannelsTitleHeader>Channels <AddIcon onClick={handleOpenAddChannel}/></ChannelsTitleHeader>
                         <ChannelsContainer>
-                            {users &&
-                                channels ?
+                        {
+                        // (users && channels) ?
+                            channels &&
                                 channels.map((data) => {
                                     return (<Channel key={data?.id} active={selectChannel?.id === data?.id} 
                                         onClick={() => {
@@ -125,16 +126,17 @@ const Index = () => {
                                             ) 
                                         }}>{data?.name}</Channel>)
                                     })
-                                : 
-                                <LoadingChannels />
-                            }
+                            //     : 
+                            //     <LoadingChannels />)
+                            // : ''
+                        }
                         </ChannelsContainer>
                         <ChannelsTitleHeader>Direct Messages {/*<AddIcon onClick={handleOpenDM}/>*/}</ChannelsTitleHeader>
                         {users ?
                         <DirectMessagesContentComponent  
                             addUserEmail={addUserEmail}
                             debounceOnChangeAddUsers={debounceOnChangeAddUsers}
-                            filteredItems={filteredItems}
+                            filteredItemsAddUsers={filteredItemsAddUsers}
                             intervalRetrieveMessagesinUser={intervalRetrieveMessagesinUser}
                             toggleDrawer={toggleDrawer}
                             classes={classes}
