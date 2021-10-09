@@ -125,7 +125,7 @@ const ContentChatBoxBodyComponent = (props) => {
 
                 <ChatsMessageandChatInput>
                             <ChatsContainer>
-                                {/* <ScrollableFeed forceScroll='true'> */}
+                                <ScrollableFeed forceScroll='true'>
                                 {allMessages ?
                                         allMessages.data?.data.map((data, index)=> {
                                             return (
@@ -142,7 +142,7 @@ const ContentChatBoxBodyComponent = (props) => {
                                         })
                                         : <LoadingChannelMessage allMessages={allMessages} loginUser={loginUser}/>
                                 }
-                                {/* </ScrollableFeed> */}
+                                </ScrollableFeed>
                             </ChatsContainer>
 
                         <form onSubmit={(e) => 
