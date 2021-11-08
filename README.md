@@ -2,7 +2,7 @@
 
 A Reactjs project with an api integration using Axios that allows users to chat between users who’s using the application. They can also create and add users inside channels.
 
-link: https://bryanlontoc06.github.io/messaging_app/#/
+link: https://bit.ly/3D3gvms
 
 ## Features
 - Enabled users to signup and login their respective accounts.
