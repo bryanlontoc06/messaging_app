@@ -18,5 +18,6 @@ Axios is used for api integration.
 **Tool used:**
 - reactjs
 - material-ui
-- styled-components
+- styled-component
+- sourcetree (git repo)
 - axios (api integration)
